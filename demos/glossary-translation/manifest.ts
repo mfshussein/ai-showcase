@@ -3,7 +3,7 @@ import type { DemoManifest } from "../types";
 export const manifest: DemoManifest = {
   slug: "glossary-translation",
   order: 80,
-  status: "soon",
+  status: "ready",
   title: "Say it exactly this way",
   hook: "A fluent translation that renames your products and regulators is a compliance problem. Lock the glossary and count every term.",
   lesson: {
