@@ -2,7 +2,7 @@
 
 Date: 2026-10-07 · Status: decided under Mohammed's standing instruction ("happy to go with your recommendation", work independently) · Builds on `2026-10-07-ai-showcase-design.md`
 
-Five demos, each designed around one pin-drop moment. They use the existing case format (five acts, run events, golden replay) and add the minimum new machinery: three panel kinds, a tool-calling loop in `Llm`, a Telegram notifier, and five pure harness modules.
+Five demos, each designed around one pin-drop moment. They use the existing case format (five acts, run events, golden replay) and add the minimum new machinery: three panel kinds, a tool-calling loop in `Llm`, an email and webhook notifier, and five pure harness modules.
 
 ## 1. The five demos
 
@@ -43,17 +43,17 @@ Walkthrough order after this batch: night-watchman (10), conflicting-docs (20), 
 - Act 1 claim: "Every night it reads every payment and login, and messages you only when something is wrong."
 - Act 2: timeline panel of the last 14 nights (seeded: 11 quiet green, 3 with alerts), and a ledger summary (500 AP rows, 1 access log). The pause label reads "Run tonight's shift".
 - Act 4: stats pass in `lib/harness/anomalies.ts` (no model) flags exactly the planted five: exact duplicate, fuzzy duplicate (same vendor and amount, dates 2 days apart), outlier (z > 3 vs the vendor's own history), split invoices (same vendor, within 3 days, each under QAR 50,000, together over it), weekend 03:00 admin login. A table fills row by row. The model writes for each flag a one-line English explanation, an Arabic line, and a suggested action (one `parse` call). Tonight's tile on the timeline turns red with "5 alerts".
-- Pin drop: a phone panel shows the Telegram message arriving (bilingual summary, 5 flags, "Reply 1 to open the evidence"). Verdict `ALERT SENT` (warn) "5 issues worth QAR <sum> found in 500 payments. Your phone has the summary."
-- Real phone: when the phone panel appears in a presenter's browser, the stage POSTs its text to `/api/notify` (presenter-only, once per run) which calls Telegram `sendMessage` if `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set, and otherwise returns `{ sent: false, reason: "not configured" }`. The phone panel shows "Delivered to Telegram" or "Preview (Telegram not configured)". So the phone buzzes in replay too, at no model cost. Tokens are never logged or returned.
+- Pin drop: an email panel ("inbox preview": from, to, subject, bilingual body, one line per flag with amount, vendor and action, a link to `/demo/night-watchman`) lands as the email is sent. Subject: "Night shift report: 5 items need a look (Marsa Holdings AP)". Verdict `ALERT SENT` (warn) "5 issues worth QAR <sum> found in 500 payments. The report is in your inbox."
+- Channels (`lib/notify.ts`, no SDKs): email via the Resend REST API (`RESEND_API_KEY`, `ALERT_EMAIL_FROM` default "Night Watchman <onboarding@resend.dev>", `ALERT_EMAIL_TO`); optional generic webhook POST of the same text as Slack mrkdwn when `SLACK_WEBHOOK_URL` is set (Slack or Teams incoming webhook). The runner sends in record and live mode, so the recorded golden contains a real send and replay matches it. When `RESEND_API_KEY` is missing the send is skipped and a `control.event` says "Email not sent: RESEND_API_KEY not set": visible in the evidence drawer only, never on the main panel. Keys are never logged or put in events.
 - Ledger: `lib/harness/ledger.ts` generates 500 rows from a seed (mulberry32) with the five issues planted; tests pin that the detectors find exactly those and nothing else.
 
 ## 2. New panel kinds
 
-Added to `PanelKind` and `PANELS`:
+Added to `PanelKind` and `PANELS` (counter, timeline, email):
 
 - `counter` `{ title?, value, total, label?, tone?, text?, highlights?: {text, tone}[], missed?: string[] }`: a large `n/m` with an optional body text where highlight phrases are marked. Used by glossary.
 - `timeline` `{ title?, nights: {date, state: "quiet"|"alert"|"running"|"pending", count?}[] }`: a strip of tiles. Used by night-watchman.
-- `phone` `{ title?, app: "Telegram", from, messages: {text, time}[], delivery?: string, notify?: boolean }`: a phone-frame mockup. `notify: true` asks the stage to call `/api/notify` once. Used by night-watchman.
+- `email` `{ from, to, subject, html?, text, sentAt? }`: an inbox-preview card (header rows, then the body; html is our own generated markup rendered as text blocks, not injected). Used by night-watchman.
 
 Existing kinds cover the rest: `gate` is the plan checklist; `json` gains optional per-field `confidence` rendering via a `fields` prop `{ path, value, confidence, tone }[]` shown as a table under the JSON; `image` gains `grid` mode via a new `images` prop `{src, alt, caption, selected?}[]`.
 
@@ -70,9 +70,9 @@ tools(o: Common & { tools: ToolDef[]; maxSteps?: number }): AsyncGenerator<ToolS
 
 OpenAI-compatible path: `chat.completions.create` with `tools` (JSON schema from `z.toJSONSchema`), run each tool call, append `tool` messages, loop until the reply has no tool calls or `maxSteps` (default 8) is reached. Bad JSON arguments become a tool result `{ error }` so the model can correct. Anthropic path: throws "tools() not implemented for the Anthropic provider yet" (noted in README). Tested with the existing fake-server pattern.
 
-## 4. Telegram
+## 4. Alert channels
 
-`lib/notify.ts`: `telegramConfigured(env)`, `sendTelegram(text, env, fetchImpl)`; `POST /api/notify` (presenter cookie required, text length capped at 4000, returns `{ sent, reason? }`). `.env.example` gains `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. Until Mohammed provides them the phone panel shows the preview label.
+`lib/notify.ts`: `buildReport(flags, notes, opts)` returns `{ subject, text, html, slack }`; `sendEmail(report, env, fetchImpl)` POSTs `https://api.resend.com/emails`; `sendWebhook(report, env, fetchImpl)` POSTs `{ text }` to `SLACK_WEBHOOK_URL`. Each returns `{ sent, channel, reason? }` and never includes secrets in `reason`. `.env.example` gains the four variables with comments; no Telegram variables.
 
 ## 5. Images
 
@@ -89,5 +89,5 @@ OpenAI-compatible path: `chat.completions.create` with `tools` (JSON schema from
 - Pick the Arabic dashboard: strongest proof for the room.
 - Snap callouts to measured tiles rather than trust raw coordinates: boxes always look right, and a wrong locate drops a box instead of drawing it in the wrong place.
 - `send_whatsapp` exists as a tool so the gate is visible as code intercepting a model action.
-- Notify from the browser on replay rather than from the runner on record: the phone buzz is the moment, and it must work without a live run.
+- Email over Telegram (Mohammed, via teammate): something presentable in the room. Send from the runner so record, live and replay agree; the inbox preview always shows what was sent.
 - Pure stats for anomalies, model only for wording: "you don't need AI for this" applied to our own demo.
