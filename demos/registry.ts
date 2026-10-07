@@ -2,9 +2,10 @@ import type { DemoManifest } from "./types";
 import { manifest as conflictingDocs } from "./conflicting-docs/manifest";
 import { manifest as guardrails } from "./guardrails/manifest";
 import { manifest as readMyDashboard } from "./read-my-dashboard/manifest";
+import { manifest as documentToJson } from "./document-to-json/manifest";
 
 /** Client-safe list of demos, in walkthrough order. Add a manifest import here to register a demo. */
-const all: DemoManifest[] = [conflictingDocs, guardrails, readMyDashboard];
+const all: DemoManifest[] = [conflictingDocs, guardrails, readMyDashboard, documentToJson];
 
 export const demos: DemoManifest[] = [...all].sort((a, b) => a.order - b.order);
 
