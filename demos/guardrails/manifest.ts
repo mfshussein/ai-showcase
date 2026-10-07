@@ -3,7 +3,7 @@ import type { DemoManifest } from "../types";
 export const manifest: DemoManifest = {
   slug: "guardrails",
   order: 40,
-  status: "soon",
+  status: "ready",
   title: "Two gates",
   hook: "Watch it refuse a Qatar ID, a jailbreak and an off-topic question, in under a second, without a human.",
   lesson: {

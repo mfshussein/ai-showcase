@@ -25,13 +25,15 @@ for (const demo of ready) {
     await page.goto(`/demo/${demo.slug}`);
     await expect(page.getByRole("heading", { name: demo.title })).toBeVisible();
     let presses = 0;
+    let sawVerdict = false;
     while (presses < 40 && (await page.getByRole("link", { name: "Back to all cases" }).count()) === 0) {
       await page.keyboard.press("Space");
       await page.waitForTimeout(250);
+      if ((await page.locator("[data-verdict]").count()) > 0) sawVerdict = true;
       presses++;
     }
     await expect(page.getByRole("link", { name: "Back to all cases" })).toBeVisible();
-    await expect(page.locator("[data-verdict]").first()).toBeAttached();
+    expect(sawVerdict, "a verdict was shown during the walkthrough").toBe(true);
     expect(errors, errors.join("\n")).toEqual([]);
   });
 }

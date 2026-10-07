@@ -3,7 +3,7 @@ import type { DemoManifest } from "../types";
 export const manifest: DemoManifest = {
   slug: "conflicting-docs",
   order: 20,
-  status: "soon",
+  status: "ready",
   title: "The Air Canada test",
   hook: "Your chatbot will cite whichever version of the policy it finds first. Ours refuses to load two that disagree.",
   lesson: {

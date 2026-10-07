@@ -1,7 +1,13 @@
 /** Record a demo's live run into demos/<slug>/golden.json. Usage: npm run record <slug> */
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
-import { runners } from "../demos/runners";
+import type { DemoRunner } from "../demos/types";
+
+// Static imports: tsx transpiles demos/*.ts as CommonJS, where the registry's dynamic import() cannot resolve.
+const runners: Record<string, () => Promise<{ run: DemoRunner }>> = {
+  "conflicting-docs": () => import("../demos/conflicting-docs/run"),
+  guardrails: () => import("../demos/guardrails/run"),
+};
 import { createLlm, resolveProvider } from "../lib/llm";
 import { stamp } from "../lib/stamp";
 import { makeFixtureLoader } from "../lib/fixtures";

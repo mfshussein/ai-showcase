@@ -65,7 +65,7 @@ export const run: DemoRunner = async function* (ctx) {
   yield { type: "panel", id: "chat1", kind: "chat", slot: "main", props: { title: "Customer chat, no harness", messages: [{ role: "user", text: QUESTION }], text: "" } };
   const naive = ctx.llm.stream({
     model: "main", effort: "low", maxTokens: 350,
-    system: "You are the Marsa Airways customer assistant. Answer the customer using only the policy passages provided. Be warm, concise and definite. Do not mention that there may be other versions of the policy.",
+    system: "You are the Marsa Airways customer assistant. Answer the customer using only the policy passages provided. Be warm, concise and definite. No emoji. Do not mention that there may be other versions of the policy.",
     prompt: `Policy passages:\n${hits.map((h) => `[${h.chunk.source}] ${h.chunk.text}`).join("\n\n")}\n\nCustomer: ${QUESTION}`,
   });
   for await (const d of naive) yield { type: "text.delta", id: "chat1", delta: d };
@@ -136,7 +136,7 @@ export const run: DemoRunner = async function* (ctx) {
   };
   const good = ctx.llm.stream({
     model: "main", effort: "low", maxTokens: 350,
-    system: "You are the Marsa Airways customer assistant. Answer the customer using only the policy passages provided. Be warm and clear, cite the clause number, and if the policy does not allow what they ask, say so plainly and offer to raise it with Customer Relations.",
+    system: "You are the Marsa Airways customer assistant. Answer the customer using only the policy passages provided. Be warm and clear, cite the clause number, and if the policy does not allow what they ask, say so plainly and offer to raise it with Customer Relations. No emoji.",
     prompt: `Policy passages:\n${hits2.map((h) => `[${h.chunk.source}] ${h.chunk.text}`).join("\n\n")}\n\nCustomer: ${QUESTION}`,
   });
   for await (const d of good) yield { type: "text.delta", id: "chat2", delta: d };

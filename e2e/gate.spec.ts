@@ -29,7 +29,9 @@ test("the presenter code shows presenter tools and the preflight page", async ({
   await expect(page.getByRole("link", { name: "Preflight" })).toBeVisible();
   await page.goto("/health");
   await expect(page.getByRole("heading", { name: "Preflight" })).toBeVisible();
-  await expect(page.getByText("Anthropic API key missing")).toBeVisible();
+  // The health route compiles on first hit in dev, so allow time for the checklist to load.
+  await expect(page.getByRole("button", { name: "Probe the model" })).toBeVisible({ timeout: 20_000 });
+  await expect(page.locator("li", { hasText: "Provider openai" }).or(page.locator("li", { hasText: "Provider anthropic" }))).toBeVisible();
 });
 
 test("live runs are refused for viewers", async ({ page }) => {

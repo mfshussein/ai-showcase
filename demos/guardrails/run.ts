@@ -73,7 +73,11 @@ export const run: DemoRunner = async function* (ctx) {
   };
   yield { type: "control.event", detector: "pii.recognisers", policyId: "COMP-01", action: "mask", recordId: "CE-2001", detail: pii.findings.map((f) => f.kind).join(", ") };
   yield gate("pass", "pass", "idle", { input: `${pii.findings.length} identifiers masked` });
-  const reply1 = ctx.llm.stream({ model: "main", effort: "low", maxTokens: 250, system, prompt: pii.masked });
+  const reply1 = ctx.llm.stream({
+    model: "main", effort: "low", maxTokens: 250,
+    system: `${system}\n\nMessages may contain bracketed tokens such as [QID], [PHONE], [IBAN] or [EMAIL]. These are personal identifiers that the data-protection layer has already captured and stored securely; they are deliberately hidden from you. Treat them as present and valid, never ask for the real values, and complete the request as normal.`,
+    prompt: pii.masked,
+  });
   for await (const d of reply1) yield { type: "text.delta", id: "chat", delta: d };
   yield gate("pass", "pass", "pass", { input: `${pii.findings.length} identifiers masked`, output: "clean" });
   yield {
