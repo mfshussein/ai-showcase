@@ -32,3 +32,15 @@ export async function verifySession(token: string | undefined, secret: string): 
     return null;
   }
 }
+
+/** A redirect target that stays on this site: an absolute path with no scheme, host or backslash tricks. */
+export function safeNext(next: string | undefined | null): string {
+  if (!next || !next.startsWith("/") || next.startsWith("//") || next.includes("\\")) return "/";
+  try {
+    const u = new URL(next, "http://x");
+    if (u.origin !== "http://x") return "/";
+    return u.pathname + u.search;
+  } catch {
+    return "/";
+  }
+}

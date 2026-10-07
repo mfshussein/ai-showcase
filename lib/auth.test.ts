@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { signSession, verifySession } from "./auth";
+import { signSession, verifySession, safeNext } from "./auth";
 
 describe("session tokens", () => {
   it("round-trips a presenter session", async () => {
@@ -21,5 +21,17 @@ describe("session tokens", () => {
   it("rejects garbage", async () => {
     expect(await verifySession(undefined, "secret")).toBeNull();
     expect(await verifySession("nodot", "secret")).toBeNull();
+  });
+});
+
+describe("safeNext", () => {
+  it("keeps same-origin paths and falls back to / for anything else", () => {
+    expect(safeNext("/demo/x?walk=1")).toBe("/demo/x?walk=1");
+    expect(safeNext("https://evil.example/x")).toBe("/");
+    expect(safeNext("//evil.example/x")).toBe("/");
+    expect(safeNext("/\\evil.example/x")).toBe("/");
+    expect(safeNext("/\\\\evil.example")).toBe("/");
+    expect(safeNext(undefined)).toBe("/");
+    expect(safeNext("demo/x")).toBe("/");
   });
 });

@@ -16,8 +16,10 @@ export interface PlayerOptions {
 export interface Player {
   /** Play the next segment, or fast-forward the one in progress. */
   next(): void;
-  /** Return to the state shown before the current segment. */
+  /** Return to the state shown before the current segment (never before the first act). */
   back(): void;
+  /** Jump instantly to a cursor (events before it applied, nothing after) and wait there. */
+  seek(cursor: number): void;
   /** Append a live event. */
   push(ev: RunEvent): void;
   state(): RunState;
@@ -77,11 +79,25 @@ export function createPlayer(o: PlayerOptions): Player {
       stop();
       let target = segment;
       if (cursor === boundaries[segment]) target = segment - 1;
-      if (target < 0) { waiting = true; return; }
+      if (target < 1) { waiting = true; return; } // segment 0 is the blank state before the first act
       segment = target;
       cursor = boundaries[target] ?? 0;
       state = initialRunState;
       for (let i = 0; i < cursor; i++) state = reduceRun(state, queue[i]);
+      waiting = true;
+      o.onState(state);
+      o.onSegment(segment);
+    },
+    seek(target) {
+      stop();
+      cursor = Math.max(0, Math.min(target, queue.length));
+      state = initialRunState;
+      segment = 0;
+      boundaries.length = 1;
+      for (let i = 0; i < cursor; i++) {
+        state = reduceRun(state, queue[i]);
+        if (queue[i].type === "pause") { segment++; boundaries[segment] = i + 1; }
+      }
       waiting = true;
       o.onState(state);
       o.onSegment(segment);

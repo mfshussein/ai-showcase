@@ -6,6 +6,7 @@ import type { DemoManifest } from "@/demos/types";
 import type { GoldenRun } from "@/lib/events";
 import { actsInRun } from "@/lib/run-state";
 import { useStagePlayer } from "@/lib/use-stage-player";
+import { stageKeyAction } from "@/lib/stage-keys";
 import { Brand } from "@/components/brand";
 import { ActStrip } from "./act-strip";
 import { PanelHost } from "./panel-host";
@@ -17,20 +18,25 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
   const router = useRouter();
   const [evidence, setEvidence] = useState(false);
   const acts = actsInRun(golden.events);
-  const { state, segment, atEnd, mode, liveError, next, back, startLive, restartReplay } = useStagePlayer(manifest.slug, golden);
+  const { state, segment, atEnd, mode, liveError, next, back, startLive, stopLive } = useStagePlayer(manifest.slug, golden);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === " " || e.key === "ArrowRight" || e.key === "Enter") { e.preventDefault(); next(); }
-      else if (e.key === "ArrowLeft") { e.preventDefault(); back(); }
-      else if (e.key === "e" || e.key === "E") setEvidence((v) => !v);
-      else if ((e.key === "l" || e.key === "L") && presenter) { if (mode === "live") restartReplay(); else startLive(); }
-      else if (e.key === "Escape") { if (evidence) setEvidence(false); else router.push("/"); }
+      const action = stageKeyAction({
+        key: e.key, metaKey: e.metaKey, ctrlKey: e.ctrlKey, altKey: e.altKey, repeat: e.repeat,
+        targetTag: e.target instanceof Element ? e.target.tagName : "BODY",
+      });
+      if (!action) return;
+      e.preventDefault();
+      if (action === "next") next();
+      else if (action === "back") back();
+      else if (action === "evidence") setEvidence((v) => !v);
+      else if (action === "live") { if (!presenter) return; if (mode === "live") stopLive(); else startLive(); }
+      else if (action === "escape") { if (evidence) setEvidence(false); else router.push("/"); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, back, evidence, router, presenter, mode, startLive, restartReplay]);
+  }, [next, back, evidence, router, presenter, mode, startLive, stopLive]);
 
   const actIndex = Math.max(0, acts.findIndex((a) => a.act === state.act));
 
@@ -48,10 +54,10 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
             </span>
             {presenter && (
               mode === "live"
-                ? <button type="button" onClick={restartReplay} className="rounded-md border border-line px-3 py-1 hover:border-fg">Stop live</button>
-                : <button type="button" onClick={startLive} className="rounded-md border border-line px-3 py-1 hover:border-fg">Run live</button>
+                ? <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={stopLive} className="rounded-md border border-line px-3 py-1 hover:border-fg">Stop live</button>
+                : <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={startLive} className="rounded-md border border-line px-3 py-1 hover:border-fg">Run live</button>
             )}
-            <button type="button" onClick={() => setEvidence((v) => !v)} className="rounded-md border border-line px-3 py-1 hover:border-fg">
+            <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => setEvidence((v) => !v)} className="rounded-md border border-line px-3 py-1 hover:border-fg">
               Evidence{state.controls.length ? ` (${state.controls.length})` : ""}
             </button>
             {presenter && <span className="text-muted">Presenter</span>}
@@ -85,8 +91,8 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <p className="text-sm text-muted">Act {actIndex + 1} of {acts.length}. Space continues, arrow keys move, E opens evidence.</p>
           <div className="flex gap-2">
-            <button type="button" onClick={back} disabled={segment === 0 && state.act <= 1} className="rounded-md border border-line px-4 py-2 disabled:opacity-40 hover:border-fg">Back</button>
-            <button type="button" onClick={next} disabled={atEnd} className="rounded-md bg-fg px-5 py-2 font-semibold text-white disabled:opacity-40 hover:bg-black">Next</button>
+            <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={back} disabled={segment <= 1} className="rounded-md border border-line px-4 py-2 disabled:opacity-40 hover:border-fg">Back</button>
+            <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={next} disabled={atEnd} className="rounded-md bg-fg px-5 py-2 font-semibold text-white disabled:opacity-40 hover:bg-black">Next</button>
           </div>
         </div>
       </footer>

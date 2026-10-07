@@ -37,3 +37,36 @@ for (const demo of ready) {
     expect(errors, errors.join("\n")).toEqual([]);
   });
 }
+
+test("clicking Next with the mouse and then pressing Space advances exactly one beat", async ({ page }) => {
+  test.skip(ready.length === 0, "needs a recorded case");
+  await unlock(page);
+  await page.goto(`/demo/${ready[0].slug}`);
+  await page.waitForTimeout(500);
+  const actLabel = () => page.locator("footer p").innerText();
+  const before = await actLabel();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await page.waitForTimeout(1500);
+  const afterClick = await actLabel();
+  await page.keyboard.press("Space");
+  await page.waitForTimeout(1500);
+  const afterSpace = await actLabel();
+  // Act 1 -> click reaches act 2 -> Space reaches act 3 (never act 4).
+  expect(before).toContain("Act 1 of");
+  expect(afterClick).toContain("Act 2 of");
+  expect(afterSpace).toContain("Act 3 of");
+});
+
+test("Cmd+L does not start a live run or move the stage", async ({ page }) => {
+  test.skip(ready.length === 0, "needs a recorded case");
+  await page.goto("/unlock?next=%2F");
+  await page.fill("#password", "presenter-test");
+  await page.click("button[type=submit]");
+  await page.goto(`/demo/${ready[0].slug}`);
+  await page.waitForTimeout(500);
+  await page.keyboard.press("Meta+l");
+  await page.keyboard.press("Meta+ArrowRight");
+  await page.waitForTimeout(500);
+  await expect(page.getByText("REPLAY", { exact: true })).toBeVisible();
+  await expect(page.locator("footer p")).toContainText("Act 1 of");
+});

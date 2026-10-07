@@ -60,17 +60,34 @@ describe("createPlayer", () => {
     expect(p.state().panels.length).toBe(0);
     expect(p.state().act).toBe(1);
     expect(p.segment()).toBe(1);
-    p.back();
-    expect(p.state().act).toBe(0);
-    expect(p.segment()).toBe(0);
-    p.back();
-    expect(p.segment()).toBe(0);
+    p.back(); // floor: the blank state before the first act is never shown
+    expect(p.state().act).toBe(1);
+    expect(p.segment()).toBe(1);
   });
   it("reports state changes through onState", () => {
     const seen: number[] = [];
     const p = createPlayer({ events, speed: 1, maxGapMs: 0, onState: (s) => seen.push(s.act), onSegment: noop });
     p.next();
     expect(seen).toEqual([0, 1, 1]);
+  });
+  it("seek() jumps to a cursor instantly and leaves the player waiting there", () => {
+    const p = createPlayer({ events, speed: 1, maxGapMs: 0, onState: noop, onSegment: noop });
+    p.seek(6); // index of act.start 2: everything before is applied, nothing after
+    expect(p.state().act).toBe(1);
+    expect(p.state().panels[0].props.text).toBe("xy");
+    expect(p.playing()).toBe(false);
+    expect(p.segment()).toBe(2);
+    p.next();
+    expect(p.state().act).toBe(2);
+  });
+  it("back() never rewinds to the blank state before the first act", () => {
+    const p = createPlayer({ events, speed: 1, maxGapMs: 0, onState: noop, onSegment: noop });
+    p.next(); p.next();
+    p.back();
+    expect(p.state().act).toBe(1);
+    p.back();
+    expect(p.state().act).toBe(1);
+    expect(p.segment()).toBe(1);
   });
   it("accepts pushed live events and waits at a pause", () => {
     const p = createPlayer({ events: [], speed: 1, maxGapMs: 0, onState: noop, onSegment: noop, live: true });

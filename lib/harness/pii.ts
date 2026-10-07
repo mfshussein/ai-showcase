@@ -7,7 +7,7 @@ const toLatinDigits = (s: string) => s.replace(/[٠-٩]/g, (d) => String(AR_DIGI
 
 /** Order matters: longer, more specific patterns first so their digits are not re-matched as phones or IDs. */
 const PATTERNS: { kind: PiiKind; re: RegExp }[] = [
-  { kind: "EMAIL", re: /[\w.+-]+@[\w-]+\.[\w.-]+/g },
+  { kind: "EMAIL", re: /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g },
   { kind: "IBAN", re: /\bQA\d{2}[A-Z]{4}[A-Z0-9]{21}\b/g },
   { kind: "PHONE", re: /(?:\+974[\s-]?)?\b[3567]\d{3}[\s-]?\d{4}\b/g },
   { kind: "QID", re: /\b[23]\d{10}\b/g },

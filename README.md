@@ -36,8 +36,10 @@ npm run dev                  # http://localhost:3000
 
 1. Create `demos/<slug>/` with `manifest.ts` (title, hook, lesson, tags, acts, takeaway), `run.ts` (an async generator that yields run events; see `lib/events.ts` for the contract and `components/panels/index.tsx` for panel props), and `fixtures/`.
 2. Register the manifest in `demos/registry.ts` and the runner in `demos/runners.ts`.
-3. Record it: `npm run record <slug>`. Read the printed transcript; re-record until the gasp and the verdict land.
+3. Add the runner to the static import map at the top of `scripts/record.mts`, then record it: `npm run record <slug>`. Read the printed transcript; re-record until the gasp and the verdict land.
 4. Add the golden to `demos/goldens.ts`, set the manifest `status` to `ready`, run `npm test` and `npm run test:e2e`.
+
+The two recorded cases were made with Qwen 3.8 Max and Qwen 3.8 Flash through OpenRouter. The Anthropic code path compiles and is unit-tested against the SDK types but has not been exercised against the live API yet; probe it from Preflight before relying on it.
 
 Fixtures are synthetic and fictional. Real incidents are cited only as public lessons, using the wording checked for the deck.
 

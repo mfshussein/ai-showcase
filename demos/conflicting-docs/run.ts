@@ -101,31 +101,51 @@ export const run: DemoRunner = async function* (ctx) {
       prompt: `Clause ${p.id} ${p.a!.heading}\n\nVersion A (${h1.version}, effective ${h1.effectiveDate}):\n${p.a!.text}\n\nVersion B (${h2.version}, effective ${h2.effectiveDate}):\n${p.b!.text}`,
     });
     rows[0].step = `clause ${p.id}: ${r.contradicts ? "contradiction" : "wording only"}`;
-    rows[2].step = rows[0].step;
+    rows[2].step = `version ${h2.version}: newest, effective ${h2.effectiveDate}`;
     yield { type: "panel.patch", id: "gate", patch: { rows: snapshot(rows) } };
-    if (r.contradicts && p.id === "4.2") { conflict = { id: p.id, heading: p.a!.heading, a: r.aQuote, b: r.bQuote, explanation: r.explanation }; break; }
-    if (r.contradicts && !conflict) conflict = { id: p.id, heading: p.a!.heading, a: r.aQuote, b: r.bQuote, explanation: r.explanation };
+    if (r.contradicts && (p.id === "4.2" || !conflict)) conflict = { id: p.id, heading: p.a!.heading, a: r.aQuote, b: r.bQuote, explanation: r.explanation };
+    if (conflict && p.id === "4.2") break;
   }
-  const pair = differing.find((p) => p.id === (conflict?.id ?? "4.2"))!;
-  rows[0].status = { text: "CONFLICT, superseded", tone: "quarantine" };
+  const pair = differing.find((p) => p.id === (conflict?.id ?? "4.2")) ?? differing[0];
   rows[2].status = { text: "INGESTED, current", tone: "ok" };
-  yield { type: "panel.patch", id: "gate", patch: { rows: snapshot(rows) } };
-  yield {
-    type: "panel", id: "diff", kind: "diff", slot: "main",
-    props: { title: `Clause ${pair.id} ${pair.a!.heading}: the two versions contradict`, leftTitle: `Version ${h1.version}, effective ${h1.effectiveDate}`, rightTitle: `Version ${h2.version}, effective ${h2.effectiveDate}`, left: pair.a!.text, right: pair.b!.text },
-  };
-  yield {
-    type: "verdict", id: "verdict", status: "QUARANTINED", tone: "quarantine",
-    headline: `Version ${h1.version} quarantined and its owner notified. Only version ${h2.version} is indexed.`,
-    reason: conflict?.explanation ?? "The two versions give opposite answers on retroactive refunds.",
-    evidence: [
-      { label: "Clause", value: `${pair.id} ${pair.a!.heading}` },
-      { label: "Owner", value: h1.owner || "Customer Relations" },
-      { label: "v1 says", value: conflict?.a ?? pair.a!.text },
-      { label: "v2 says", value: conflict?.b ?? pair.b!.text },
-    ],
-  };
-  yield { type: "control.event", detector: "conflict.clause", policyId: "DATA-02", action: "quarantine", recordId: "CE-1002", detail: `clause ${pair.id}, version ${h1.version} vs ${h2.version}` };
+  if (conflict) {
+    rows[0].status = { text: "CONFLICT, superseded", tone: "quarantine" };
+    yield { type: "panel.patch", id: "gate", patch: { rows: snapshot(rows) } };
+    yield {
+      type: "panel", id: "diff", kind: "diff", slot: "main",
+      props: {
+        title: `Clause ${pair.id} ${pair.a!.heading}: the two versions contradict`,
+        leftTitle: `Version ${h1.version}, effective ${h1.effectiveDate}`, rightTitle: `Version ${h2.version}, effective ${h2.effectiveDate}`,
+        left: pair.a!.text, right: pair.b!.text, leftHighlight: conflict.a, rightHighlight: conflict.b,
+      },
+    };
+    yield {
+      type: "verdict", id: "verdict", status: "QUARANTINED", tone: "quarantine",
+      headline: `Version ${h1.version} quarantined and its owner notified. Only version ${h2.version} is indexed.`,
+      reason: conflict.explanation,
+      evidence: [
+        { label: "Clause", value: `${pair.id} ${pair.a!.heading}` },
+        { label: "Owner", value: h1.owner || "Customer Relations" },
+        { label: "v1 says", value: conflict.a },
+        { label: "v2 says", value: conflict.b },
+      ],
+    };
+  } else {
+    // Honest path: the versions differ but the classifier did not confirm a contradiction. Still nothing stale gets indexed.
+    rows[0].status = { text: "SUPERSEDED, held", tone: "warn" };
+    yield { type: "panel.patch", id: "gate", patch: { rows: snapshot(rows) } };
+    yield {
+      type: "panel", id: "diff", kind: "diff", slot: "main",
+      props: { title: `Clause ${pair.id} ${pair.a!.heading}: the two versions differ`, leftTitle: `Version ${h1.version}, effective ${h1.effectiveDate}`, rightTitle: `Version ${h2.version}, effective ${h2.effectiveDate}`, left: pair.a!.text, right: pair.b!.text },
+    };
+    yield {
+      type: "verdict", id: "verdict", status: "HELD FOR REVIEW", tone: "warn",
+      headline: `Version ${h1.version} is superseded and held for its owner to review. Only version ${h2.version} is indexed.`,
+      reason: `${differing.length} clauses differ between the versions. The classifier did not confirm a direct contradiction, so the older version is held rather than quarantined, and the owner decides.`,
+      evidence: [{ label: "Clauses", value: differing.map((d) => d.id).join(", ") }, { label: "Owner", value: h1.owner || "Customer Relations" }],
+    };
+  }
+  yield { type: "control.event", detector: "conflict.clause", policyId: "DATA-02", action: conflict ? "quarantine" : "hold", recordId: "CE-1002", detail: `clause ${pair.id}, version ${h1.version} vs ${h2.version}` };
   yield { type: "pause" };
 
   const idx2 = buildIndex(chunk(v2.text, 60, v2.name));
@@ -151,7 +171,7 @@ export const run: DemoRunner = async function* (ctx) {
       columns: [{ key: "file", label: "File" }, { key: "state", label: "State" }, { key: "why", label: "Why" }],
       rows: [
         { file: v2.name, state: { text: "CURRENT", tone: "ok" }, why: `Effective ${h2.effectiveDate}, newest version` },
-        { file: v1.name, state: { text: "SUPERSEDED, QUARANTINED", tone: "quarantine" }, why: `Clause ${pair.id} contradicts the current version` },
+        { file: v1.name, state: conflict ? { text: "SUPERSEDED, QUARANTINED", tone: "quarantine" } : { text: "SUPERSEDED, HELD", tone: "warn" }, why: conflict ? `Clause ${pair.id} contradicts the current version` : `Clauses ${differing.map((d) => d.id).join(", ")} differ; owner to review` },
         { file: copy.name, state: { text: "DROPPED", tone: "warn" }, why: `Duplicate of version ${h1.version}, similarity ${dup.score}` },
       ],
     },

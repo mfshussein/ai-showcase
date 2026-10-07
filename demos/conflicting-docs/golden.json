@@ -1,6 +1,6 @@
 {
   "demo": "conflicting-docs",
-  "recordedAt": "2026-10-07T14:03:35.628Z",
+  "recordedAt": "2026-10-07T14:27:05.393Z",
   "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
   "events": [
     {
@@ -8,18 +8,18 @@
       "t": 0,
       "demo": "conflicting-docs",
       "mode": "live",
-      "runId": "35eb13e0-0aff-4a14-ab78-ecdb24f07993"
+      "runId": "df3674f4-3d26-4f63-88d0-fa4a597e7895"
     },
     {
       "type": "act.start",
-      "t": 1,
+      "t": 3,
       "act": 1,
       "title": "The claim",
       "keep": []
     },
     {
       "type": "panel",
-      "t": 2,
+      "t": 4,
       "id": "claim",
       "kind": "markdown",
       "slot": "main",
@@ -31,18 +31,18 @@
     },
     {
       "type": "pause",
-      "t": 3
+      "t": 5
     },
     {
       "type": "act.start",
-      "t": 3,
+      "t": 6,
       "act": 2,
       "title": "Three files",
       "keep": []
     },
     {
       "type": "panel",
-      "t": 3,
+      "t": 6,
       "id": "files",
       "kind": "files",
       "slot": "left",
@@ -69,7 +69,7 @@
     },
     {
       "type": "panel",
-      "t": 3,
+      "t": 6,
       "id": "doc",
       "kind": "document",
       "slot": "right",
@@ -81,11 +81,11 @@
     },
     {
       "type": "pause",
-      "t": 3
+      "t": 6
     },
     {
       "type": "act.start",
-      "t": 3,
+      "t": 6,
       "act": 3,
       "title": "Without the harness",
       "subtitle": "A typical chatbot: find the best-matching passages, answer from them.",
@@ -95,7 +95,7 @@
     },
     {
       "type": "panel",
-      "t": 4,
+      "t": 10,
       "id": "retrieval",
       "kind": "table",
       "slot": "right",
@@ -131,11 +131,11 @@
     },
     {
       "type": "pause",
-      "t": 4
+      "t": 10
     },
     {
       "type": "panel",
-      "t": 4,
+      "t": 10,
       "id": "chat1",
       "kind": "chat",
       "slot": "main",
@@ -152,127 +152,139 @@
     },
     {
       "type": "text.delta",
-      "t": 4958,
+      "t": 4909,
       "id": "chat1",
-      "delta": "I am sorry"
+      "delta": "I'm very"
     },
     {
       "type": "text.delta",
-      "t": 5113,
+      "t": 5364,
       "id": "chat1",
-      "delta": " for your loss."
+      "delta": " sorry for your loss"
     },
     {
       "type": "text.delta",
-      "t": 5183,
+      "t": 5364,
       "id": "chat1",
-      "delta": " Yes, you can"
+      "delta": ". Yes, you"
     },
     {
       "type": "text.delta",
-      "t": 5253,
+      "t": 5364,
       "id": "chat1",
-      "delta": " still claim the bere"
+      "delta": " can still"
     },
     {
       "type": "text.delta",
-      "t": 5401,
+      "t": 5447,
       "id": "chat1",
-      "delta": "avement refund even"
+      "delta": " claim the bereav"
     },
     {
       "type": "text.delta",
-      "t": 5609,
+      "t": 5448,
       "id": "chat1",
-      "delta": " though you have already"
+      "delta": "ement refund"
     },
     {
       "type": "text.delta",
-      "t": 5612,
+      "t": 5590,
       "id": "chat1",
-      "delta": " travelled"
+      "delta": " even after you have"
     },
     {
       "type": "text.delta",
-      "t": 5679,
+      "t": 5592,
       "id": "chat1",
-      "delta": ", provided your request"
+      "delta": " travelled. You"
     },
     {
       "type": "text.delta",
-      "t": 5887,
+      "t": 5661,
       "id": "chat1",
-      "delta": " is submitted within"
+      "delta": " have 90"
     },
     {
       "type": "text.delta",
-      "t": 5888,
+      "t": 5909,
       "id": "chat1",
-      "delta": " 90 days"
+      "delta": " days"
     },
     {
       "type": "text.delta",
-      "t": 5888,
+      "t": 5909,
       "id": "chat1",
-      "delta": " of the ticket issue"
+      "delta": " from the ticket issue"
     },
     {
       "type": "text.delta",
-      "t": 5888,
+      "t": 5909,
       "id": "chat1",
-      "delta": " date. The difference"
+      "delta": " date to submit your"
     },
     {
       "type": "text.delta",
-      "t": 6178,
+      "t": 5917,
       "id": "chat1",
-      "delta": " between the fare you"
+      "delta": " request, and the"
     },
     {
       "type": "text.delta",
-      "t": 6179,
+      "t": 6311,
       "id": "chat1",
-      "delta": " paid and the bere"
+      "delta": " difference between"
     },
     {
       "type": "text.delta",
-      "t": 6179,
+      "t": 6312,
       "id": "chat1",
-      "delta": "avement fare will"
+      "delta": " the fare you paid"
     },
     {
       "type": "text.delta",
-      "t": 6180,
+      "t": 6312,
       "id": "chat1",
-      "delta": " be refunded to your"
+      "delta": " and the bereav"
     },
     {
       "type": "text.delta",
-      "t": 6464,
+      "t": 6313,
       "id": "chat1",
-      "delta": " original form of payment"
+      "delta": "ement fare will be"
     },
     {
       "type": "text.delta",
-      "t": 6465,
+      "t": 6350,
       "id": "chat1",
-      "delta": ".\n\nTo submit"
+      "delta": " refunded to your original"
     },
     {
       "type": "text.delta",
-      "t": 6467,
+      "t": 6350,
       "id": "chat1",
-      "delta": " your request, please"
+      "delta": " form of payment."
     },
     {
       "type": "text.delta",
-      "t": 6468,
+      "t": 6544,
       "id": "chat1",
-      "delta": " contact Customer Relations at"
+      "delta": "\n\nTo proceed,"
     },
     {
       "type": "text.delta",
-      "t": 6702,
+      "t": 6545,
+      "id": "chat1",
+      "delta": " please contact our"
+    },
+    {
+      "type": "text.delta",
+      "t": 6545,
+      "id": "chat1",
+      "delta": " Customer Relations team at"
+    },
+    {
+      "type": "text.delta",
+      "t": 6545,
       "id": "chat1",
       "delta": " care@marsa"
     },
@@ -284,13 +296,13 @@
     },
     {
       "type": "text.delta",
-      "t": 6703,
+      "t": 6702,
       "id": "chat1",
       "delta": " Marsa app."
     },
     {
       "type": "panel",
-      "t": 6717,
+      "t": 6716,
       "id": "gasp",
       "kind": "markdown",
       "slot": "main",
@@ -302,11 +314,11 @@
     },
     {
       "type": "pause",
-      "t": 6717
+      "t": 6716
     },
     {
       "type": "act.start",
-      "t": 6717,
+      "t": 6716,
       "act": 4,
       "title": "With the harness",
       "subtitle": "Nothing is indexed until it passes the ingestion gate.",
@@ -316,7 +328,7 @@
     },
     {
       "type": "panel",
-      "t": 6718,
+      "t": 6717,
       "id": "gate",
       "kind": "table",
       "slot": "main",
@@ -366,7 +378,7 @@
     },
     {
       "type": "panel.patch",
-      "t": 6718,
+      "t": 6717,
       "id": "gate",
       "patch": {
         "rows": [
@@ -399,7 +411,7 @@
     },
     {
       "type": "panel.patch",
-      "t": 6719,
+      "t": 6717,
       "id": "gate",
       "patch": {
         "rows": [
@@ -432,7 +444,7 @@
     },
     {
       "type": "control.event",
-      "t": 6720,
+      "t": 6717,
       "detector": "dedupe.shingles",
       "policyId": "DATA-01",
       "score": 0.965,
@@ -442,7 +454,7 @@
     },
     {
       "type": "panel.patch",
-      "t": 6721,
+      "t": 6718,
       "id": "gate",
       "patch": {
         "rows": [
@@ -475,7 +487,7 @@
     },
     {
       "type": "panel.patch",
-      "t": 10904,
+      "t": 17122,
       "id": "gate",
       "patch": {
         "rows": [
@@ -497,7 +509,7 @@
           },
           {
             "file": "bereavement-policy-v2.md",
-            "step": "clause 4.1: contradiction",
+            "step": "version 2.0: newest, effective 2024-06-01",
             "status": {
               "text": "PENDING",
               "tone": "info"
@@ -508,7 +520,7 @@
     },
     {
       "type": "panel.patch",
-      "t": 16418,
+      "t": 23488,
       "id": "gate",
       "patch": {
         "rows": [
@@ -530,7 +542,7 @@
           },
           {
             "file": "bereavement-policy-v2.md",
-            "step": "clause 4.2: contradiction",
+            "step": "version 2.0: newest, effective 2024-06-01",
             "status": {
               "text": "PENDING",
               "tone": "info"
@@ -541,7 +553,7 @@
     },
     {
       "type": "panel.patch",
-      "t": 16420,
+      "t": 23488,
       "id": "gate",
       "patch": {
         "rows": [
@@ -563,7 +575,7 @@
           },
           {
             "file": "bereavement-policy-v2.md",
-            "step": "clause 4.2: contradiction",
+            "step": "version 2.0: newest, effective 2024-06-01",
             "status": {
               "text": "INGESTED, current",
               "tone": "ok"
@@ -574,7 +586,7 @@
     },
     {
       "type": "panel",
-      "t": 16420,
+      "t": 23488,
       "id": "diff",
       "kind": "diff",
       "slot": "main",
@@ -583,17 +595,19 @@
         "leftTitle": "Version 1.0, effective 2022-03-01",
         "rightTitle": "Version 2.0, effective 2024-06-01",
         "left": "A customer who travels before applying may submit a request for a bereavement refund within 90 days of the ticket issue date, and the difference between the fare paid and the bereavement fare will be refunded to the original form of payment.",
-        "right": "Bereavement fares must be requested before travel. Refund requests submitted after travel has taken place will not be approved. Customers who are unable to apply before travel should contact Customer Relations before departure so that a note can be placed on the booking."
+        "right": "Bereavement fares must be requested before travel. Refund requests submitted after travel has taken place will not be approved. Customers who are unable to apply before travel should contact Customer Relations before departure so that a note can be placed on the booking.",
+        "leftHighlight": "A customer who travels before applying may submit a request for a bereavement refund within 90 days of the ticket issue date",
+        "rightHighlight": "Bereavement fares must be requested before travel. Refund requests submitted after travel has taken place will not be approved."
       }
     },
     {
       "type": "verdict",
-      "t": 16421,
+      "t": 23488,
       "id": "verdict",
       "status": "QUARANTINED",
       "tone": "quarantine",
       "headline": "Version 1.0 quarantined and its owner notified. Only version 2.0 is indexed.",
-      "reason": "Version A permits a customer to submit a bereavement refund request after travel has occurred within 90 days of the ticket issue date. Version B reverses that rule by requiring bereavement fares to be requested before travel and stating that requests submitted after travel will not be approved.",
+      "reason": "Version A allows a bereavement refund request after travel within 90 days of ticket issue, while Version B reverses that rule by requiring requests before travel and denying refund requests submitted after travel has taken place.",
       "evidence": [
         {
           "label": "Clause",
@@ -615,7 +629,7 @@
     },
     {
       "type": "control.event",
-      "t": 16425,
+      "t": 23489,
       "detector": "conflict.clause",
       "policyId": "DATA-02",
       "action": "quarantine",
@@ -624,11 +638,11 @@
     },
     {
       "type": "pause",
-      "t": 16425
+      "t": 23489
     },
     {
       "type": "panel",
-      "t": 16425,
+      "t": 23489,
       "id": "chat2",
       "kind": "chat",
       "slot": "main",
@@ -649,324 +663,300 @@
     },
     {
       "type": "text.delta",
-      "t": 20701,
+      "t": 28055,
       "id": "chat2",
-      "delta": "I am very"
+      "delta": "I am sorry"
     },
     {
       "type": "text.delta",
-      "t": 20761,
+      "t": 28403,
       "id": "chat2",
-      "delta": " sorry for the"
+      "delta": " for your loss."
     },
     {
       "type": "text.delta",
-      "t": 20898,
+      "t": 28403,
       "id": "chat2",
-      "delta": " loss of your father"
+      "delta": " I understand"
     },
     {
       "type": "text.delta",
-      "t": 21035,
+      "t": 28561,
+      "id": "chat2",
+      "delta": " this was a difficult"
+    },
+    {
+      "type": "text.delta",
+      "t": 28561,
+      "id": "chat2",
+      "delta": " time,"
+    },
+    {
+      "type": "text.delta",
+      "t": 28683,
+      "id": "chat2",
+      "delta": " and I appreciate you"
+    },
+    {
+      "type": "text.delta",
+      "t": 28685,
+      "id": "chat2",
+      "delta": " reaching out"
+    },
+    {
+      "type": "text.delta",
+      "t": 29003,
       "id": "chat2",
       "delta": ".\n\nUnfortunately,"
     },
     {
       "type": "text.delta",
-      "t": 21037,
+      "t": 29004,
       "id": "chat2",
-      "delta": " I must"
+      "delta": " under clause"
     },
     {
       "type": "text.delta",
-      "t": 21175,
-      "id": "chat2",
-      "delta": " let you know that"
-    },
-    {
-      "type": "text.delta",
-      "t": 21176,
-      "id": "chat2",
-      "delta": " the"
-    },
-    {
-      "type": "text.delta",
-      "t": 21378,
-      "id": "chat2",
-      "delta": " bereavement policy"
-    },
-    {
-      "type": "text.delta",
-      "t": 21379,
-      "id": "chat2",
-      "delta": " does"
-    },
-    {
-      "type": "text.delta",
-      "t": 21581,
-      "id": "chat2",
-      "delta": " not allow for a"
-    },
-    {
-      "type": "text.delta",
-      "t": 21581,
-      "id": "chat2",
-      "delta": " refund in"
-    },
-    {
-      "type": "text.delta",
-      "t": 21581,
-      "id": "chat2",
-      "delta": " this situation. Clause"
-    },
-    {
-      "type": "text.delta",
-      "t": 21581,
+      "t": 29004,
       "id": "chat2",
       "delta": " 4.2"
     },
     {
       "type": "text.delta",
-      "t": 21895,
+      "t": 29033,
       "id": "chat2",
-      "delta": " states that bereav"
+      "delta": " of our bereav"
     },
     {
       "type": "text.delta",
-      "t": 21895,
+      "t": 29033,
       "id": "chat2",
-      "delta": "ement fares must be"
+      "delta": "ement policy,"
     },
     {
       "type": "text.delta",
-      "t": 21895,
+      "t": 29103,
       "id": "chat2",
-      "delta": " requested before travel,"
+      "delta": " bereavement fares"
     },
     {
       "type": "text.delta",
-      "t": 21919,
+      "t": 29104,
       "id": "chat2",
-      "delta": " and that refund requests"
+      "delta": " must"
     },
     {
       "type": "text.delta",
-      "t": 22167,
+      "t": 29216,
       "id": "chat2",
-      "delta": " submitted after"
+      "delta": " be requested before travel"
     },
     {
       "type": "text.delta",
-      "t": 22167,
+      "t": 29242,
       "id": "chat2",
-      "delta": " travel has taken place"
+      "delta": ", and refund requests"
     },
     {
       "type": "text.delta",
-      "t": 22168,
+      "t": 29313,
       "id": "chat2",
-      "delta": " will not be approved"
+      "delta": " submitted after travel has"
     },
     {
       "type": "text.delta",
-      "t": 22208,
+      "t": 29378,
       "id": "chat2",
-      "delta": ".\n\nThe policy"
+      "delta": " taken place will not"
     },
     {
       "type": "text.delta",
-      "t": 22336,
+      "t": 29518,
       "id": "chat2",
-      "delta": " does note that customers"
+      "delta": " be approved. The"
     },
     {
       "type": "text.delta",
-      "t": 22492,
+      "t": 29588,
       "id": "chat2",
-      "delta": " who"
+      "delta": " policy also notes that"
     },
     {
       "type": "text.delta",
-      "t": 22492,
+      "t": 29588,
+      "id": "chat2",
+      "delta": " customers who"
+    },
+    {
+      "type": "text.delta",
+      "t": 29667,
       "id": "chat2",
       "delta": " are unable to apply"
     },
     {
       "type": "text.delta",
-      "t": 22494,
+      "t": 29731,
       "id": "chat2",
       "delta": " before travel should contact"
     },
     {
       "type": "text.delta",
-      "t": 22494,
+      "t": 29805,
       "id": "chat2",
       "delta": " Customer Relations before departure"
     },
     {
       "type": "text.delta",
-      "t": 22801,
+      "t": 29871,
       "id": "chat2",
       "delta": " so that a note"
     },
     {
       "type": "text.delta",
-      "t": 22802,
+      "t": 29939,
       "id": "chat2",
       "delta": " can be placed on"
     },
     {
       "type": "text.delta",
-      "t": 22802,
+      "t": 30080,
       "id": "chat2",
-      "delta": " the booking (Clause"
+      "delta": " the booking.\n\n"
     },
     {
       "type": "text.delta",
-      "t": 22826,
+      "t": 30151,
       "id": "chat2",
-      "delta": " 5). It"
+      "delta": "Since your travel has"
     },
     {
       "type": "text.delta",
-      "t": 22896,
+      "t": 30153,
       "id": "chat2",
-      "delta": " appears that step was"
+      "delta": " already taken"
     },
     {
       "type": "text.delta",
-      "t": 22896,
+      "t": 30467,
       "id": "chat2",
-      "delta": " not taken in"
+      "delta": " place, I am"
     },
     {
       "type": "text.delta",
-      "t": 23234,
+      "t": 30467,
       "id": "chat2",
-      "delta": " this case.\n\n"
+      "delta": " not able to approve"
     },
     {
       "type": "text.delta",
-      "t": 23234,
+      "t": 30467,
       "id": "chat2",
-      "delta": "That said, I"
+      "delta": " a refund under the"
     },
     {
       "type": "text.delta",
-      "t": 23241,
+      "t": 30498,
       "id": "chat2",
-      "delta": " understand this was a"
+      "delta": " current policy. However"
     },
     {
       "type": "text.delta",
-      "t": 23242,
+      "t": 30640,
       "id": "chat2",
-      "delta": " difficult and"
+      "delta": ", if you feel"
     },
     {
       "type": "text.delta",
-      "t": 23508,
+      "t": 30774,
       "id": "chat2",
-      "delta": " sudden situation. I"
+      "delta": " there are exceptional circumstances"
     },
     {
       "type": "text.delta",
-      "t": 23509,
+      "t": 30780,
       "id": "chat2",
-      "delta": " would"
+      "delta": ","
     },
     {
       "type": "text.delta",
-      "t": 23509,
+      "t": 30914,
       "id": "chat2",
-      "delta": " be happy to raise"
+      "delta": " I can raise your"
     },
     {
       "type": "text.delta",
-      "t": 23509,
+      "t": 30992,
       "id": "chat2",
-      "delta": " your case with Customer"
+      "delta": " case with our Customer"
     },
     {
       "type": "text.delta",
-      "t": 23757,
+      "t": 30992,
       "id": "chat2",
-      "delta": " Relations so"
+      "delta": " Relations team for"
     },
     {
       "type": "text.delta",
-      "t": 23758,
+      "t": 31065,
       "id": "chat2",
-      "delta": " they can review it"
+      "delta": " further review. They"
     },
     {
       "type": "text.delta",
-      "t": 23773,
+      "t": 31136,
       "id": "chat2",
-      "delta": " directly. You can"
+      "delta": " can be reached at"
     },
     {
       "type": "text.delta",
-      "t": 23774,
+      "t": 31208,
       "id": "chat2",
-      "delta": " also"
+      "delta": " care@marsa"
     },
     {
       "type": "text.delta",
-      "t": 23845,
+      "t": 31311,
       "id": "chat2",
-      "delta": " reach them yourself at"
+      "delta": ".example or through the"
     },
     {
       "type": "text.delta",
-      "t": 23846,
+      "t": 31347,
       "id": "chat2",
-      "delta": " care@mars"
+      "delta": " Marsa app."
     },
     {
       "type": "text.delta",
-      "t": 24162,
+      "t": 31418,
       "id": "chat2",
-      "delta": "a.example or through"
+      "delta": "\n\nWould you like"
     },
     {
       "type": "text.delta",
-      "t": 24162,
+      "t": 31486,
       "id": "chat2",
-      "delta": " the Marsa app"
+      "delta": " me to help you"
     },
     {
       "type": "text.delta",
-      "t": 24163,
+      "t": 31506,
       "id": "chat2",
-      "delta": ".\n\nWould you"
-    },
-    {
-      "type": "text.delta",
-      "t": 24185,
-      "id": "chat2",
-      "delta": " like me to help"
-    },
-    {
-      "type": "text.delta",
-      "t": 24213,
-      "id": "chat2",
-      "delta": " with anything else?"
+      "delta": " with that?"
     },
     {
       "type": "pause",
-      "t": 24222
+      "t": 31530
     },
     {
       "type": "act.start",
-      "t": 24223,
+      "t": 31531,
       "act": 5,
       "title": "Proof",
       "keep": []
     },
     {
       "type": "panel",
-      "t": 24223,
+      "t": 31531,
       "id": "lifecycle",
       "kind": "table",
       "slot": "main",
@@ -1016,7 +1006,7 @@
     },
     {
       "type": "panel",
-      "t": 24224,
+      "t": 31531,
       "id": "takeaway",
       "kind": "markdown",
       "slot": "main",
@@ -1028,11 +1018,11 @@
     },
     {
       "type": "run.end",
-      "t": 24224,
+      "t": 31531,
       "usage": {
         "inputTokens": 1256,
-        "outputTokens": 1105,
-        "costUsd": 0.004938002
+        "outputTokens": 1343,
+        "costUsd": 0.0050553920000000006
       }
     }
   ]

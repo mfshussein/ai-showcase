@@ -38,6 +38,8 @@ export function reduceRun(state: RunState, ev: RunEvent): RunState {
       if (!p) return state;
       return upsert(state, p.id, p.kind, p.slot, { ...p.props, ...ev.patch });
     }
+    case "panel.remove":
+      return state.panels.some((p) => p.id === ev.id) ? { ...state, panels: state.panels.filter((p) => p.id !== ev.id) } : state;
     case "text.delta": {
       const p = state.panels.find((x) => x.id === ev.id);
       const text = ((p?.props.text as string | undefined) ?? "") + ev.delta;

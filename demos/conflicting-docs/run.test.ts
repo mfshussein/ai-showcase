@@ -27,3 +27,41 @@ describe("conflicting-docs preconditions", () => {
     expect(hits.every((h) => h.chunk.text.includes("90 days"))).toBe(true);
   });
 });
+
+import { run } from "./run";
+import type { Llm } from "@/lib/llm";
+import type { RunContext } from "../types";
+
+function fakeLlm(contradicts: boolean): Llm {
+  return {
+    label: "fake",
+    async text() { return "ok"; },
+    async *stream() { yield "answer"; },
+    async parse() { return { contradicts, topic: "t", aQuote: "a", bQuote: "b", explanation: "because" } as never; },
+    async vision() { return "img"; },
+    usage: () => ({ inputTokens: 0, outputTokens: 0, costUsd: 0 }),
+  };
+}
+
+async function runWith(llm: Llm) {
+  const ctx: RunContext = { mode: "record", llm, fixture: (n) => readFile(path.join(__dirname, "fixtures", n), "utf8"), fixtureBuffer: (n) => readFile(path.join(__dirname, "fixtures", n)) };
+  const out = [];
+  for await (const e of run(ctx)) out.push(e);
+  return out;
+}
+
+describe("conflicting-docs verdict follows the classifier", () => {
+  it("quarantines on a confirmed contradiction", async () => {
+    const events = await runWith(fakeLlm(true));
+    const v = events.find((e) => e.type === "verdict");
+    expect(v && v.type === "verdict" && v.status).toBe("QUARANTINED");
+  });
+  it("holds for owner review, honestly, when no contradiction is confirmed", async () => {
+    const events = await runWith(fakeLlm(false));
+    const v = events.find((e) => e.type === "verdict");
+    expect(v && v.type === "verdict" && v.status).toBe("HELD FOR REVIEW");
+    expect(v && v.type === "verdict" && v.tone).toBe("warn");
+    const gate = events.filter((e) => e.type === "panel.patch" && e.id === "gate").pop();
+    expect(JSON.stringify(gate)).toContain("wording only");
+  });
+});

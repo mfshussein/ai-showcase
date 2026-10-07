@@ -22,6 +22,7 @@ export const RunEvent = z.discriminatedUnion("type", [
   }),
   z.object({ type: z.literal("panel"), t, id: z.string(), kind: PanelKind, slot: Slot.default("main"), props }),
   z.object({ type: z.literal("panel.patch"), t, id: z.string(), patch: props }),
+  z.object({ type: z.literal("panel.remove"), t, id: z.string() }),
   z.object({ type: z.literal("text.delta"), t, id: z.string(), delta: z.string() }),
   z.object({
     type: z.literal("verdict"), t, id: z.string(), status: z.string(), tone: Tone, headline: z.string(),

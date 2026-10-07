@@ -1,7 +1,9 @@
+import { safeNext } from "@/lib/auth";
+
 export default async function UnlockPage({ searchParams }: PageProps<"/unlock">) {
   const sp = await searchParams;
   const error = sp.error === "1";
-  const next = typeof sp.next === "string" && sp.next.startsWith("/") ? sp.next : "/";
+  const next = safeNext(typeof sp.next === "string" ? sp.next : undefined);
   return (
     <main className="flex flex-1 items-center justify-center p-6">
       <form method="post" action="/api/unlock" className="w-full max-w-md rounded-md border border-line bg-card p-10">

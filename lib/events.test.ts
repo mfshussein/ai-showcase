@@ -9,6 +9,9 @@ describe("RunEvent", () => {
   it("rejects an unknown panel kind", () => {
     expect(() => RunEvent.parse({ type: "panel", t: 0, id: "a", kind: "hologram", props: {} })).toThrow();
   });
+  it("accepts a panel.remove event", () => {
+    expect(RunEvent.parse({ type: "panel.remove", t: 0, id: "v" }).type).toBe("panel.remove");
+  });
   it("rejects negative t", () => {
     expect(() => RunEvent.parse({ type: "pause", t: -1 })).toThrow();
   });

@@ -1,4 +1,4 @@
-import { signSession, COOKIE_NAME } from "@/lib/auth";
+import { signSession, COOKIE_NAME, safeNext } from "@/lib/auth";
 
 const THIRTY_DAYS_S = 30 * 24 * 3600;
 
@@ -21,7 +21,7 @@ function roleFor(password: string | undefined): "viewer" | "presenter" | null {
 
 export async function POST(req: Request) {
   const body = await readBody(req);
-  const next = body.next && body.next.startsWith("/") && !body.next.startsWith("//") ? body.next : "/";
+  const next = safeNext(body.next);
   const role = roleFor(body.password);
   if (!role) {
     return new Response(null, { status: 303, headers: { location: `/unlock?error=1&next=${encodeURIComponent(next)}` } });

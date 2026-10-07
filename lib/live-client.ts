@@ -41,3 +41,18 @@ export function fallbackCursor(golden: RunEvent[], live: RunEvent[]): number {
   const i = golden.findIndex((e) => e.type === "act.start" && e.act === last.act);
   return i === -1 ? 0 : i;
 }
+
+/** Re-yields events from `source`, failing if none arrives within `ms`. Protects the room from a hung model call. */
+export async function* withInactivityTimeout<T>(source: AsyncGenerator<T>, ms: number): AsyncGenerator<T> {
+  for (;;) {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const timeout = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`no event for ${ms} ms`)), ms); });
+    try {
+      const r = await Promise.race([source.next(), timeout]);
+      if (r.done) return;
+      yield r.value;
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+}

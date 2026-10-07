@@ -19,6 +19,11 @@ describe("maskPii", () => {
     const r = maskPii("QA58DOHB00001234567890ABCDEFG");
     expect(r.findings.map((f) => f.kind)).toEqual(["IBAN"]);
   });
+  it("does not swallow a sentence's full stop after an email", () => {
+    const r = maskPii("Write to fatima.k@example.com. Thanks.");
+    expect(r.masked).toBe("Write to [EMAIL]. Thanks.");
+    expect(r.findings[0].value).toBe("fatima.k@example.com");
+  });
   it("returns the text unchanged when nothing matches", () => {
     expect(maskPii("How many days of annual leave do I get?").masked).toBe("How many days of annual leave do I get?");
   });

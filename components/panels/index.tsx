@@ -20,7 +20,7 @@ export type PanelProps = { id: string; props: Record<string, unknown> };
  * markdown  { text, title?, tone?, size?: "display" }
  * document  { title, text, highlight?, lang? }
  * files     { title?, files: { name, size?, status?, tone?, meta? }[] }
- * diff      { title, leftTitle, rightTitle, left, right }
+ * diff      { title, leftTitle, rightTitle, left, right, leftHighlight?, rightHighlight? }
  * table     { title?, columns: {key,label}[], rows: Record<key, string|number|{text,tone}>[] }
  * chat      { title?, messages: {role,text,note?}[], text? (streaming reply) }
  * json      { title?, value, errors?: {path,message}[] }

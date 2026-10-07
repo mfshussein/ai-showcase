@@ -30,6 +30,13 @@ describe("reduceRun", () => {
     expect(s.panels[0].kind).toBe("verdict");
     expect(s.controls).toHaveLength(1);
   });
+  it("panel.remove drops a panel and ignores unknown ids", () => {
+    let s = reduceRun(initialRunState, ev({ type: "panel", id: "v", kind: "markdown", slot: "main", props: {} }));
+    s = reduceRun(s, ev({ type: "panel.remove", id: "nope" }));
+    expect(s.panels).toHaveLength(1);
+    s = reduceRun(s, ev({ type: "panel.remove", id: "v" }));
+    expect(s.panels).toHaveLength(0);
+  });
   it("run.end marks ended and keeps usage", () => {
     const s = reduceRun(initialRunState, ev({ type: "run.end", usage: { inputTokens: 1, outputTokens: 2, costUsd: 0.01 } }));
     expect(s.ended).toBe(true);

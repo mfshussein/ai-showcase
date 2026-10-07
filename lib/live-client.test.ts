@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { fallbackCursor, parseSseChunk } from "./live-client";
+import { fallbackCursor, parseSseChunk, withInactivityTimeout } from "./live-client";
+import { vi } from "vitest";
 import type { RunEvent } from "@/lib/events";
 
 const A = (act: number, t = 0): RunEvent => ({ type: "act.start", t, act, title: "", keep: [] });
@@ -21,5 +22,26 @@ describe("parseSseChunk", () => {
   });
   it("throws on an error frame with the server message", () => {
     expect(() => parseSseChunk('event: error\ndata: {"message":"boom"}\n\n')).toThrow(/boom/);
+  });
+});
+
+describe("withInactivityTimeout", () => {
+  it("passes events through and throws when the source goes quiet", async () => {
+    vi.useFakeTimers();
+    let release: (() => void) | null = null;
+    async function* source(): AsyncGenerator<RunEvent> {
+      yield A(1);
+      await new Promise<void>((r) => { release = r; }); // never released: simulates a hung model call
+      yield A(2);
+    }
+    const out: RunEvent[] = [];
+    const run = (async () => { for await (const e of withInactivityTimeout(source(), 1000)) out.push(e); })();
+    const failed = run.then(() => null, (e: Error) => e.message);
+    await vi.advanceTimersByTimeAsync(10);
+    expect(out).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(await failed).toMatch(/no event for 1000 ms/);
+    void release;
+    vi.useRealTimers();
   });
 });

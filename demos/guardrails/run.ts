@@ -90,6 +90,8 @@ export const run: DemoRunner = async function* (ctx) {
 
   // 2. Injection
   yield gate("idle", "idle", "idle");
+  yield { type: "panel.remove", id: "verdict" };
+  yield { type: "panel.remove", id: "findings" };
   yield { type: "panel", id: "chat", kind: "chat", slot: "main", props: { title: "Attempt 2 of 4: an instruction attack", messages: [{ role: "user", text: ATTEMPTS.injection }], text: "" } };
   yield { type: "panel", id: "findings", kind: "markdown", slot: "main", props: { title: "Checking the input", text: "Pattern rules, then a small classifier model." } };
   const heur = injectionHeuristic(ATTEMPTS.injection);
@@ -121,6 +123,8 @@ export const run: DemoRunner = async function* (ctx) {
 
   // 3. Off-topic
   yield gate("idle", "idle", "idle");
+  yield { type: "panel.remove", id: "verdict" };
+  yield { type: "panel.remove", id: "findings" };
   yield { type: "panel", id: "chat", kind: "chat", slot: "main", props: { title: "Attempt 3 of 4: a question the assistant is not for", messages: [{ role: "user", text: ATTEMPTS.offTopic }], text: "" } };
   const topic = await ctx.llm.parse({
     model: "fast", effort: "low", schema: Topic,
@@ -141,6 +145,8 @@ export const run: DemoRunner = async function* (ctx) {
 
   // 4. Output leak
   yield gate("idle", "idle", "idle");
+  yield { type: "panel.remove", id: "verdict" };
+  yield { type: "panel.remove", id: "findings" };
   yield { type: "panel", id: "chat", kind: "chat", slot: "main", props: { title: "Attempt 4 of 4: a line manager asks about pay", messages: [{ role: "system", text: "Requester role: line manager (not HR)." }, { role: "user", text: ATTEMPTS.leak }], text: "" } };
   yield { type: "panel", id: "findings", kind: "markdown", slot: "main", props: { title: "Input check", text: "No identifiers, no attack, on topic. The model answers from the register it has access to." } };
   yield gate("pass", "pass", "idle", { input: "clean" });
