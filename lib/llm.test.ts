@@ -98,3 +98,70 @@ describe("createOpenAiCompatibleLlm", () => {
     expect(content[0]).toEqual({ type: "image_url", image_url: { url: "data:image/png;base64,AAAA" } });
   });
 });
+
+/** A fake server whose replies may carry tool calls. */
+type Reply = { content?: string; calls?: { name: string; args: string }[] };
+function toolServer(replies: Reply[]) {
+  const calls: { body: Record<string, unknown> }[] = [];
+  let n = 0;
+  const fetchImpl = async (_url: string | URL | Request, init?: RequestInit) => {
+    const body = JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>;
+    calls.push({ body });
+    const r = replies.shift() ?? { calls: [{ name: "echo", args: "{\"text\":\"again\"}" }] };
+    const tool_calls = r.calls?.map((c) => ({ id: `call_${++n}`, type: "function", function: { name: c.name, arguments: c.args } }));
+    const json = { id: "x", object: "chat.completion", created: 0, model: String(body.model), choices: [{ index: 0, message: { role: "assistant", content: r.content ?? null, ...(tool_calls ? { tool_calls } : {}) }, finish_reason: tool_calls ? "tool_calls" : "stop" }], usage: { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 } };
+    return new Response(JSON.stringify(json), { status: 200, headers: { "content-type": "application/json" } });
+  };
+  return { calls, fetchImpl: fetchImpl as unknown as typeof fetch };
+}
+
+describe("tools()", () => {
+  const provider = { kind: "openai" as const, baseURL: "https://x.example/v1", apiKey: "k", models: { main: "m", fast: "f" }, label: "m", prices: { m: [1, 2] as [number, number] } };
+  const echo = { name: "echo", description: "Echo text back", parameters: z.object({ text: z.string() }), run: async (a: unknown) => ({ echoed: (a as { text: string }).text }) };
+  async function collect(gen: AsyncGenerator<unknown>) { const out = []; for await (const s of gen) out.push(s); return out; }
+
+  it("runs a tool call, sends the result back, and ends with the final text", async () => {
+    const srv = toolServer([{ calls: [{ name: "echo", args: "{\"text\":\"hi\"}" }] }, { content: "done" }]);
+    const llm = createOpenAiCompatibleLlm(provider, srv.fetchImpl);
+    const steps = await collect(llm.tools({ prompt: "go", tools: [echo] }));
+    expect(steps).toEqual([
+      { type: "call", id: "call_1", name: "echo", args: { text: "hi" } },
+      { type: "result", id: "call_1", name: "echo", result: { echoed: "hi" } },
+      { type: "final", text: "done" },
+    ]);
+    const sentTools = srv.calls[0].body.tools as { type: string; function: { name: string; parameters: { properties: object } } }[];
+    expect(sentTools[0].function.name).toBe("echo");
+    expect(sentTools[0].function.parameters.properties).toHaveProperty("text");
+    const second = srv.calls[1].body.messages as { role: string; tool_call_id?: string; content?: string }[];
+    expect(second.at(-1)).toEqual({ role: "tool", tool_call_id: "call_1", content: JSON.stringify({ echoed: "hi" }) });
+    expect(llm.usage().inputTokens).toBe(20);
+  });
+  it("returns an error result for invalid JSON arguments and keeps going", async () => {
+    const srv = toolServer([{ calls: [{ name: "echo", args: "{not json" }] }, { content: "ok" }]);
+    const steps = await collect(createOpenAiCompatibleLlm(provider, srv.fetchImpl).tools({ prompt: "go", tools: [echo] }));
+    expect(steps[1]).toMatchObject({ type: "result", result: { error: expect.stringMatching(/invalid arguments/) } });
+    expect(steps.at(-1)).toEqual({ type: "final", text: "ok" });
+  });
+  it("returns an error result for arguments that fail the schema", async () => {
+    const srv = toolServer([{ calls: [{ name: "echo", args: "{\"text\":5}" }] }, { content: "ok" }]);
+    const steps = await collect(createOpenAiCompatibleLlm(provider, srv.fetchImpl).tools({ prompt: "go", tools: [echo] }));
+    expect(steps[1]).toMatchObject({ type: "result", result: { error: expect.stringMatching(/invalid arguments/) } });
+  });
+  it("returns an error result for an unknown tool", async () => {
+    const srv = toolServer([{ calls: [{ name: "nope", args: "{}" }] }, { content: "ok" }]);
+    const steps = await collect(createOpenAiCompatibleLlm(provider, srv.fetchImpl).tools({ prompt: "go", tools: [echo] }));
+    expect(steps[1]).toMatchObject({ type: "result", name: "nope", result: { error: "unknown tool nope" } });
+  });
+  it("returns an error result when a tool throws", async () => {
+    const boom = { ...echo, run: async () => { throw new Error("db down"); } };
+    const srv = toolServer([{ calls: [{ name: "echo", args: "{\"text\":\"x\"}" }] }, { content: "ok" }]);
+    const steps = await collect(createOpenAiCompatibleLlm(provider, srv.fetchImpl).tools({ prompt: "go", tools: [boom] }));
+    expect(steps[1]).toMatchObject({ result: { error: "db down" } });
+  });
+  it("stops after maxSteps even if the model keeps calling tools", async () => {
+    const srv = toolServer([]);
+    const steps = await collect(createOpenAiCompatibleLlm(provider, srv.fetchImpl).tools({ prompt: "go", tools: [echo], maxSteps: 3 }));
+    expect(srv.calls).toHaveLength(3);
+    expect(steps.at(-1)).toEqual({ type: "final", text: "(stopped after 3 steps)" });
+  });
+});

@@ -35,7 +35,7 @@ function fakeLlm(): Llm {
         questions: ["Why Tower C?", "Is 82% on track?", "What is 52 points?"],
       } as never;
     },
-    async tools() { throw new Error("unused"); },
+    async *tools() { throw new Error("unused"); },
     usage: () => ({ inputTokens: 0, outputTokens: 0, costUsd: 0 }),
   } as Llm;
 }

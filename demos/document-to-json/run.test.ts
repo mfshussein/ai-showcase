@@ -19,7 +19,7 @@ function fakeLlm(records = RECORDS): Llm {
     async *stream() { yield ""; },
     async parse() { throw new Error("unused"); },
     async vision(o: { prompt: string }) { return (o.prompt.includes("tax invoice") ? records.invoice : o.prompt.includes("identity card") ? records.id : records.note) as never; },
-    async tools() { throw new Error("unused"); },
+    async *tools() { throw new Error("unused"); },
     usage: () => ({ inputTokens: 0, outputTokens: 0, costUsd: 0 }),
   } as unknown as Llm;
 }

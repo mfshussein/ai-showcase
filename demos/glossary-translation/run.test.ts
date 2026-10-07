@@ -30,7 +30,7 @@ function fakeLlm(texts: { plain: string; locked: string; reask: string }): Llm &
     async *stream(o: { system?: string }) { const k = o.system?.includes("House glossary") ? "locked" : "plain"; calls.push(k); yield texts[k]; },
     async parse() { throw new Error("unused"); },
     async vision() { throw new Error("unused"); },
-    async tools() { throw new Error("unused"); },
+    async *tools() { throw new Error("unused"); },
     usage: () => ({ inputTokens: 0, outputTokens: 0, costUsd: 0 }),
   } as unknown as Llm & { calls: string[] };
 }
