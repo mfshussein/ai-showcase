@@ -3,7 +3,7 @@ import type { DemoManifest } from "../types";
 export const manifest: DemoManifest = {
   slug: "enquiry-to-crm",
   order: 50,
-  status: "soon",
+  status: "ready",
   title: "From WhatsApp to CRM, with a human on send",
   hook: "An Arabic WhatsApp enquiry is classified, matched, checked against policy, answered in two languages and logged. The one thing it cannot do alone is press send.",
   lesson: {

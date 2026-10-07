@@ -8,7 +8,7 @@
     "pricing": "Lusail Residences 2-bedroom units are listed from QAR 1,650,000 to QAR 2,150,000. A 10% booking deposit reserves a unit for 14 days. Never promise discounts.",
     "financing": "We do not give financing advice. Customers arrange financing with their own bank; we can share the developer payment plan: 10% on booking, 40% during construction, 50% on handover.",
     "viewing": "Viewings of the show apartment in Tower B run Saturday to Thursday, 09:00 to 19:00. Offer a specific slot and ask the customer to confirm.",
-    "communication": "Reply in the customer's language. First replies to Arabic enquiries are bilingual, Arabic first. Outbound customer messages need human approval before sending."
+    "communication": "Reply in the customer's language. First replies to Arabic enquiries are bilingual, Arabic first."
   },
   "routing": { "purchase": "Sales: residential", "rental": "Leasing", "complaint": "Customer care", "other": "General enquiries" }
 }
