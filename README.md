@@ -16,11 +16,14 @@ npm run dev                  # http://localhost:3000
 
 | Variable | Purpose |
 |---|---|
-| `ANTHROPIC_API_KEY` | Only for live runs and for recording. Replay works without it. |
+| `LLM_PROVIDER` | `anthropic` (default) or `openai` for any OpenAI-compatible API (Qwen, DeepSeek, Kimi, GLM, MiniMax, OpenRouter). |
+| `ANTHROPIC_API_KEY` | When the provider is Anthropic. Only for live runs and recording. Replay works without it. |
+| `LLM_BASE_URL`, `LLM_API_KEY` | When the provider is `openai`. See `.env.example` for base URLs. |
+| `LLM_PRICE_MAIN`, `LLM_PRICE_FAST` | Optional "input,output" USD per million tokens, for the cost shown in the evidence drawer. |
 | `VIEWER_PASSWORD` | The code prospects use. Replay only. |
 | `PRESENTER_PASSWORD` | The code partners use. Adds "Run live" and the preflight page. |
 | `COOKIE_SECRET` | Any long random string. Signs the session cookie. |
-| `MODEL_MAIN`, `MODEL_FAST` | Default `claude-opus-5-5` and `claude-sonnet-5-5`. |
+| `MODEL_MAIN`, `MODEL_FAST` | The capable model and the cheap classifier model. Defaults depend on the provider. |
 
 ## Presenting
 

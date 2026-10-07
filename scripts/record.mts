@@ -2,7 +2,7 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { runners } from "../demos/runners";
-import { createLlm, MODEL } from "../lib/llm";
+import { createLlm, resolveProvider } from "../lib/llm";
 import { stamp } from "../lib/stamp";
 import { makeFixtureLoader } from "../lib/fixtures";
 import { GoldenRun, type RunEvent } from "../lib/events";
@@ -12,12 +12,14 @@ if (!slug || !runners[slug]) {
   console.error(`usage: npm run record <slug>\nknown demos: ${Object.keys(runners).join(", ") || "(none)"}`);
   process.exit(1);
 }
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.error("ANTHROPIC_API_KEY is not set. Put it in .env.local and run again.");
+const provider = resolveProvider();
+if (provider.kind === "anthropic" && !process.env.ANTHROPIC_API_KEY) {
+  console.error("ANTHROPIC_API_KEY is not set. Put it in .env.local (or set LLM_PROVIDER=openai with LLM_BASE_URL and LLM_API_KEY) and run again.");
   process.exit(1);
 }
+console.log(`recording ${slug} with ${provider.label}`);
 const { run } = await runners[slug]();
-const llm = createLlm();
+const llm = createLlm(provider);
 const events: RunEvent[] = [];
 const started = Date.now();
 for await (const ev of stamp(run({ mode: "record", llm, ...makeFixtureLoader(slug) }))) {
@@ -26,7 +28,7 @@ for await (const ev of stamp(run({ mode: "record", llm, ...makeFixtureLoader(slu
   process.stdout.write(`${String(ev.t).padStart(6)}ms ${ev.type}${extra}\n`);
   if (ev.type === "text.delta") process.stdout.write(`        ${JSON.stringify(ev.delta)}\n`);
 }
-const golden = GoldenRun.parse({ demo: slug, recordedAt: new Date().toISOString(), model: MODEL.main, events });
+const golden = GoldenRun.parse({ demo: slug, recordedAt: new Date().toISOString(), model: provider.label, events });
 const out = path.join("demos", slug, "golden.json");
 await writeFile(out, JSON.stringify(golden, null, 2) + "\n");
 const u = llm.usage();
