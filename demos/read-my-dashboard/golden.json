@@ -1,6 +1,6 @@
 {
   "demo": "read-my-dashboard",
-  "recordedAt": "2026-10-07T15:57:32.079Z",
+  "recordedAt": "2026-10-07T16:02:47.553Z",
   "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
   "events": [
     {
@@ -8,7 +8,7 @@
       "t": 0,
       "demo": "read-my-dashboard",
       "mode": "live",
-      "runId": "da639ce3-192a-4a86-bddd-5c97941781f9"
+      "runId": "3eb2c891-d373-48e1-8fee-c904e5d05146"
     },
     {
       "type": "act.start",
@@ -31,11 +31,11 @@
     },
     {
       "type": "pause",
-      "t": 3
+      "t": 4
     },
     {
       "type": "act.start",
-      "t": 3,
+      "t": 5,
       "act": 2,
       "title": "Four dashboards",
       "subtitle": "Screenshots, exactly as they would land in a pack. One is entirely in Arabic.",
@@ -43,7 +43,7 @@
     },
     {
       "type": "panel",
-      "t": 3,
+      "t": 5,
       "id": "grid",
       "kind": "image",
       "slot": "main",
@@ -75,12 +75,12 @@
     },
     {
       "type": "pause",
-      "t": 3,
+      "t": 5,
       "label": "Read the Arabic one"
     },
     {
       "type": "panel.patch",
-      "t": 3,
+      "t": 5,
       "id": "grid",
       "patch": {
         "images": [
@@ -113,7 +113,7 @@
     },
     {
       "type": "act.start",
-      "t": 3,
+      "t": 5,
       "act": 4,
       "title": "Read it",
       "subtitle": "One look at the image. Answer in English, figures quoted as printed.",
@@ -121,7 +121,7 @@
     },
     {
       "type": "panel",
-      "t": 3,
+      "t": 6,
       "id": "dash",
       "kind": "image",
       "slot": "left",
@@ -134,58 +134,73 @@
     },
     {
       "type": "panel.patch",
-      "t": 48779,
+      "t": 5229,
       "id": "dash",
       "patch": {
-        "callouts": []
+        "callouts": [
+          {
+            "x": 74.8,
+            "y": 8.9,
+            "w": 23.2,
+            "h": 19.9,
+            "label": "Occupancy On Track status contradiction"
+          },
+          {
+            "x": 56.7,
+            "y": 30.5,
+            "w": 41.2,
+            "h": 41.8,
+            "label": "Tower C collection rate collapse"
+          }
+        ]
       }
     },
     {
       "type": "panel",
-      "t": 48780,
+      "t": 5229,
       "id": "cfo",
       "kind": "markdown",
       "slot": "right",
       "props": {
         "title": "What the CFO will say",
-        "text": "- Occupancy is at 82% with a 'on track' tag, yet monthly collection fell 12% versus August to 11.4 million QAR while total arrears rose by 2.3 million to 6.9 million, so cash collection is deteriorating even though the headline occupancy metric looks healthy.\n- Tower C is collecting only 41% of its billed rent versus 89-93% for Towers A, B, D and E, which is the single biggest drag on the 11.4 million monthly collection figure.\n- September actual rental revenue collapsed to roughly 11.1-11.5 million QAR, well below the ~13.4 million target line, breaking a year-long trend where actuals tracked or beat target."
+        "text": "- Monthly collections dropped sharply to 11.4 million QAR in September 2026, down 12% versus August from the Monthly Collection KPI tile.\n- Total arrears have surged to 6.9 million QAR, an increase of 2.3 million QAR month-on-month, driven primarily by Tower C where the collection rate collapsed to 41%.\n- Overall occupancy decreased by 9 percentage points from August to 82%, even as the portfolio added 37 new lease contracts during the month."
       }
     },
     {
       "type": "panel",
-      "t": 48780,
+      "t": 5230,
       "id": "anomalies",
       "kind": "markdown",
       "slot": "right",
       "props": {
         "tone": "block",
         "title": "Two things look wrong",
-        "text": "- **Occupancy up but collections down.** The occupancy tile shows 82% tagged 'on track' while the monthly collection tile shows a 12% drop and arrears up 2.3 million, a contradiction that suggests new leases are not converting into cash or that arrears are concentrated in newly occupied units.\n- **Tower C collection collapse.** Tower C collects only 41% of billed rent versus 89-93% for every other tower, an outlier so severe it likely explains most of the 6.9 million arrears and the September revenue miss, and needs an immediate operational explanation."
+        "text": "- **Occupancy On Track status contradiction.** The occupancy rate tile shows a severe drop of 9 percentage points to 82% yet is still tagged as On Track (على المسار).\n- **Tower C collection rate collapse.** Tower C collection rate plunges to 41% compared to peer towers which are all performing at 89% to 93%."
       }
     },
     {
       "type": "panel",
-      "t": 48780,
+      "t": 5230,
       "id": "questions",
       "kind": "markdown",
       "slot": "right",
       "props": {
         "title": "Ask before the meeting",
-        "text": "- What is driving Tower C's 41% collection rate - is it a single anchor tenant in dispute, a data-feed error, or a systemic billing problem?\n- Why did September actual rental revenue drop sharply below the target line after tracking it all year - is this a real vacancy event or a timing issue with invoicing?\n- Of the 6.9 million arrears, how much sits in the 'more than 90 days' bucket (1.6 million across 22 units) and what legal or escalation steps are underway on those accounts?"
+        "text": "- What specific operational or tenant issue caused Tower C collections to plummet to 41% while all other towers achieved at least 89%?\n- Why does the occupancy KPI card indicate On Track status despite an 82% occupancy level and a 9 percentage point drop from August?\n- What explains the steep decline in actual monthly rental revenues from approximately 13.0 million QAR in August down to around 11.4 million QAR in September against an increasing target?"
       }
     },
     {
       "type": "verdict",
-      "t": 48780,
+      "t": 5230,
       "id": "verdict",
-      "status": "READ IN 48.8 S",
+      "status": "READ IN 5.2 S",
       "tone": "ok",
-      "headline": "Board lines, no anomaly could be circled, questions to ask. From a screenshot in Arabic.",
+      "headline": "Board lines, two anomalies circled, questions to ask. From a screenshot in Arabic.",
       "reason": "One call to a vision model. The callouts are snapped to the dashboard tiles it pointed at, so a box is never drawn in the wrong place.",
       "evidence": [
         {
           "label": "Model",
-          "value": "qwen/qwen3.8-max-0902 via openrouter.ai"
+          "value": "google/gemini-3.8-flash"
         },
         {
           "label": "Input",
@@ -193,30 +208,30 @@
         },
         {
           "label": "Callouts",
-          "value": "0 of 2 matched to a tile"
+          "value": "2 of 2 matched to a tile"
         },
         {
           "label": "Elapsed",
-          "value": "48.8 s"
+          "value": "5.2 s"
         }
       ]
     },
     {
       "type": "control.event",
-      "t": 48781,
+      "t": 5231,
       "detector": "vision.read",
       "policyId": "VIS-01",
       "action": "allow",
       "recordId": "CE-6001",
-      "detail": "0/2 callouts snapped to tiles"
+      "detail": "2/2 callouts snapped to tiles"
     },
     {
       "type": "pause",
-      "t": 48781
+      "t": 5231
     },
     {
       "type": "act.start",
-      "t": 48781,
+      "t": 5231,
       "act": 5,
       "title": "Proof",
       "subtitle": "Vision is triage. Every figure it quoted is traced back to the page.",
@@ -224,12 +239,12 @@
     },
     {
       "type": "panel",
-      "t": 48782,
+      "t": 5232,
       "id": "trace",
       "kind": "table",
       "slot": "main",
       "props": {
-        "title": "Figures quoted: 13 printed on the dashboard, 1 not printed",
+        "title": "Figures quoted: 10 printed on the dashboard, 1 not printed",
         "columns": [
           {
             "key": "figure",
@@ -242,7 +257,7 @@
         ],
         "rows": [
           {
-            "figure": "82",
+            "figure": "11.4",
             "status": {
               "text": "PRINTED",
               "tone": "ok"
@@ -256,7 +271,7 @@
             }
           },
           {
-            "figure": "11.4",
+            "figure": "6.9",
             "status": {
               "text": "PRINTED",
               "tone": "ok"
@@ -270,14 +285,28 @@
             }
           },
           {
-            "figure": "6.9",
+            "figure": "41",
             "status": {
               "text": "PRINTED",
               "tone": "ok"
             }
           },
           {
-            "figure": "41",
+            "figure": "9",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "82",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "37",
             "status": {
               "text": "PRINTED",
               "tone": "ok"
@@ -298,42 +327,7 @@
             }
           },
           {
-            "figure": "11.1",
-            "status": {
-              "text": "PRINTED",
-              "tone": "ok"
-            }
-          },
-          {
-            "figure": "13.4",
-            "status": {
-              "text": "PRINTED",
-              "tone": "ok"
-            }
-          },
-          {
-            "figure": "90",
-            "status": {
-              "text": "PRINTED",
-              "tone": "ok"
-            }
-          },
-          {
-            "figure": "1.6",
-            "status": {
-              "text": "PRINTED",
-              "tone": "ok"
-            }
-          },
-          {
-            "figure": "22",
-            "status": {
-              "text": "PRINTED",
-              "tone": "ok"
-            }
-          },
-          {
-            "figure": "11.5",
+            "figure": "13",
             "status": {
               "text": "DERIVED OR READ OFF A CHART, CHECK",
               "tone": "warn"
@@ -344,16 +338,16 @@
     },
     {
       "type": "control.event",
-      "t": 48782,
+      "t": 5232,
       "detector": "figures.trace",
       "policyId": "VIS-02",
       "action": "flag",
       "recordId": "CE-6002",
-      "detail": "13 traced, 1 flagged"
+      "detail": "10 traced, 1 flagged"
     },
     {
       "type": "panel",
-      "t": 48782,
+      "t": 5232,
       "id": "takeaway",
       "kind": "markdown",
       "slot": "main",
@@ -365,11 +359,11 @@
     },
     {
       "type": "run.end",
-      "t": 48782,
+      "t": 5232,
       "usage": {
-        "inputTokens": 1364,
-        "outputTokens": 2323,
-        "costUsd": 0.016666
+        "inputTokens": 1453,
+        "outputTokens": 418,
+        "costUsd": 0.00265725
       }
     }
   ]

@@ -3,7 +3,7 @@ import type { DemoManifest } from "../types";
 export const manifest: DemoManifest = {
   slug: "read-my-dashboard",
   order: 60,
-  status: "soon",
+  status: "ready",
   title: "Read this for me",
   hook: "Hand it a screenshot of a dashboard, in Arabic, and get what your CFO would say, what looks wrong, and what to ask, in seconds.",
   lesson: {
