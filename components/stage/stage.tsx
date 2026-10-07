@@ -1,11 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { DemoManifest } from "@/demos/types";
 import type { GoldenRun } from "@/lib/events";
-import { actsInRun, initialRunState, type RunState } from "@/lib/run-state";
-import { createPlayer, type Player } from "@/lib/player";
+import { actsInRun } from "@/lib/run-state";
+import { useStagePlayer } from "@/lib/use-stage-player";
 import { Brand } from "@/components/brand";
 import { ActStrip } from "./act-strip";
 import { PanelHost } from "./panel-host";
@@ -15,26 +15,9 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
   manifest: DemoManifest; golden: GoldenRun; presenter: boolean; walk: boolean; nextSlug?: string;
 }) {
   const router = useRouter();
-  const playerRef = useRef<Player | null>(null);
-  const [state, setState] = useState<RunState>(initialRunState);
-  const [segment, setSegment] = useState(0);
-  const [atEnd, setAtEnd] = useState(false);
   const [evidence, setEvidence] = useState(false);
   const acts = actsInRun(golden.events);
-
-  useEffect(() => {
-    const p = createPlayer({
-      events: golden.events, speed: 1, maxGapMs: 900,
-      onState: (s) => { setState(s); setAtEnd(p.atEnd()); },
-      onSegment: setSegment,
-    });
-    playerRef.current = p;
-    p.next();
-    return () => { p.dispose(); playerRef.current = null; };
-  }, [golden]);
-
-  const next = useCallback(() => playerRef.current?.next(), []);
-  const back = useCallback(() => playerRef.current?.back(), []);
+  const { state, segment, atEnd, mode, liveError, next, back, startLive, restartReplay } = useStagePlayer(manifest.slug, golden);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -42,11 +25,12 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
       if (e.key === " " || e.key === "ArrowRight" || e.key === "Enter") { e.preventDefault(); next(); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); back(); }
       else if (e.key === "e" || e.key === "E") setEvidence((v) => !v);
+      else if ((e.key === "l" || e.key === "L") && presenter) { if (mode === "live") restartReplay(); else startLive(); }
       else if (e.key === "Escape") { if (evidence) setEvidence(false); else router.push("/"); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, back, evidence, router]);
+  }, [next, back, evidence, router, presenter, mode, startLive, restartReplay]);
 
   const actIndex = Math.max(0, acts.findIndex((a) => a.act === state.act));
 
@@ -59,7 +43,14 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
             <h1 className="text-lg font-semibold tracking-tight">{manifest.title}</h1>
           </div>
           <div className="flex items-center gap-3 text-sm">
-            <span className="rounded-sm border border-line px-2 py-0.5 font-mono text-muted">{state.mode === "live" ? "LIVE" : "REPLAY"}</span>
+            <span className={`rounded-sm border px-2 py-0.5 font-mono ${mode === "live" ? "border-ok text-ok" : mode === "cached" ? "border-warn text-warn" : "border-line text-muted"}`} title={liveError ?? undefined}>
+              {mode === "live" ? "LIVE" : mode === "cached" ? "CACHED" : "REPLAY"}
+            </span>
+            {presenter && (
+              mode === "live"
+                ? <button type="button" onClick={restartReplay} className="rounded-md border border-line px-3 py-1 hover:border-fg">Stop live</button>
+                : <button type="button" onClick={startLive} className="rounded-md border border-line px-3 py-1 hover:border-fg">Run live</button>
+            )}
             <button type="button" onClick={() => setEvidence((v) => !v)} className="rounded-md border border-line px-3 py-1 hover:border-fg">
               Evidence{state.controls.length ? ` (${state.controls.length})` : ""}
             </button>
@@ -100,7 +91,7 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
         </div>
       </footer>
 
-      <EvidenceDrawer open={evidence} onClose={() => setEvidence(false)} state={state} model={golden.model} mode={state.mode ?? "replay"} />
+      <EvidenceDrawer open={evidence} onClose={() => setEvidence(false)} state={state} model={golden.model} mode={mode} />
     </div>
   );
 }
