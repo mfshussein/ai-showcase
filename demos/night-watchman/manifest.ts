@@ -3,7 +3,7 @@ import type { DemoManifest } from "../types";
 export const manifest: DemoManifest = {
   slug: "night-watchman",
   order: 10,
-  status: "soon",
+  status: "ready",
   title: "It works the night shift",
   hook: "Every night it reads every payment and every login, and it only messages you when something is wrong. Tonight, something is.",
   lesson: {

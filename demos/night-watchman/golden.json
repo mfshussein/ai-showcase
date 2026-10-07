@@ -1,0 +1,742 @@
+{
+  "demo": "night-watchman",
+  "recordedAt": "2026-10-07T16:07:25.951Z",
+  "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
+  "events": [
+    {
+      "type": "run.start",
+      "t": 0,
+      "demo": "night-watchman",
+      "mode": "live",
+      "runId": "f9d11180-0e0a-4f5e-9507-62f5899f2a00"
+    },
+    {
+      "type": "act.start",
+      "t": 1,
+      "act": 1,
+      "title": "The claim",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 2,
+      "id": "claim",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "size": "display",
+        "title": "It works the night shift.",
+        "text": "Every night it reads every payment and every login, checks them against your rules and against their own history, and stays silent unless something is wrong. When something is, the report is in your inbox before anyone is at their desk."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 2
+    },
+    {
+      "type": "act.start",
+      "t": 3,
+      "act": 2,
+      "title": "Fourteen nights",
+      "subtitle": "Marsa Holdings, a fictional group. Eleven quiet nights, three with something worth a look.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "recipient",
+      "kind": "recipient",
+      "slot": "main",
+      "props": {
+        "label": "Email the report to"
+      }
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "timeline",
+      "kind": "timeline",
+      "slot": "main",
+      "props": {
+        "title": "The last fourteen nights, and tonight",
+        "nights": [
+          {
+            "date": "2026-09-23",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-24",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-25",
+            "state": "alert",
+            "count": 1
+          },
+          {
+            "date": "2026-09-26",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-27",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-28",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-29",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-30",
+            "state": "alert",
+            "count": 2
+          },
+          {
+            "date": "2026-10-01",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-02",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-03",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-04",
+            "state": "alert",
+            "count": 1
+          },
+          {
+            "date": "2026-10-05",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-06",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-07",
+            "state": "pending"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 11,
+      "id": "scope",
+      "kind": "table",
+      "slot": "left",
+      "props": {
+        "title": "What it reads",
+        "columns": [
+          {
+            "key": "k",
+            "label": "Source"
+          },
+          {
+            "key": "v",
+            "label": "Tonight"
+          }
+        ],
+        "rows": [
+          {
+            "k": "Accounts payable ledger",
+            "v": "500 payments, QAR 7,193,784.94"
+          },
+          {
+            "k": "Vendors",
+            "v": "20"
+          },
+          {
+            "k": "Access log",
+            "v": "161 logins"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 12,
+      "id": "rules",
+      "kind": "table",
+      "slot": "right",
+      "props": {
+        "title": "What it checks, in plain code",
+        "columns": [
+          {
+            "key": "rule",
+            "label": "Rule"
+          }
+        ],
+        "rows": [
+          {
+            "rule": "Same invoice paid twice"
+          },
+          {
+            "rule": "Same vendor and amount, a few days apart"
+          },
+          {
+            "rule": "Invoices split to stay under the QAR 50,000 approval limit"
+          },
+          {
+            "rule": "Amounts far outside the vendor's own history"
+          },
+          {
+            "rule": "Admin logins at night or at the weekend"
+          }
+        ]
+      }
+    },
+    {
+      "type": "pause",
+      "t": 12,
+      "label": "Run tonight's shift"
+    },
+    {
+      "type": "act.start",
+      "t": 12,
+      "act": 4,
+      "title": "Tonight's shift",
+      "subtitle": "Statistics find. The model explains. Nobody had to be awake.",
+      "keep": [
+        "timeline"
+      ]
+    },
+    {
+      "type": "panel.patch",
+      "t": 12,
+      "id": "timeline",
+      "patch": {
+        "nights": [
+          {
+            "date": "2026-09-23",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-24",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-25",
+            "state": "alert",
+            "count": 1
+          },
+          {
+            "date": "2026-09-26",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-27",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-28",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-29",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-30",
+            "state": "alert",
+            "count": 2
+          },
+          {
+            "date": "2026-10-01",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-02",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-03",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-04",
+            "state": "alert",
+            "count": 1
+          },
+          {
+            "date": "2026-10-05",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-06",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-07",
+            "state": "running"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 16,
+      "id": "flags",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Checking 500 payments and 161 logins",
+        "columns": [
+          {
+            "key": "kind",
+            "label": "Finding"
+          },
+          {
+            "key": "vendor",
+            "label": "Where"
+          },
+          {
+            "key": "amount",
+            "label": "Amount"
+          },
+          {
+            "key": "detail",
+            "label": "Detail"
+          }
+        ],
+        "rows": []
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 16,
+      "id": "flags",
+      "patch": {
+        "title": "1 finding in 500 payments and 161 logins",
+        "rows": [
+          {
+            "kind": {
+              "text": "EXACT DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Najma Telecom Services",
+            "amount": "QAR 7,419.33",
+            "detail": "Invoice INV-10046 paid 2 times, QAR 7,419.33 each"
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 16,
+      "detector": "anomaly.exact-duplicate",
+      "policyId": "FIN-07",
+      "action": "flag",
+      "recordId": "CE-9001",
+      "detail": "P-0285, P-0493: Invoice INV-10046 paid 2 times, QAR 7,419.33 each"
+    },
+    {
+      "type": "panel.patch",
+      "t": 17,
+      "id": "flags",
+      "patch": {
+        "title": "2 findings in 500 payments and 161 logins",
+        "rows": [
+          {
+            "kind": {
+              "text": "EXACT DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Najma Telecom Services",
+            "amount": "QAR 7,419.33",
+            "detail": "Invoice INV-10046 paid 2 times, QAR 7,419.33 each"
+          },
+          {
+            "kind": {
+              "text": "NEAR-DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Pearl Coast Logistics",
+            "amount": "QAR 16,613.19",
+            "detail": "QAR 16,613.19 paid on 2026-10-04 (INV-10492) and again on 2026-10-06 (INV-10493)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 17,
+      "detector": "anomaly.fuzzy-duplicate",
+      "policyId": "FIN-07",
+      "action": "flag",
+      "recordId": "CE-9002",
+      "detail": "P-0489, P-0496: QAR 16,613.19 paid on 2026-10-04 (INV-10492) and again on 2026-10-06 (INV-10493)"
+    },
+    {
+      "type": "panel.patch",
+      "t": 17,
+      "id": "flags",
+      "patch": {
+        "title": "3 findings in 500 payments and 161 logins",
+        "rows": [
+          {
+            "kind": {
+              "text": "EXACT DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Najma Telecom Services",
+            "amount": "QAR 7,419.33",
+            "detail": "Invoice INV-10046 paid 2 times, QAR 7,419.33 each"
+          },
+          {
+            "kind": {
+              "text": "NEAR-DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Pearl Coast Logistics",
+            "amount": "QAR 16,613.19",
+            "detail": "QAR 16,613.19 paid on 2026-10-04 (INV-10492) and again on 2026-10-06 (INV-10493)"
+          },
+          {
+            "kind": {
+              "text": "SPLIT INVOICES",
+              "tone": "block"
+            },
+            "vendor": "Abu Hamour Steel Traders",
+            "amount": "QAR 145,450.00",
+            "detail": "3 invoices between 2026-10-06 and 2026-10-06, each under QAR 50,000.00, together QAR 145,450.00"
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 17,
+      "detector": "anomaly.split-invoice",
+      "policyId": "FIN-07",
+      "action": "flag",
+      "recordId": "CE-9003",
+      "detail": "P-0498, P-0499, P-0500: 3 invoices between 2026-10-06 and 2026-10-06, each under QAR 50,000.00, together QAR 145,450.00"
+    },
+    {
+      "type": "panel.patch",
+      "t": 17,
+      "id": "flags",
+      "patch": {
+        "title": "4 findings in 500 payments and 161 logins",
+        "rows": [
+          {
+            "kind": {
+              "text": "EXACT DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Najma Telecom Services",
+            "amount": "QAR 7,419.33",
+            "detail": "Invoice INV-10046 paid 2 times, QAR 7,419.33 each"
+          },
+          {
+            "kind": {
+              "text": "NEAR-DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Pearl Coast Logistics",
+            "amount": "QAR 16,613.19",
+            "detail": "QAR 16,613.19 paid on 2026-10-04 (INV-10492) and again on 2026-10-06 (INV-10493)"
+          },
+          {
+            "kind": {
+              "text": "SPLIT INVOICES",
+              "tone": "block"
+            },
+            "vendor": "Abu Hamour Steel Traders",
+            "amount": "QAR 145,450.00",
+            "detail": "3 invoices between 2026-10-06 and 2026-10-06, each under QAR 50,000.00, together QAR 145,450.00"
+          },
+          {
+            "kind": {
+              "text": "UNUSUAL AMOUNT",
+              "tone": "block"
+            },
+            "vendor": "Doha Office Supplies",
+            "amount": "QAR 19,840.00",
+            "detail": "QAR 19,840.00 against a usual QAR 3,200.40 over 26 invoices (z = 32.4)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 17,
+      "detector": "anomaly.outlier",
+      "policyId": "FIN-07",
+      "action": "flag",
+      "recordId": "CE-9004",
+      "detail": "P-0497: QAR 19,840.00 against a usual QAR 3,200.40 over 26 invoices (z = 32.4)"
+    },
+    {
+      "type": "panel.patch",
+      "t": 17,
+      "id": "flags",
+      "patch": {
+        "title": "5 findings in 500 payments and 161 logins",
+        "rows": [
+          {
+            "kind": {
+              "text": "EXACT DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Najma Telecom Services",
+            "amount": "QAR 7,419.33",
+            "detail": "Invoice INV-10046 paid 2 times, QAR 7,419.33 each"
+          },
+          {
+            "kind": {
+              "text": "NEAR-DUPLICATE",
+              "tone": "block"
+            },
+            "vendor": "Pearl Coast Logistics",
+            "amount": "QAR 16,613.19",
+            "detail": "QAR 16,613.19 paid on 2026-10-04 (INV-10492) and again on 2026-10-06 (INV-10493)"
+          },
+          {
+            "kind": {
+              "text": "SPLIT INVOICES",
+              "tone": "block"
+            },
+            "vendor": "Abu Hamour Steel Traders",
+            "amount": "QAR 145,450.00",
+            "detail": "3 invoices between 2026-10-06 and 2026-10-06, each under QAR 50,000.00, together QAR 145,450.00"
+          },
+          {
+            "kind": {
+              "text": "UNUSUAL AMOUNT",
+              "tone": "block"
+            },
+            "vendor": "Doha Office Supplies",
+            "amount": "QAR 19,840.00",
+            "detail": "QAR 19,840.00 against a usual QAR 3,200.40 over 26 invoices (z = 32.4)"
+          },
+          {
+            "kind": {
+              "text": "OFF-HOURS ADMIN LOGIN",
+              "tone": "quarantine"
+            },
+            "vendor": "Access log",
+            "amount": "",
+            "detail": "Admin account it.ops logged in Wednesday 02:47 from 203.0.113.47"
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 17,
+      "detector": "anomaly.off-hours-login",
+      "policyId": "FIN-07",
+      "action": "flag",
+      "recordId": "CE-9005",
+      "detail": "L-0161: Admin account it.ops logged in Wednesday 02:47 from 203.0.113.47"
+    },
+    {
+      "type": "panel.patch",
+      "t": 45792,
+      "id": "timeline",
+      "patch": {
+        "nights": [
+          {
+            "date": "2026-09-23",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-24",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-25",
+            "state": "alert",
+            "count": 1
+          },
+          {
+            "date": "2026-09-26",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-27",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-28",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-29",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-09-30",
+            "state": "alert",
+            "count": 2
+          },
+          {
+            "date": "2026-10-01",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-02",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-03",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-04",
+            "state": "alert",
+            "count": 1
+          },
+          {
+            "date": "2026-10-05",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-06",
+            "state": "quiet"
+          },
+          {
+            "date": "2026-10-07",
+            "state": "alert",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.remove",
+      "t": 45801,
+      "id": "flags"
+    },
+    {
+      "type": "panel",
+      "t": 45816,
+      "id": "email",
+      "kind": "email",
+      "slot": "main",
+      "props": {
+        "title": "Inbox",
+        "from": "Night Watchman <t•••@luminicious.net>",
+        "to": "*********.com",
+        "subject": "Night shift report: 5 items need a look (Marsa Holdings AP)",
+        "text": "Night shift report, 2026-10-07, Marsa Holdings AP\nتقرير الوردية الليلية، 2026-10-07\n\n5 items need a look:\n\n1. Exact duplicate · Najma Telecom Services · QAR 7,419.33\n   Invoice INV-10046 from Najma Telecom Services was paid twice at QAR 7,419.33 each, resulting in an overpayment of QAR 7,419.33 that must be recovered.\n   تم دفع الفاتورة INV-10046 من شركة نجمة لخدمات الاتصالات مرتين بمبلغ 7,419.33 ريال قطري لكل منهما، مما أدى إلى دفعة زائدة قدرها 7,419.33 ريال قطري يجب استردادها.\n   Action: Initiate a recovery request with Najma Telecom Services for the duplicate payment of QAR 7,419.33 this morning.\n\n2. Near-duplicate · Pearl Coast Logistics · QAR 16,613.19\n   Pearl Coast Logistics received two near-identical payments of QAR 16,613.19 within two days on different invoice numbers, suggesting a possible duplicate disbursement.\n   تلقت شركة بيرل كوست اللوجستية دفعتين متقاربتين بمبلغ 16,613.19 ريال قطري خلال يومين برقمي فاتورة مختلفين، مما يشير إلى احتمال وجود دفعة مكررة.\n   Action: Compare the supporting documents for INV-10492 and INV-10493 and flag the discrepancy for review before approving any further payments to this vendor.\n\n3. Split invoices · Abu Hamour Steel Traders · QAR 145,450.00\n   Abu Hamour Steel Traders submitted three invoices on the same day each under QAR 50,000.00 totalling QAR 145,450.00, a pattern consistent with split invoicing to bypass approval thresholds.\n   قدّمت شركة أبو هامور لتجارة الحديد ثلاث فواتير في نفس اليوم، كل منها أقل من 50,000.00 ريال قطري بإجمالي 145,450.00 ريال قطري، وهو نمط يتوافق مع تجزئة الفواتير لتجاوز حدود الموافقة.\n   Action: Escalate the three Abu Hamour invoices to the procurement compliance team for threshold-circumvention review before processing any further payments.\n\n4. Unusual amount · Doha Office Supplies · QAR 19,840.00\n   Doha Office Supplies submitted an invoice for QAR 19,840.00, which is over six times the historical average of QAR 3,200.40 across 26 prior invoices and represents a statistically extreme outlier (z = 32.4).\n   قدّمت شركة الدوحة للمستلزمات المكتبية فاتورة بمبلغ 19,840.00 ريال قطري، وهو أكثر من ستة أضعاف المتوسط التاريخي البالغ 3,200.40 ريال قطري عبر 26 فاتورة سابقة ويمثل قيمة شاذة إحصائياً (z = 32.4).\n   Action: Hold payment on the Doha Office Supplies invoice and request a detailed breakdown and justification before release.\n\n5. Off-hours admin login · Access log\n   The admin account it.ops logged in at 02:47 on Wednesday from IP address 203.0.113.47, an off-hours access that may indicate unauthorized system activity.\n   سجّل حساب المسؤول it.ops الدخول في الساعة 02:47 يوم الأربعاء من عنوان IP‏ 203.0.113.47، وهو دخول خارج أوقات العمل قد يشير إلى نشاط غير مصرّح به على النظام.\n   Action: Verify with the IT operations team whether the 02:47 login was authorized and, if not, disable the account and initiate a security incident review.\n\nEvidence: http://localhost:3000/demo/night-watchman",
+        "html": "<div style=\"font-family:Arial,sans-serif;font-size:15px;color:#0f1720;max-width:640px\">\n<h2 style=\"margin:0 0 4px\">Night shift report: 5 items need a look (Marsa Holdings AP)</h2>\n<p style=\"margin:0 0 16px;color:#5b6472\">2026-10-07 · <span dir=\"rtl\">تقرير الوردية الليلية</span></p>\n<div style=\"border-top:1px solid #d9dee5;padding:10px 0\">\n<p style=\"margin:0\"><b>1. Exact duplicate</b> · Najma Telecom Services · <b>QAR 7,419.33</b></p>\n<p style=\"margin:4px 0\">Invoice INV-10046 from Najma Telecom Services was paid twice at QAR 7,419.33 each, resulting in an overpayment of QAR 7,419.33 that must be recovered.</p>\n<p style=\"margin:4px 0\" dir=\"rtl\">تم دفع الفاتورة INV-10046 من شركة نجمة لخدمات الاتصالات مرتين بمبلغ 7,419.33 ريال قطري لكل منهما، مما أدى إلى دفعة زائدة قدرها 7,419.33 ريال قطري يجب استردادها.</p>\n<p style=\"margin:4px 0;color:#b45309\">Action: Initiate a recovery request with Najma Telecom Services for the duplicate payment of QAR 7,419.33 this morning.</p>\n</div>\n<div style=\"border-top:1px solid #d9dee5;padding:10px 0\">\n<p style=\"margin:0\"><b>2. Near-duplicate</b> · Pearl Coast Logistics · <b>QAR 16,613.19</b></p>\n<p style=\"margin:4px 0\">Pearl Coast Logistics received two near-identical payments of QAR 16,613.19 within two days on different invoice numbers, suggesting a possible duplicate disbursement.</p>\n<p style=\"margin:4px 0\" dir=\"rtl\">تلقت شركة بيرل كوست اللوجستية دفعتين متقاربتين بمبلغ 16,613.19 ريال قطري خلال يومين برقمي فاتورة مختلفين، مما يشير إلى احتمال وجود دفعة مكررة.</p>\n<p style=\"margin:4px 0;color:#b45309\">Action: Compare the supporting documents for INV-10492 and INV-10493 and flag the discrepancy for review before approving any further payments to this vendor.</p>\n</div>\n<div style=\"border-top:1px solid #d9dee5;padding:10px 0\">\n<p style=\"margin:0\"><b>3. Split invoices</b> · Abu Hamour Steel Traders · <b>QAR 145,450.00</b></p>\n<p style=\"margin:4px 0\">Abu Hamour Steel Traders submitted three invoices on the same day each under QAR 50,000.00 totalling QAR 145,450.00, a pattern consistent with split invoicing to bypass approval thresholds.</p>\n<p style=\"margin:4px 0\" dir=\"rtl\">قدّمت شركة أبو هامور لتجارة الحديد ثلاث فواتير في نفس اليوم، كل منها أقل من 50,000.00 ريال قطري بإجمالي 145,450.00 ريال قطري، وهو نمط يتوافق مع تجزئة الفواتير لتجاوز حدود الموافقة.</p>\n<p style=\"margin:4px 0;color:#b45309\">Action: Escalate the three Abu Hamour invoices to the procurement compliance team for threshold-circumvention review before processing any further payments.</p>\n</div>\n<div style=\"border-top:1px solid #d9dee5;padding:10px 0\">\n<p style=\"margin:0\"><b>4. Unusual amount</b> · Doha Office Supplies · <b>QAR 19,840.00</b></p>\n<p style=\"margin:4px 0\">Doha Office Supplies submitted an invoice for QAR 19,840.00, which is over six times the historical average of QAR 3,200.40 across 26 prior invoices and represents a statistically extreme outlier (z = 32.4).</p>\n<p style=\"margin:4px 0\" dir=\"rtl\">قدّمت شركة الدوحة للمستلزمات المكتبية فاتورة بمبلغ 19,840.00 ريال قطري، وهو أكثر من ستة أضعاف المتوسط التاريخي البالغ 3,200.40 ريال قطري عبر 26 فاتورة سابقة ويمثل قيمة شاذة إحصائياً (z = 32.4).</p>\n<p style=\"margin:4px 0;color:#b45309\">Action: Hold payment on the Doha Office Supplies invoice and request a detailed breakdown and justification before release.</p>\n</div>\n<div style=\"border-top:1px solid #d9dee5;padding:10px 0\">\n<p style=\"margin:0\"><b>5. Off-hours admin login</b> · Access log</p>\n<p style=\"margin:4px 0\">The admin account it.ops logged in at 02:47 on Wednesday from IP address 203.0.113.47, an off-hours access that may indicate unauthorized system activity.</p>\n<p style=\"margin:4px 0\" dir=\"rtl\">سجّل حساب المسؤول it.ops الدخول في الساعة 02:47 يوم الأربعاء من عنوان IP‏ 203.0.113.47، وهو دخول خارج أوقات العمل قد يشير إلى نشاط غير مصرّح به على النظام.</p>\n<p style=\"margin:4px 0;color:#b45309\">Action: Verify with the IT operations team whether the 02:47 login was authorized and, if not, disable the account and initiate a security incident review.</p>\n</div>\n<p style=\"margin-top:16px\"><a href=\"http://localhost:3000/demo/night-watchman\">Open the evidence</a></p>\n</div>",
+        "sentAt": "19:07 Doha",
+        "send": true,
+        "sendKey": "f9d11180-0e0a-4f5e-9507-62f5899f2a00"
+      }
+    },
+    {
+      "type": "verdict",
+      "t": 45816,
+      "id": "verdict",
+      "status": "ALERT RAISED",
+      "tone": "warn",
+      "headline": "5 issues involving QAR 189,322.52 found in 500 payments. This is the report the inbox receives.",
+      "reason": "Found by plain statistics, so every finding is exact and repeatable. The model only wrote the explanations, in English and Arabic.",
+      "evidence": [
+        {
+          "label": "Checked",
+          "value": "500 payments, 161 logins"
+        },
+        {
+          "label": "Model",
+          "value": "qwen/qwen3.8-max-0902 via openrouter.ai"
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "t": 45821
+    },
+    {
+      "type": "act.start",
+      "t": 45822,
+      "act": 5,
+      "title": "Proof",
+      "subtitle": "Every finding traces to rows you can open.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 45822,
+      "id": "proof",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Findings and the records behind them",
+        "columns": [
+          {
+            "key": "kind",
+            "label": "Finding"
+          },
+          {
+            "key": "ids",
+            "label": "Records"
+          },
+          {
+            "key": "why",
+            "label": "Plain English"
+          }
+        ],
+        "rows": [
+          {
+            "kind": "Exact duplicate",
+            "ids": "P-0285, P-0493",
+            "why": "Invoice INV-10046 from Najma Telecom Services was paid twice at QAR 7,419.33 each, resulting in an overpayment of QAR 7,419.33 that must be recovered."
+          },
+          {
+            "kind": "Near-duplicate",
+            "ids": "P-0489, P-0496",
+            "why": "Pearl Coast Logistics received two near-identical payments of QAR 16,613.19 within two days on different invoice numbers, suggesting a possible duplicate disbursement."
+          },
+          {
+            "kind": "Split invoices",
+            "ids": "P-0498, P-0499, P-0500",
+            "why": "Abu Hamour Steel Traders submitted three invoices on the same day each under QAR 50,000.00 totalling QAR 145,450.00, a pattern consistent with split invoicing to bypass approval thresholds."
+          },
+          {
+            "kind": "Unusual amount",
+            "ids": "P-0497",
+            "why": "Doha Office Supplies submitted an invoice for QAR 19,840.00, which is over six times the historical average of QAR 3,200.40 across 26 prior invoices and represents a statistically extreme outlier (z = 32.4)."
+          },
+          {
+            "kind": "Off-hours admin login",
+            "ids": "L-0161",
+            "why": "The admin account it.ops logged in at 02:47 on Wednesday from IP address 203.0.113.47, an off-hours access that may indicate unauthorized system activity."
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 45833,
+      "id": "takeaway",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "ok",
+        "title": "You don't need AI to find these. You need it to explain them.",
+        "text": "Statistics do the finding, exactly and repeatably. The model writes the explanation in two languages. The agent runs every night, stays quiet when there is nothing to say, and leaves an audit trail when there is."
+      }
+    },
+    {
+      "type": "run.end",
+      "t": 45840,
+      "usage": {
+        "inputTokens": 603,
+        "outputTokens": 2068,
+        "costUsd": 0.013614
+      }
+    }
+  ]
+}
