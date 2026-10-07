@@ -8,13 +8,17 @@ function Dot({ ok }: { ok: boolean }) { return <span className={`inline-block h-
 export function HealthClient() {
   const [h, setH] = useState<Health | null>(null);
   const [probing, setProbing] = useState(false);
-  const load = async (probe = false) => {
-    setProbing(probe);
-    const res = await fetch(`/api/health${probe ? "?probe=1" : ""}`);
+  useEffect(() => {
+    let on = true;
+    fetch("/api/health").then((r) => r.json()).then((d: Health) => { if (on) setH(d); });
+    return () => { on = false; };
+  }, []);
+  const probe = async () => {
+    setProbing(true);
+    const res = await fetch("/api/health?probe=1");
     setH((await res.json()) as Health);
     setProbing(false);
   };
-  useEffect(() => { void load(); }, []);
   if (!h) return <p className="text-muted">Checking…</p>;
   return (
     <div className="space-y-6">
@@ -28,7 +32,7 @@ export function HealthClient() {
           <li className="flex items-center gap-3"><Dot ok={h.probe.ok} /> Model probe {h.probe.ok ? `answered "${h.probe.text}" in ${h.probe.latencyMs} ms` : `failed: ${h.probe.error}`}</li>
         )}
       </ul>
-      <button type="button" onClick={() => load(true)} disabled={probing} className="rounded-md bg-fg px-4 py-2 font-semibold text-white disabled:opacity-50">
+      <button type="button" onClick={probe} disabled={probing} className="rounded-md bg-fg px-4 py-2 font-semibold text-white disabled:opacity-50">
         {probing ? "Probing…" : "Probe the model"}
       </button>
     </div>

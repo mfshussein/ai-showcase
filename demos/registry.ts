@@ -1,7 +1,8 @@
 import type { DemoManifest } from "./types";
+import { manifest as conflictingDocs } from "./conflicting-docs/manifest";
 
 /** Client-safe list of demos, in walkthrough order. Add a manifest import here to register a demo. */
-const all: DemoManifest[] = [];
+const all: DemoManifest[] = [conflictingDocs];
 
 export const demos: DemoManifest[] = [...all].sort((a, b) => a.order - b.order);
 
