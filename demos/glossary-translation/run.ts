@@ -69,8 +69,8 @@ export const run: DemoRunner = async function* (ctx) {
     headline: pass ? "Every product, structure and regulator named exactly as the bank names them." : "Still not exact after one re-ask, so a human reviewer signs it off before it is published.",
     reason: `Without the glossary: ${ps.honoured}/${ps.total}. With it: ${s.honoured}/${s.total}${reasked ? ", after one automatic re-ask naming the missed terms" : ""}. The count is code, not the model's opinion.`,
     evidence: [
-      { label: "Missed before", value: ps.missed.join(", ") || "none" },
-      { label: "Missed after", value: s.missed.join(", ") || "none" },
+      { label: "Before", value: `${ps.missed.length} of ${ps.total} terms missed` },
+      { label: "After", value: s.missed.length ? `missed: ${s.missed.join(", ")}` : "none missed" },
       { label: "Model", value: ctx.llm.label },
     ],
   };

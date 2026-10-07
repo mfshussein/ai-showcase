@@ -28,7 +28,7 @@ export function ImagePanel({ props }: { id: string; props: Record<string, unknow
         <img src={String(props.src ?? "")} alt={String(props.alt ?? "")} className="max-h-[60vh] w-auto rounded-sm" />
         {callouts.map((c, i) => (
           <div key={i} className="callout-enter absolute rounded-sm border-[3px] border-block" style={{ left: `${c.x}%`, top: `${c.y}%`, width: `${c.w}%`, height: `${c.h}%` }}>
-            <span className="absolute -top-7 left-0 whitespace-nowrap rounded-sm bg-block px-2 py-0.5 text-sm text-white">{c.label}</span>
+            <span className="absolute -top-7 left-0 z-10 whitespace-nowrap rounded-sm bg-block px-2 py-0.5 text-sm text-white">{c.label}</span>
           </div>
         ))}
       </div>

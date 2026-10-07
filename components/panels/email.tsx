@@ -13,7 +13,10 @@ export function EmailPanel({ props }: { id: string; props: Record<string, unknow
           </div>
         ))}
       </dl>
-      <div className="mt-3 whitespace-pre-wrap text-[15px] leading-relaxed" dir="auto">{String(props.text ?? "")}</div>
+      <div className="mt-3 text-[15px] leading-relaxed">
+        {/* One element per line so each Arabic or English line takes its own direction. */}
+        {String(props.text ?? "").split("\n").map((line, i) => (line.trim() ? <p key={i} dir="auto" className="whitespace-pre-wrap">{line}</p> : <div key={i} className="h-3" />))}
+      </div>
     </Card>
   );
 }

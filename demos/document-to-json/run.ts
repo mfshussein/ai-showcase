@@ -5,6 +5,8 @@ import { DOCS, flatten, TODAY, type Field } from "./shared";
 
 const src = (file: string) => `/fixtures/document-to-json/${file}`;
 const verdictTone: Record<ReturnType<typeof recordVerdict>, Tone> = { RELEASED: "ok", "HUMAN CHECK": "warn", BLOCKED: "block" };
+const SHORT: Record<string, string> = { vat: "VAT wrong", total: "total wrong", expiry: "expired", structure: "ID number invalid", confidence: "low confidence", readable: "unreadable field" };
+const shortWhy = (checks: Check[]) => [...new Set(checks.filter((c) => !c.ok).map((c) => SHORT[c.rule] ?? c.rule))].join(", ");
 const CAVEAT = "This is extraction and validation, not identity verification. In production, identity checks go through a licensed KYC provider (liveness, document authenticity, watchlists).";
 
 export const run: DemoRunner = async function* (ctx) {
@@ -68,7 +70,7 @@ export const run: DemoRunner = async function* (ctx) {
     type: "verdict", id: "verdict", status: `${released} OF ${results.length} RELEASED`, tone: released === results.length ? "ok" : "quarantine",
     headline: "Downstream systems only ever receive validated records.",
     reason: `${blocked} blocked by validation, ${held} waiting for a human check. Nothing reached the ERP or the onboarding system on the model's word alone.`,
-    evidence: results.map((r) => ({ label: r.title.split(",")[0].split(" (")[0], value: `${r.verdict}${r.checks.filter((c) => !c.ok).length ? `: ${r.checks.filter((c) => !c.ok).map((c) => c.message).join("; ")}` : ""}` })),
+    evidence: results.map((r) => ({ label: r.title.split(",")[0].split(" (")[0], value: `${r.verdict}${shortWhy(r.checks) ? `: ${shortWhy(r.checks)}` : ""}` })),
   };
   yield { type: "pause" };
 

@@ -90,6 +90,8 @@ export const run: DemoRunner = async function* (ctx) {
     const hook = await sendWebhook(report.slack, env);
     yield { type: "control.event", detector: "alert.webhook", policyId: "FIN-08", action: hook.sent ? "sent" : "skipped", recordId: `CE-${ce++}`, detail: hook.sent ? "Posted to the team channel" : `Webhook not sent: ${hook.reason}` };
   }
+  // The findings are repeated, with their record ids, in the proof. Clear the table so the email is the moment.
+  yield { type: "panel.remove", id: "flags" };
   yield {
     type: "panel", id: "email", kind: "email",
     props: {
@@ -106,7 +108,6 @@ export const run: DemoRunner = async function* (ctx) {
     reason: "Found by plain statistics, so every finding is exact and repeatable. The model only wrote the explanations, in English and Arabic.",
     evidence: [
       { label: "Checked", value: `${payments.length} payments, ${logins.length} logins` },
-      { label: "Findings", value: flags.map((f) => KIND_LABEL[f.kind]).join(", ") },
       { label: "Model", value: ctx.llm.label },
     ],
   };
