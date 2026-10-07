@@ -1,0 +1,14 @@
+{
+  "inbound": { "channel": "WhatsApp", "from": "+974 5512 3487", "receivedAt": "2026-10-07 09:12" },
+  "customers": [
+    { "id": "CUST-20418", "phone": "+97455123487", "name": "Sara Nasser", "nameAr": "سارة ناصر", "status": "Returning lead", "lastContact": "2026-05-12", "notes": "Asked about 1-bedroom units in May; preferred Arabic.", "language": "ar" },
+    { "id": "CUST-11873", "phone": "+97433019922", "name": "Daniel Okafor", "nameAr": "", "status": "Owner", "lastContact": "2026-08-30", "notes": "Owns unit B-1204.", "language": "en" }
+  ],
+  "policy": {
+    "pricing": "Lusail Residences 2-bedroom units are listed from QAR 1,650,000 to QAR 2,150,000. A 10% booking deposit reserves a unit for 14 days. Never promise discounts.",
+    "financing": "We do not give financing advice. Customers arrange financing with their own bank; we can share the developer payment plan: 10% on booking, 40% during construction, 50% on handover.",
+    "viewing": "Viewings of the show apartment in Tower B run Saturday to Thursday, 09:00 to 19:00. Offer a specific slot and ask the customer to confirm.",
+    "communication": "Reply in the customer's language. First replies to Arabic enquiries are bilingual, Arabic first. Outbound customer messages need human approval before sending."
+  },
+  "routing": { "purchase": "Sales: residential", "rental": "Leasing", "complaint": "Customer care", "other": "General enquiries" }
+}
