@@ -10,7 +10,8 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "record": "node --env-file=.env.local --import tsx scripts/record.ts"
+    "record": "node --env-file=.env.local --import tsx scripts/record.mts",
+    "shot": "node --import tsx scripts/shot.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
