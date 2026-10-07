@@ -47,7 +47,7 @@ Fixtures are synthetic and fictional. Real incidents are cited only as public le
 
 ```bash
 npm test           # unit tests (harness logic, event schema, player, gate)
-npm run test:e2e   # Playwright: gate and a full replay of every recorded case
+npm run test:e2e   # Playwright: gate and a full replay of every recorded case (stop any running `next dev` first)
 npm run lint
 npx tsc --noEmit
 ```
