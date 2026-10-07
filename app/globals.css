@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f7f5f0;
-  --fg: #16181d;
-  --muted: #5f6673;
-  --line: #e2ddd3;
+  --bg: #f2f4f7;
+  --fg: #0f1720;
+  --muted: #5b6472;
+  --line: #d9dee5;
   --card: #ffffff;
-  --accent: #0b5fff;
-  --ok: #137a3d;
-  --warn: #b26b00;
-  --block: #c62828;
-  --quarantine: #6a3fb5;
-  --info: #0b5fff;
+  --accent: #1646d6;
+  --ok: #15803d;
+  --warn: #b45309;
+  --block: #b91c1c;
+  --quarantine: #6d28d9;
+  --info: #1646d6;
 }
 
 @theme inline {
@@ -26,11 +26,15 @@
   --color-block: var(--block);
   --color-quarantine: var(--quarantine);
   --color-info: var(--info);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-arabic: var(--font-arabic), var(--font-inter), sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-plex), sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
 }
 
 html { background: var(--bg); color: var(--fg); }
-body { font-family: var(--font-sans); }
+body { font-family: var(--font-sans); font-feature-settings: "ss01", "cv05"; }
 [dir="rtl"], .ar { font-family: var(--font-arabic); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
