@@ -1,9 +1,12 @@
 import type { DemoRunner } from "../types";
 import { generateLedger } from "@/lib/harness/ledger";
 import { detectAnomalies } from "@/lib/harness/anomalies";
-import { buildReport, sendWebhook, qar, type ReportLine } from "@/lib/notify";
-import { sendAlertEmail } from "@/lib/mail";
+import { buildReport, qar, type ReportLine } from "@/lib/notify";
+import { baseUrl, maskAddress } from "@/lib/alert";
 import { COMPANY, KIND_LABEL, LEDGER_SEED, Notes, maskEmail, qatarTime } from "./shared";
+
+// The runner never sends email. The inbox panel asks the stage to send it (presenter sessions only, via /api/alert),
+// so the report arrives in replay as well as live, to whoever was typed into the recipient field.
 
 type Night = { date: string; state: "quiet" | "alert" | "running" | "pending"; count?: number; note?: string };
 const TONIGHT = "2026-10-07";
@@ -14,7 +17,8 @@ export const run: DemoRunner = async function* (ctx) {
   const { payments, logins } = generateLedger(LEDGER_SEED);
   const nights = (tonight: Night) => [...history.map((n) => ({ date: n.date, state: n.state, count: n.count })), tonight];
 
-  yield { type: "run.start", demo: "night-watchman", mode: "live", runId: crypto.randomUUID() };
+  const runId = crypto.randomUUID();
+  yield { type: "run.start", demo: "night-watchman", mode: "live", runId };
 
   yield { type: "act.start", act: 1, title: "The claim" };
   yield {
@@ -28,6 +32,7 @@ export const run: DemoRunner = async function* (ctx) {
   yield { type: "pause" };
 
   yield { type: "act.start", act: 2, title: "Fourteen nights", subtitle: "Marsa Holdings, a fictional group. Eleven quiet nights, three with something worth a look." };
+  yield { type: "panel", id: "recipient", kind: "recipient", props: { label: "Email the report to" } };
   yield { type: "panel", id: "timeline", kind: "timeline", props: { title: "The last fourteen nights, and tonight", nights: nights({ date: TONIGHT, state: "pending" }) } };
   const total = payments.reduce((s, p) => s + p.amount, 0);
   yield {
@@ -83,13 +88,7 @@ export const run: DemoRunner = async function* (ctx) {
   });
   yield { type: "panel.patch", id: "timeline", patch: { nights: nights({ date: TONIGHT, state: "alert", count: flags.length }) } };
 
-  const report = buildReport(lines, { company: COMPANY, link: `${env.PUBLIC_BASE_URL ?? "http://localhost:3000"}/demo/night-watchman`, date: TONIGHT });
-  const mail = await sendAlertEmail({ subject: report.subject, text: report.text, html: report.html }, env);
-  yield { type: "control.event", detector: "alert.email", policyId: "FIN-08", action: mail.sent ? "sent" : "skipped", recordId: `CE-${ce++}`, detail: mail.sent ? `Email sent${mail.id ? `, message ${mail.id}` : ""}` : `Email not sent: ${mail.reason}` };
-  if (env.SLACK_WEBHOOK_URL) {
-    const hook = await sendWebhook(report.slack, env);
-    yield { type: "control.event", detector: "alert.webhook", policyId: "FIN-08", action: hook.sent ? "sent" : "skipped", recordId: `CE-${ce++}`, detail: hook.sent ? "Posted to the team channel" : `Webhook not sent: ${hook.reason}` };
-  }
+  const report = buildReport(lines, { company: COMPANY, link: `${baseUrl(env)}/demo/night-watchman`, date: TONIGHT });
   // The findings are repeated, with their record ids, in the proof. Clear the table so the email is the moment.
   yield { type: "panel.remove", id: "flags" };
   yield {
@@ -97,14 +96,14 @@ export const run: DemoRunner = async function* (ctx) {
     props: {
       title: "Inbox",
       from: maskEmail(env.SMTP_FROM || "Night Watchman <alerts@example.com>"),
-      to: maskEmail(env.ALERT_EMAIL_TO || "finance.controller@example.com"),
-      subject: report.subject, text: report.text, sentAt: `${qatarTime()} Doha`,
+      to: maskAddress(env.ALERT_EMAIL_TO || "finance.controller@example.com"),
+      subject: report.subject, text: report.text, html: report.html, sentAt: `${qatarTime()} Doha`, send: true, sendKey: runId,
     },
   };
   const atRisk = flags.reduce((s, f) => s + f.amount, 0);
   yield {
-    type: "verdict", id: "verdict", status: mail.sent ? "ALERT SENT" : "ALERT RAISED", tone: "warn",
-    headline: `${flags.length} issues involving ${qar(atRisk)} found in ${payments.length} payments. ${mail.sent ? "The report is in the controller's inbox." : "The report is ready for the controller."}`,
+    type: "verdict", id: "verdict", status: "ALERT RAISED", tone: "warn",
+    headline: `${flags.length} issues involving ${qar(atRisk)} found in ${payments.length} payments. This is the report the inbox receives.`,
     reason: "Found by plain statistics, so every finding is exact and repeatable. The model only wrote the explanations, in English and Arabic.",
     evidence: [
       { label: "Checked", value: `${payments.length} payments, ${logins.length} logins` },

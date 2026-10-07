@@ -39,16 +39,22 @@ describe("night-watchman run", () => {
     const v = ev.find((e) => e.type === "verdict");
     expect(v && v.type === "verdict" && v.headline).toMatch(/^5 issues involving QAR [\d,]+\.\d\d found in 500 payments/);
   });
-  it("without SMTP: shows the email, says ALERT RAISED, and explains only in the evidence drawer", async () => {
-    const ev = await events({});
+  it("never sends from the runner: the inbox panel asks the stage to send, and the verdict claims nothing", async () => {
+    const ev = await events({ SMTP_HOST: "smtp.example.com", ALERT_EMAIL_TO: "owner@gmail.com" });
     const email = ev.find((e) => e.type === "panel" && e.id === "email");
-    expect(email && email.type === "panel" && String(email.props.subject)).toBe("Night shift report: 5 items need a look (Marsa Holdings AP)");
-    expect(JSON.stringify(email)).not.toMatch(/SMTP/);
+    expect(email && email.type === "panel" && email.props).toMatchObject({ subject: "Night shift report: 5 items need a look (Marsa Holdings AP)", send: true });
+    expect(email && email.type === "panel" && String(email.props.html)).toContain("<h2");
+    expect(JSON.stringify(ev)).not.toContain("owner@gmail.com");
+    expect(ev.some((e) => e.type === "control.event" && e.detector === "alert.email")).toBe(false);
     const v = ev.find((e) => e.type === "verdict");
     expect(v && v.type === "verdict" && v.status).toBe("ALERT RAISED");
-    expect(JSON.stringify(v)).not.toMatch(/SMTP/);
-    const ce = ev.find((e) => e.type === "control.event" && e.detector === "alert.email");
-    expect(ce && ce.type === "control.event" && ce.detail).toBe("Email not sent: SMTP_HOST not set");
+  });
+  it("asks who should receive the report before the shift runs", async () => {
+    const ev = await events();
+    const firstPause = ev.findIndex((e) => e.type === "pause" && e.label === "Run tonight's shift");
+    const recipient = ev.findIndex((e) => e.type === "panel" && e.kind === "recipient");
+    expect(recipient).toBeGreaterThan(-1);
+    expect(recipient).toBeLessThan(firstPause);
   });
   it("puts each flag's English, Arabic and action in the email body", async () => {
     const ev = await events();

@@ -5,7 +5,7 @@ export type Tone = z.infer<typeof Tone>;
 export const Slot = z.enum(["main", "left", "right", "aside"]);
 export type Slot = z.infer<typeof Slot>;
 export const PanelKind = z.enum([
-  "markdown", "document", "files", "diff", "table", "chat", "json", "gate", "matrix", "image", "scorecard", "chart", "verdict", "counter", "timeline", "email",
+  "markdown", "document", "files", "diff", "table", "chat", "json", "gate", "matrix", "image", "scorecard", "chart", "verdict", "counter", "timeline", "email", "recipient",
 ]);
 export type PanelKind = z.infer<typeof PanelKind>;
 export const Evidence = z.object({ label: z.string(), value: z.string() });

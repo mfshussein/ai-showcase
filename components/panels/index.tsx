@@ -15,6 +15,7 @@ import { ScorecardPanel } from "./scorecard";
 import { CounterPanel } from "./counter";
 import { TimelinePanel } from "./timeline";
 import { EmailPanel } from "./email";
+import { RecipientPanel } from "./recipient";
 
 export type PanelProps = { id: string; props: Record<string, unknown> };
 
@@ -34,7 +35,8 @@ export type PanelProps = { id: string; props: Record<string, unknown> };
  * scorecard { title?, criteria: {name,a?,b?,max,reasoning?}[], winner? }
  * counter   { title?, value, total, label?, tone?, text?, highlights?: {text,tone}[], missed?: string[] }
  * timeline  { title?, nights: {date, state: quiet|alert|running|pending, count?}[] }
- * email     { title?, from, to, subject, text, sentAt? }
+ * email     { title?, from, to, subject, text, html?, sentAt?, send?, sendKey? } (send: the stage emails it once, presenter only)
+ * recipient { label? } (editable "Email to"; default comes from ALERT_EMAIL_TO, shown masked)
  */
 export const PANELS: Record<PanelKind, ComponentType<PanelProps>> = {
   markdown: MarkdownPanel,
@@ -53,4 +55,5 @@ export const PANELS: Record<PanelKind, ComponentType<PanelProps>> = {
   counter: CounterPanel,
   timeline: TimelinePanel,
   email: EmailPanel,
+  recipient: RecipientPanel,
 };
