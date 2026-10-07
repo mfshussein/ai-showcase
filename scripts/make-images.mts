@@ -33,6 +33,9 @@ for (const slug of slugs) {
       const pct = (v, d) => Math.round((v / d) * 1000) / 10;
       return { id: el.getAttribute("data-tile"), title: el.getAttribute("data-title") || "", x: pct(r.x, ${width}), y: pct(r.y, ${height}), w: pct(r.width, ${width}), h: pct(r.height, ${height}) };
     })`)) as { id: string; title: string; x: number; y: number; w: number; h: number }[];
+    // What is on screen, chart labels included: the source that quoted figures are traced against.
+    const visible = (await page.evaluate(`(() => { const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); const out = []; let n; while ((n = w.nextNode())) { const p = n.parentElement; if (p && !["SCRIPT", "STYLE"].includes(p.tagName) && n.textContent.trim()) out.push(n.textContent.trim()); } return out.join("\\n"); })()`)) as string;
+    if (tiles.length) await writeFile(path.join(outDir, `${name}.text.txt`), visible + "\n");
     if (tiles.length) await writeFile(path.join(outDir, `${name}.tiles.json`), JSON.stringify({ width, height, tiles }, null, 2) + "\n");
     console.log(`${slug}/${name}.png ${width}x${height}${tiles.length ? `, ${tiles.length} tiles` : ""}`);
     await page.close();

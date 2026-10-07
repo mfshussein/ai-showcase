@@ -1,0 +1,67 @@
+Contact centre · September 2026
+Rawda Telecom customer care · synthetic data
+Answered within 30 s
+71%
+target 80% ·
+-6 pts
+Average handle time
+6m 48s
++41s
+vs Aug
+Abandon rate
+9.8%
++3.1 pts
+CSAT
+4.2 / 5
+flat
+Daily service level, %
+50
+60
+70
+80
+90
+1
+4
+7
+10
+13
+16
+19
+22
+25
+28
+Service level
+Target
+Top contact reasons, % of calls
+0%
+9%
+18%
+27%
+36%
+31%
+Billing
+14%
+Roaming
+22%
+5G home
+18%
+Outage
+15%
+Other
+Queues
+Queue
+Calls
+SLA
+Agents
+Arabic general
+41,220
+74%
+58
+English general
+18,905
+79%
+24
+Business
+6,410
+88%
+12
