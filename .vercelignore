@@ -1,0 +1,7 @@
+.env*
+!.env.example
+.superpowers
+test-results
+playwright-report
+.next
+node_modules
