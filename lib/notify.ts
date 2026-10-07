@@ -2,6 +2,11 @@
 export type ReportLine = { kind: string; vendor: string; amount: number; en: string; ar: string; action: string };
 export type Report = { subject: string; text: string; html: string; slack: string };
 
+/** "Name <local@domain>" or "local@domain" → keep the first character of the local part. Recordings are committed; mailboxes are not. */
+export function maskEmail(s: string): string {
+  return s.replace(/([A-Za-z0-9._%+-])[A-Za-z0-9._%+-]*@([A-Za-z0-9.-]+)/g, "$1•••@$2");
+}
+
 export const qar = (n: number) => `QAR ${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const money = (n: number) => (n ? ` · ${qar(n)}` : "");
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -35,7 +40,7 @@ export async function sendWebhook(text: string, env: Record<string, string | und
   const url = env.SLACK_WEBHOOK_URL;
   if (!url) return { sent: false, reason: "SLACK_WEBHOOK_URL not set" };
   try {
-    const res = await fetchImpl(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text }) });
+    const res = await fetchImpl(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text }), signal: AbortSignal.timeout(8000) });
     return res.ok ? { sent: true } : { sent: false, reason: `webhook ${res.status}` };
   } catch {
     return { sent: false, reason: "webhook unreachable" };

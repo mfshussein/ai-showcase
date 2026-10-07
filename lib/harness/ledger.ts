@@ -43,7 +43,7 @@ export function generateLedger(seed = 2026, opts: { plant?: boolean } = {}): Led
   for (let t = START; t <= END; t += DAY) if (working(t)) workDays.push(t);
   let inv = 10000;
   const payments: Payment[] = [];
-  const normalCount = plant ? 493 : 500; // planted rows: 1 duplicate, 1 fuzzy, 1 outlier, 3 split = 6, plus the outlier vendor's extra history row
+  const normalCount = plant ? 492 : 500; // planted rows: 1 duplicate, 2 fuzzy, 1 outlier, 3 split, plus one extra history row for the outlier vendor
   const mk = (date: string, vendor: string, amount: number): Payment => ({ id: "", date, vendor, invoice: `INV-${inv++}`, amount: round2(amount), approver: pick(APPROVERS) });
   for (let i = 0; i < normalCount; i++) {
     const v = pick(VENDORS);
@@ -52,26 +52,24 @@ export function generateLedger(seed = 2026, opts: { plant?: boolean } = {}): Led
   const planted = { "exact-duplicate": [], "fuzzy-duplicate": [], outlier: [], "split-invoice": [], "off-hours-login": [] } as Record<FlagKind, string[]>;
   const tag = (p: Payment, kind: FlagKind) => { planted[kind].push(p.invoice); return p; };
   if (plant) {
-    // Exact duplicate: the same invoice paid twice.
+    // Everything planted was posted last night (6 October), so tonight's shift is the first that could see it.
+    const LAST = "2026-10-06";
+    // Exact duplicate: an invoice from the summer paid again last night.
     const orig = payments[Math.floor(rnd() * 100)];
     tag(orig, "exact-duplicate");
-    payments.push(tag({ ...orig, approver: pick(APPROVERS) }, "exact-duplicate"));
-    // Fuzzy duplicate: same vendor and amount two days later, re-keyed with a new invoice number.
-    // Exactly two calendar days later, both on working days (Sunday to Tuesday originals).
-    let fi = 100 + Math.floor(rnd() * 100);
-    while (!working(Date.parse(`${payments[fi].date}T00:00:00Z`) + 2 * DAY)) fi++;
-    const f0 = payments[fi];
-    const f1day = Date.parse(`${f0.date}T00:00:00Z`) + 2 * DAY;
-    tag(f0, "fuzzy-duplicate");
-    payments.push(tag({ ...mk(iso(f1day), f0.vendor, f0.amount), amount: f0.amount }, "fuzzy-duplicate"));
+    payments.push(tag({ ...orig, date: LAST, approver: pick(APPROVERS) }, "exact-duplicate"));
+    // Fuzzy duplicate: same vendor and amount, 4 and 6 October, re-keyed with a new invoice number.
+    const fv = VENDORS[2];
+    const famt = round2(fv.mean * (0.75 + rnd() * 0.5));
+    payments.push(tag(mk("2026-10-04", fv.name, famt), "fuzzy-duplicate"));
+    payments.push(tag(mk(LAST, fv.name, famt), "fuzzy-duplicate"));
     // Outlier: about six times this vendor's usual invoice (one extra normal row keeps the history deep).
     const ov = VENDORS[3];
     payments.push(mk(iso(pick(workDays)), ov.name, ov.mean));
-    payments.push(tag(mk(iso(workDays[workDays.length - 3]), ov.name, ov.mean * 6.2), "outlier"));
-    // Split invoices: three just under the QAR 50,000 approval threshold, same vendor, within three days.
+    payments.push(tag(mk(LAST, ov.name, ov.mean * 6.2), "outlier"));
+    // Split invoices: three on one day, each just under the QAR 50,000 approval threshold.
     const sv = VENDORS[16];
-    const s0 = workDays.length - 12;
-    for (const [k, amt] of [[0, 48900], [1, 47350], [3, 49200]] as const) payments.push(tag(mk(iso(workDays[s0 + k]), sv.name, amt), "split-invoice"));
+    for (const amt of [48900, 47350, 49200]) payments.push(tag(mk(LAST, sv.name, amt), "split-invoice"));
   }
   // Stable order by date, then ids by position.
   payments.sort((a, b) => a.date.localeCompare(b.date) || a.invoice.localeCompare(b.invoice));
@@ -93,9 +91,9 @@ export function generateLedger(seed = 2026, opts: { plant?: boolean } = {}): Led
     const mm = String(Math.floor(rnd() * 60)).padStart(2, "0");
     logins.push({ id: "", at: `${day}T${hh}:${mm}:00`, user: u.user, role: u.role, ip: `10.20.${Math.floor(rnd() * 8)}.${10 + Math.floor(rnd() * 200)}` });
   }
-  if (plant) logins.push({ id: "", at: "2026-10-03T03:12:00", user: "it.ops", role: "admin", ip: "203.0.113.47" });
+  if (plant) logins.push({ id: "", at: "2026-10-07T02:47:00", user: "it.ops", role: "admin", ip: "203.0.113.47" });
   logins.sort((a, b) => a.at.localeCompare(b.at));
   logins.forEach((l, i) => { l.id = `L-${String(i + 1).padStart(4, "0")}`; });
-  if (plant) planted["off-hours-login"] = logins.filter((l) => l.at === "2026-10-03T03:12:00").map((l) => l.id);
+  if (plant) planted["off-hours-login"] = logins.filter((l) => l.at === "2026-10-07T02:47:00").map((l) => l.id);
   return { payments, logins, planted };
 }

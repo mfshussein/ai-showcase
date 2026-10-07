@@ -12,7 +12,8 @@ function termPattern(en: string): RegExp {
 }
 
 export function checkTerms(translation: string, glossary: Term[]): TermResult[] {
-  const text = plainPunctuation(translation);
+  // Markdown emphasis becomes spaces (same length), so "**Golden Saver** Account" still matches.
+  const text = plainPunctuation(translation).replace(/[*_]/g, " ");
   return glossary.map((term) => {
     const m = termPattern(term.en).exec(text);
     return m ? { term, honoured: true, match: translation.slice(m.index, m.index + m[0].length) } : { term, honoured: false };

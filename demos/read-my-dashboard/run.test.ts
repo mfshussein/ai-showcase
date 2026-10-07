@@ -19,13 +19,14 @@ describe("read-my-dashboard preconditions", () => {
   });
 });
 
-function fakeLlm(): Llm {
+function fakeLlm(reading?: unknown): Llm {
   return {
     label: "fake",
     async text() { return ""; },
     async *stream() { yield ""; },
     async parse() { throw new Error("unused"); },
-    async vision() {
+    async vision(o: { schema?: { parse: (x: unknown) => unknown } }) {
+      if (reading) return o.schema!.parse(reading) as never;
       return {
         cfoLines: ["Collections fell to 11.4 million.", "Tower C collected 41%.", "Occupancy is 82%."],
         anomalies: [
@@ -40,8 +41,8 @@ function fakeLlm(): Llm {
   } as Llm;
 }
 
-async function events() {
-  const ctx: RunContext = { mode: "record", llm: fakeLlm(), fixture: (n) => readFile(fx(n), "utf8"), fixtureBuffer: (n) => readFile(fx(n)) };
+async function events(reading?: unknown) {
+  const ctx: RunContext = { mode: "record", llm: fakeLlm(reading), fixture: (n) => readFile(fx(n), "utf8"), fixtureBuffer: (n) => readFile(fx(n)) };
   const out = [];
   for await (const e of run(ctx)) out.push(e);
   return out;
@@ -61,5 +62,23 @@ describe("read-my-dashboard run", () => {
     const rows = trace && trace.type === "panel" ? (trace.props.rows as { figure: string; status: { text: string } }[]) : [];
     expect(rows.find((r) => r.figure === "41")?.status.text).toBe("PRINTED");
     expect(rows.find((r) => r.figure === "52")?.status.text).toMatch(/CHECK/);
+  });
+  it("survives imperfect output: extra items, a null box, an array box; the headline counts what was circled", async () => {
+    const ev = await events({
+      cfoLines: ["a", "b", "c", "d"],
+      anomalies: [
+        { label: "No box", why: "w", box: null },
+        { label: "Array box", why: "w", box: [60, 33, 37, 38] },
+        { label: "Third", why: "w", box: { x: 60, y: 33, w: 37, h: 38 } },
+      ],
+      questions: ["q1", "q2", "q3", "q4"],
+    });
+    const patch = ev.find((e) => e.type === "panel.patch" && e.id === "dash");
+    const callouts = patch && patch.type === "panel.patch" ? (patch.patch.callouts as { label: string }[]) : [];
+    expect(callouts.map((c) => c.label)).toEqual(["Array box"]);
+    const v = ev.find((e) => e.type === "verdict");
+    expect(v && v.type === "verdict" && v.headline).toMatch(/one anomaly circled/);
+    const cfo = ev.find((e) => e.type === "panel" && e.id === "cfo");
+    expect(cfo && cfo.type === "panel" && String(cfo.props.text).split("\n")).toHaveLength(3);
   });
 });

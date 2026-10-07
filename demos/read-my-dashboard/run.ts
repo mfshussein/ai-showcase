@@ -1,7 +1,7 @@
 import type { DemoRunner } from "../types";
 import { snapToTile } from "@/lib/harness/regions";
 import { extractFigures, traceFigures } from "@/lib/harness/figures";
-import { DASHBOARDS, PICK, Reading, TilesFile, src } from "./shared";
+import { DASHBOARDS, PICK, Reading, TilesFile, src, toBox } from "./shared";
 
 const bullets = (xs: string[]) => xs.map((x) => `- ${x}`).join("\n");
 
@@ -45,19 +45,23 @@ export const run: DemoRunner = async function* (ctx) {
 - anomalies: the two things that look wrong or contradictory. For each: a short label (max 5 words), why it matters (one sentence), and box: the bounding box of the tile or chart where it appears, as percentages of image width and height (0 to 100), with x,y the top-left corner.
 - questions: three questions to ask the team before the meeting.`,
   })) as Reading;
+  reading.cfoLines = reading.cfoLines.slice(0, 3);
+  reading.anomalies = reading.anomalies.slice(0, 2);
+  reading.questions = reading.questions.slice(0, 3);
   const seconds = (Date.now() - t0) / 1000;
 
   const callouts = reading.anomalies.flatMap((a) => {
-    const tile = snapToTile(a.box, layout.tiles, layout);
+    const box = toBox(a.box);
+    const tile = box ? snapToTile(box, layout.tiles, layout) : null;
     return tile ? [{ x: tile.x, y: tile.y, w: tile.w, h: tile.h, label: a.label }] : [];
   });
   yield { type: "panel.patch", id: "dash", patch: { callouts } };
   yield { type: "panel", id: "cfo", kind: "markdown", slot: "right", props: { title: "What the CFO will say", text: bullets(reading.cfoLines) } };
-  yield { type: "panel", id: "anomalies", kind: "markdown", slot: "right", props: { tone: "block", title: "Two things look wrong", text: bullets(reading.anomalies.map((a) => `**${a.label}.** ${a.why}`)) } };
+  yield { type: "panel", id: "anomalies", kind: "markdown", slot: "right", props: { tone: "block", title: reading.anomalies.length === 1 ? "One thing looks wrong" : `${reading.anomalies.length === 2 ? "Two things" : "Things that"} look wrong`, text: bullets(reading.anomalies.map((a) => `**${a.label}.** ${a.why}`)) } };
   yield { type: "panel", id: "questions", kind: "markdown", slot: "right", props: { title: "Ask before the meeting", text: bullets(reading.questions) } };
   yield {
     type: "verdict", id: "verdict", status: `READ IN ${seconds.toFixed(1)} S`, tone: "ok",
-    headline: "Three board lines, two anomalies circled, three questions. From a screenshot in Arabic.",
+    headline: `Board lines, ${["no anomaly could be", "one anomaly", "two anomalies"][callouts.length]} circled, questions to ask. From a screenshot in Arabic.`,
     reason: "One call to a vision model. The callouts are snapped to the dashboard tiles it pointed at, so a box is never drawn in the wrong place.",
     evidence: [
       { label: "Model", value: ctx.llm.label },

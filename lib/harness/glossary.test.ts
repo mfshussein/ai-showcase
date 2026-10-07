@@ -22,6 +22,10 @@ describe("checkTerms", () => {
   it("treats curly apostrophes and en dashes like their plain forms", () => {
     expect(checkTerms("Profit–Sharing Ratio’s", [{ ar: "x", en: "Profit-Sharing Ratio's" }])[0].honoured).toBe(true);
   });
+  it("ignores markdown emphasis inside a term", () => {
+    expect(checkTerms("Open a **Golden Saver** Account today", G)[2].honoured).toBe(true);
+    expect(checkTerms("the _QCB Circular_ applies", G)[1].honoured).toBe(true);
+  });
   it("returns match spans as the text appears, for highlighting", () => {
     expect(checkTerms("See the qcb circular now", G)[1].match).toBe("qcb circular");
   });

@@ -59,6 +59,13 @@ describe("sendAlertEmail", () => {
     let seen: Record<string, unknown> = {};
     await sendAlertEmail(msg, env, (o) => { seen = o as Record<string, unknown>; return nodemailer.createTransport({ jsonTransport: true }); });
     expect(seen).toMatchObject({ host: "smtp.example.com", port: 465, secure: true, auth: { user: "u", pass: "secret-pass" } });
+    expect(seen).toMatchObject({ connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 15000 });
+  });
+  it("masks mailboxes in failure reasons, because reasons end up in committed recordings", async () => {
+    const failing = () => ({ sendMail: async () => { throw new Error("550 mailbox unavailable <real.person@corp.example>"); } }) as unknown as Transporter;
+    const r = await sendAlertEmail(msg, env, failing);
+    expect(r.reason).not.toContain("real.person@");
+    expect(r.reason).toContain("r•••@corp.example");
   });
   it("reports a failure without leaking the password", async () => {
     const failing = () => ({ sendMail: async () => { throw new Error("auth failed for u with secret-pass"); } }) as unknown as Transporter;
@@ -70,6 +77,12 @@ describe("sendAlertEmail", () => {
 });
 
 describe("sendWebhook", () => {
+  it("gives up on a hung webhook instead of freezing the run", async () => {
+    let signal: AbortSignal | undefined;
+    const hang = (async (_u: string, init: RequestInit) => { signal = init.signal ?? undefined; return new Response("ok"); }) as unknown as typeof fetch;
+    await sendWebhook("hi", { SLACK_WEBHOOK_URL: "https://hooks.example/x" }, hang);
+    expect(signal).toBeInstanceOf(AbortSignal);
+  });
   it("does nothing without a URL", async () => {
     expect(await sendWebhook("hi", {})).toEqual({ sent: false, reason: "SLACK_WEBHOOK_URL not set" });
   });

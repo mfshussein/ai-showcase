@@ -43,12 +43,12 @@ describe("detectAnomalies", () => {
     expect(split.ids.every((id) => byId.get(id)!.amount < 50000)).toBe(true);
     expect(flags.find((f) => f.kind === "off-hours-login")!.amount).toBe(0);
   });
-  it("flags an admin login at 03:00 on a Saturday", () => {
+  it("flags an admin login at 02:47 on a Wednesday night", () => {
     const { payments, logins, planted } = generateLedger(2026);
     const login = logins.find((l) => l.id === planted["off-hours-login"][0])!;
     expect(login.role).toBe("admin");
-    expect(login.at.slice(11, 13)).toBe("03");
-    expect(detectAnomalies(payments, logins).find((f) => f.kind === "off-hours-login")!.detail).toMatch(/Saturday 03:/);
+    expect(login.at.slice(11, 16)).toBe("02:47");
+    expect(detectAnomalies(payments, logins).find((f) => f.kind === "off-hours-login")!.detail).toMatch(/Wednesday 02:47/);
   });
 });
 
@@ -57,5 +57,21 @@ describe("outlier materiality", () => {
     const base = [100, 101, 99, 100.5, 99.5, 100.2, 99.8, 100.4];
     const payments = [...base, 140].map((amount, i) => ({ id: `P-${i}`, date: `2026-05-${String(i + 3).padStart(2, "0")}`, vendor: "V", invoice: `I-${i}`, amount, approver: "a" }));
     expect(detectAnomalies(payments, [])).toEqual([]);
+  });
+});
+
+describe("tonight's story", () => {
+  it("every planted issue happened last night: a row dated 2026-10-06 or later in each payment flag, and the login on 2026-10-07", () => {
+    const { payments, logins } = generateLedger(2026);
+    const byId = new Map(payments.map((p) => [p.id, p]));
+    for (const f of detectAnomalies(payments, logins)) {
+      if (f.kind === "off-hours-login") expect(logins.find((l) => l.id === f.ids[0])!.at.slice(0, 10)).toBe("2026-10-07");
+      else expect(f.ids.some((id) => byId.get(id)!.date >= "2026-10-06"), f.kind).toBe(true);
+    }
+  });
+  it("nothing planted would have fired on an earlier night", () => {
+    const { payments, logins } = generateLedger(2026);
+    const before = payments.filter((p) => p.date < "2026-10-06");
+    expect(detectAnomalies(before, logins.filter((l) => l.at < "2026-10-06"))).toEqual([]);
   });
 });

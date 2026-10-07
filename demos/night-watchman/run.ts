@@ -28,7 +28,7 @@ export const run: DemoRunner = async function* (ctx) {
   yield { type: "pause" };
 
   yield { type: "act.start", act: 2, title: "Fourteen nights", subtitle: "Marsa Holdings, a fictional group. Eleven quiet nights, three with something worth a look." };
-  yield { type: "panel", id: "timeline", kind: "timeline", props: { title: "The last fourteen nights", nights: nights({ date: TONIGHT, state: "pending" }) } };
+  yield { type: "panel", id: "timeline", kind: "timeline", props: { title: "The last fourteen nights, and tonight", nights: nights({ date: TONIGHT, state: "pending" }) } };
   const total = payments.reduce((s, p) => s + p.amount, 0);
   yield {
     type: "panel", id: "scope", kind: "table", slot: "left",
@@ -104,7 +104,7 @@ export const run: DemoRunner = async function* (ctx) {
   const atRisk = flags.reduce((s, f) => s + f.amount, 0);
   yield {
     type: "verdict", id: "verdict", status: mail.sent ? "ALERT SENT" : "ALERT RAISED", tone: "warn",
-    headline: `${flags.length} issues worth ${qar(atRisk)} found in ${payments.length} payments. ${mail.sent ? "The report is in the controller's inbox." : "The report is ready for the controller."}`,
+    headline: `${flags.length} issues involving ${qar(atRisk)} found in ${payments.length} payments. ${mail.sent ? "The report is in the controller's inbox." : "The report is ready for the controller."}`,
     reason: "Found by plain statistics, so every finding is exact and repeatable. The model only wrote the explanations, in English and Arabic.",
     evidence: [
       { label: "Checked", value: `${payments.length} payments, ${logins.length} logins` },

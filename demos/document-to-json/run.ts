@@ -35,12 +35,23 @@ export const run: DemoRunner = async function* (ctx) {
     if (i > 0) yield { type: "pause", label: "Next document" };
     yield { type: "panel", id: "doc", kind: "image", slot: "left", props: { title: doc.title, src: src(doc.file), alt: doc.title } };
     yield { type: "panel", id: "record", kind: "json", slot: "right", props: { title: "Extracting…", fields: [] } };
-    const rec = (await ctx.llm.vision({
-      model: "main", schema: doc.schema,
-      image: { data: (await ctx.fixtureBuffer(doc.file)).toString("base64"), mediaType: "image/png" },
-      system: "You extract structured data from business documents for a back-office system in Qatar. Return only what is on the document. No emoji.",
-      prompt: doc.prompt,
-    })) as Record<string, unknown>;
+    let rec: Record<string, unknown>;
+    try {
+      rec = (await ctx.llm.vision({
+        model: "main", schema: doc.schema,
+        image: { data: (await ctx.fixtureBuffer(doc.file)).toString("base64"), mediaType: "image/png" },
+        system: "You extract structured data from business documents for a back-office system in Qatar. Return only what is on the document. No emoji.",
+        prompt: doc.prompt,
+      })) as Record<string, unknown>;
+    } catch {
+      // Extraction failed: nothing is guessed, the document goes to a person.
+      const failed: Check = { field: "document", rule: "readable", ok: false, tone: "warn", message: "Could not be extracted: human check" };
+      results.push({ title: doc.title, verdict: "HUMAN CHECK", checks: [failed] });
+      yield { type: "panel.patch", id: "record", patch: { title: `Record: ${doc.title}`, fields: [] } };
+      yield { type: "panel", id: "checks", kind: "table", slot: "main", props: { title: "Validation: HUMAN CHECK", columns: [{ key: "rule", label: "Check" }, { key: "message", label: "Finding" }, { key: "result", label: "Result" }], rows: [{ rule: failed.rule, message: failed.message, result: { text: "HUMAN CHECK", tone: "warn" } }] } };
+      yield { type: "control.event", detector: "doc.extract", policyId: "DOC-02", action: "hold", recordId: `CE-${ce++}`, detail: `${doc.title}: extraction failed` };
+      continue;
+    }
     const checks = doc.checks(rec);
     const fields = Object.entries(flatten(rec)).map(([path, f]: [string, Field]) => {
       const bad = checks.filter((c) => !c.ok && c.field === path);

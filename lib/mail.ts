@@ -1,6 +1,7 @@
 /** Sends the alert email over SMTP. Server-only. Credentials come from env and are never logged or returned. */
 import nodemailer, { type Transporter } from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
+import { maskEmail } from "./notify";
 
 type Env = Record<string, string | undefined>;
 type MakeTransport = (o: SMTPTransport.Options) => Transporter;
@@ -16,10 +17,12 @@ export async function sendAlertEmail(
   const secrets = [env.SMTP_PASS, env.SMTP_USER].filter((s): s is string => !!s && s.length > 2);
   const scrub = (s: string) => secrets.reduce((acc, x) => acc.split(x).join("***"), s);
   try {
-    const transport = makeTransport({ host: env.SMTP_HOST, port, secure: port === 465, auth: { user: env.SMTP_USER ?? "", pass: env.SMTP_PASS ?? "" } });
+    const transport = makeTransport({ host: env.SMTP_HOST, port, secure: port === 465, auth: { user: env.SMTP_USER ?? "", pass: env.SMTP_PASS ?? "" },
+      // Venue Wi-Fi often blocks SMTP ports: fail in seconds, not minutes, so the stage never hangs at the pin drop.
+      connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 15000 });
     const info = (await transport.sendMail({ from: env.SMTP_FROM ?? env.SMTP_USER, to: env.ALERT_EMAIL_TO, subject: msg.subject, text: msg.text, html: msg.html })) as { messageId?: string; message?: unknown };
     return { sent: true, id: info.messageId, ...(typeof info.message === "string" ? { raw: info.message } : {}) };
   } catch (e) {
-    return { sent: false, reason: scrub(`smtp error: ${e instanceof Error ? e.message : String(e)}`).slice(0, 200) };
+    return { sent: false, reason: maskEmail(scrub(`smtp error: ${e instanceof Error ? e.message : String(e)}`)).slice(0, 200) };
   }
 }

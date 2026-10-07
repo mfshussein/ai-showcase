@@ -26,6 +26,7 @@ npm run dev                  # http://localhost:3000
 | `MODEL_MAIN`, `MODEL_FAST` | The capable model and the cheap classifier model. Defaults depend on the provider. |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | Night watchman alert email (port 465 uses implicit TLS). Without `SMTP_HOST` the email is still shown on stage and the evidence drawer says it was not sent. |
 | `ALERT_EMAIL_TO` | Who receives the night shift report. Put your own address here to have your phone buzz in the meeting. |
+| `PUBLIC_BASE_URL` | The deployed showcase URL, used for the evidence link in the alert email. Defaults to `http://localhost:3000`, which is a dead link on a phone. |
 | `SLACK_WEBHOOK_URL` | Optional. Also posts the report to a Slack or Microsoft Teams incoming webhook. |
 
 ## Presenting

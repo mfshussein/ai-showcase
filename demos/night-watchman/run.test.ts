@@ -37,7 +37,7 @@ describe("night-watchman run", () => {
     const rows = table && table.type === "panel.patch" ? (table.patch.rows as { amount: string }[]) : [];
     expect(rows).toHaveLength(5);
     const v = ev.find((e) => e.type === "verdict");
-    expect(v && v.type === "verdict" && v.headline).toMatch(/^5 issues worth QAR [\d,]+\.\d\d found in 500 payments/);
+    expect(v && v.type === "verdict" && v.headline).toMatch(/^5 issues involving QAR [\d,]+\.\d\d found in 500 payments/);
   });
   it("without SMTP: shows the email, says ALERT RAISED, and explains only in the evidence drawer", async () => {
     const ev = await events({});
@@ -61,6 +61,8 @@ describe("night-watchman run", () => {
     const ev = await events();
     const states = ev.flatMap((e) => (e.type === "panel.patch" && e.id === "timeline" ? [(e.patch.nights as { state: string; count?: number }[]).at(-1)] : []));
     expect(states[0]?.state).toBe("running");
+    const tl = ev.find((e) => e.type === "panel" && e.id === "timeline");
+    expect(tl && tl.type === "panel" && tl.props.title).toBe("The last fourteen nights, and tonight");
     expect(states.at(-1)).toMatchObject({ state: "alert", count: 5 });
   });
   it("masks email addresses so goldens never carry a real mailbox", () => {

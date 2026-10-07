@@ -18,6 +18,8 @@ const SYSTEM = `You are the WhatsApp enquiry assistant for Lusail Residences, a 
 For each inbound message, use the tools in this order: classify_enquiry; lookup_customer with the sender's phone; check_policy for every topic the customer raises plus "communication"; log_to_crm with a one-line summary and the next action; then send_whatsapp with your reply.
 Follow the policies exactly: reply in the customer's language, bilingual for a first reply to an Arabic enquiry (Arabic first, then English); quote listed prices only; no discounts; no financing advice; offer a specific viewing slot. Greet returning customers by name. Keep the reply under 120 words per language. No emoji. After send_whatsapp, end with one short sentence for the sales team.`;
 
+const NO_DRAFT = "No draft produced: the agent stopped before writing a reply. A person needs to reply to this customer.";
+
 const summarise = (name: string, args: unknown, result: unknown): string => {
   const a = (args ?? {}) as Record<string, unknown>;
   const r = (result ?? {}) as Record<string, unknown>;
@@ -77,7 +79,7 @@ export const run: DemoRunner = async function* (ctx) {
   let sendCalled = false;
   let final = "";
   const steps: AsyncGenerator<ToolStep> = ctx.llm.tools({
-    model: "main", effort: "low", maxTokens: 1500, maxSteps: 8, system: SYSTEM, tools: makeTools(data, log),
+    model: "main", effort: "low", maxTokens: 1500, maxSteps: 12, system: SYSTEM, tools: makeTools(data, log),
     prompt: `Inbound ${data.inbound.channel} message from ${data.inbound.from} at ${data.inbound.receivedAt}:\n\n${message}`,
   });
   for await (const s of steps) {
@@ -112,7 +114,8 @@ export const run: DemoRunner = async function* (ctx) {
   }
   if (!sendCalled) {
     // The model never tried to send. The harness still owns the send step: the final text becomes the draft, and it is held.
-    draft = final;
+    // A stopped loop or an empty reply is not a draft: say so rather than show a sentinel as the customer reply.
+    draft = !final.trim() || /^\(stopped after \d+ steps\)$/.test(final.trim()) ? NO_DRAFT : final;
     set("draft", "pass");
     set("send", "hold", "awaiting approval");
     yield { type: "panel.patch", id: "plan", patch: plan() };

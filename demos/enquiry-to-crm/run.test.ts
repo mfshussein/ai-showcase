@@ -7,7 +7,7 @@ import type { RunContext } from "../types";
 import type { RunEventInput } from "@/lib/events";
 
 const DRAFT = "وعليكم السلام سارة...\n\nHello Sara...";
-function script(withSend: boolean): ToolStep[] {
+function script(withSend: boolean, finalText?: string): ToolStep[] {
   const s: ToolStep[] = [
     { type: "call", id: "1", name: "classify_enquiry", args: { intent: "purchase", language: "ar", summary: "2-bed" } },
     { type: "result", id: "1", name: "classify_enquiry", result: { recorded: true, queue: "Sales: residential" } },
@@ -19,7 +19,7 @@ function script(withSend: boolean): ToolStep[] {
     { type: "result", id: "4", name: "log_to_crm", result: { created: true, id: "CRM-04211" } },
   ];
   if (withSend) s.push({ type: "call", id: "5", name: "send_whatsapp", args: { to: "+97455123487", text: DRAFT } }, { type: "result", id: "5", name: "send_whatsapp", result: { status: "HELD", reason: "x" } });
-  s.push({ type: "final", text: withSend ? "Reply held for approval." : DRAFT });
+  s.push({ type: "final", text: finalText ?? (withSend ? "Reply held for approval." : DRAFT) });
   return s;
 }
 
@@ -35,10 +35,10 @@ function fakeLlm(steps: ToolStep[], seen: { maxSteps?: number; tools?: string[] 
   } as unknown as Llm;
 }
 
-async function events(withSend = true) {
+async function events(withSend = true, finalText?: string) {
   const seen: { maxSteps?: number; tools?: string[] } = {};
   const fx = (n: string) => path.join(__dirname, "fixtures", n);
-  const ctx: RunContext = { mode: "record", llm: fakeLlm(script(withSend), seen), fixture: (n) => readFile(fx(n), "utf8"), fixtureBuffer: (n) => readFile(fx(n)) };
+  const ctx: RunContext = { mode: "record", llm: fakeLlm(script(withSend, finalText), seen), fixture: (n) => readFile(fx(n), "utf8"), fixtureBuffer: (n) => readFile(fx(n)) };
   const out: RunEventInput[] = [];
   for await (const e of run(ctx)) out.push(e);
   return { out, seen };
@@ -47,9 +47,9 @@ type Stage = { id: string; state: string };
 const sendState = (e: RunEventInput) => (e.type === "panel.patch" && e.id === "plan" ? (e.patch.stages as Stage[]).find((s) => s.id === "send")?.state : undefined);
 
 describe("enquiry-to-crm run", () => {
-  it("offers all five tools with a step cap of 8", async () => {
+  it("offers all five tools with a step cap of 12", async () => {
     const { seen } = await events();
-    expect(seen.maxSteps).toBe(8);
+    expect(seen.maxSteps).toBe(12);
     expect(seen.tools).toEqual(["classify_enquiry", "lookup_customer", "check_policy", "log_to_crm", "send_whatsapp"]);
   });
   it("holds the send, then marks it sent only after the presenter advances", async () => {
@@ -73,5 +73,11 @@ describe("enquiry-to-crm run", () => {
     expect(hold && hold.type === "verdict" && hold.status).toBe("HOLD");
     const reply = out.find((e) => e.type === "panel" && e.id === "reply");
     expect(JSON.stringify(reply)).toContain("Hello Sara");
+  });
+  it("never shows the step-cap sentinel as the customer reply", async () => {
+    const { out } = await events(false, "(stopped after 12 steps)");
+    const reply = out.find((e) => e.type === "panel" && e.id === "reply");
+    expect(JSON.stringify(reply)).not.toContain("(stopped");
+    expect(JSON.stringify(reply)).toContain("No draft produced");
   });
 });

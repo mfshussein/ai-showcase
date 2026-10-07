@@ -13,10 +13,7 @@ export const KIND_LABEL: Record<FlagKind, string> = {
 
 export const Notes = z.object({ notes: z.array(z.object({ id: z.string(), en: z.string(), ar: z.string(), action: z.string() })) });
 
-/** "Name <local@domain>" or "local@domain" → keep the first character of the local part. Goldens are committed; mailboxes are not. */
-export function maskEmail(s: string): string {
-  return s.replace(/([A-Za-z0-9._%+-])[A-Za-z0-9._%+-]*@([A-Za-z0-9.-]+)/g, "$1•••@$2");
-}
+export { maskEmail } from "@/lib/notify";
 
 export function qatarTime(d = new Date()): string {
   return d.toLocaleTimeString("en-GB", { timeZone: "Asia/Qatar", hour: "2-digit", minute: "2-digit" });

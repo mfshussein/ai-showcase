@@ -12,13 +12,13 @@ const RECORDS: Record<string, unknown> = {
   note: { noteNumber: f("DN 7731"), date: f("2026-10-05"), deliverTo: f("Marina Tower 3 site, Lusail"), receivedBy: f("M. Farouk"), lines: [{ item: f("Cement"), qty: f(17, 0.55), unit: f("pallets") }] },
 };
 
-function fakeLlm(records = RECORDS): Llm {
+function fakeLlm(records = RECORDS, failId = false): Llm {
   return {
     label: "fake",
     async text() { return ""; },
     async *stream() { yield ""; },
     async parse() { throw new Error("unused"); },
-    async vision(o: { prompt: string }) { return (o.prompt.includes("tax invoice") ? records.invoice : o.prompt.includes("identity card") ? records.id : records.note) as never; },
+    async vision(o: { prompt: string }) { if (failId && o.prompt.includes("identity card")) throw new Error("structured output failed to parse after one retry"); return (o.prompt.includes("tax invoice") ? records.invoice : o.prompt.includes("identity card") ? records.id : records.note) as never; },
     async *tools() { throw new Error("unused"); },
     usage: () => ({ inputTokens: 0, outputTokens: 0, costUsd: 0 }),
   } as unknown as Llm;
@@ -57,5 +57,30 @@ describe("document-to-json", () => {
   it("shows the KYC caveat on screen", async () => {
     const ev = await events();
     expect(JSON.stringify(ev)).toContain("licensed KYC provider");
+  });
+  it("normalises percent confidences and a VAT rate given as 5", async () => {
+    const pct = (value: string | number | null, confidence = 97) => ({ value, confidence });
+    const invoice = { supplier: pct("Ghaf"), invoiceNumber: pct("x"), date: pct("2026-09-28"), currency: pct("AED"), subtotal: pct(12400), vatRate: pct(5), vat: pct(620), total: pct(13020) };
+    const ev = await events(fakeLlm({ ...RECORDS, invoice }));
+    const checks = ev.find((e) => e.type === "panel" && e.id === "checks");
+    expect(JSON.stringify(checks)).toContain("VAT 620.00 is 5% of 12,400.00");
+    const rec = ev.find((e) => e.type === "panel.patch" && e.id === "record");
+    expect(rec && rec.type === "panel.patch" && (rec.patch.fields as { confidence: number }[])[0].confidence).toBeCloseTo(0.97);
+    const v = ev.find((e) => e.type === "verdict");
+    expect(v && v.type === "verdict" && v.status).toBe("1 OF 3 RELEASED");
+  });
+  it("asks a human when a figure is unreadable instead of printing NaN", async () => {
+    const invoice = { ...(RECORDS.invoice as object), total: f(null) };
+    const ev = await events(fakeLlm({ ...RECORDS, invoice }));
+    const checks = ev.find((e) => e.type === "panel" && e.id === "checks");
+    expect(JSON.stringify(checks)).not.toContain("NaN");
+    expect(JSON.stringify(checks)).not.toContain("printed 0.00");
+    expect(JSON.stringify(checks)).toContain("Could not read");
+  });
+  it("keeps going when one document cannot be extracted, and holds it for a human", async () => {
+    const ev = await events(fakeLlm(RECORDS, true));
+    const v = ev.find((e) => e.type === "verdict");
+    expect(v && v.type === "verdict" && v.status).toBe("0 OF 3 RELEASED");
+    expect(v && v.type === "verdict" && v.reason).toMatch(/^1 blocked by validation, 2 waiting for a human check/);
   });
 });
