@@ -5,9 +5,10 @@ import { manifest as readMyDashboard } from "./read-my-dashboard/manifest";
 import { manifest as documentToJson } from "./document-to-json/manifest";
 import { manifest as glossaryTranslation } from "./glossary-translation/manifest";
 import { manifest as enquiryToCrm } from "./enquiry-to-crm/manifest";
+import { manifest as nightWatchman } from "./night-watchman/manifest";
 
 /** Client-safe list of demos, in walkthrough order. Add a manifest import here to register a demo. */
-const all: DemoManifest[] = [conflictingDocs, guardrails, readMyDashboard, documentToJson, glossaryTranslation, enquiryToCrm];
+const all: DemoManifest[] = [conflictingDocs, guardrails, readMyDashboard, documentToJson, glossaryTranslation, enquiryToCrm, nightWatchman];
 
 export const demos: DemoManifest[] = [...all].sort((a, b) => a.order - b.order);
 

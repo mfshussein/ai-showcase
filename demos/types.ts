@@ -21,6 +21,8 @@ export interface RunContext {
   llm: Llm;
   fixture: (name: string) => Promise<string>;
   fixtureBuffer: (name: string) => Promise<Buffer>;
+  /** Environment for side effects such as sending alerts. Defaults to process.env; tests pass their own. */
+  env?: Record<string, string | undefined>;
 }
 
 export type DemoRunner = (ctx: RunContext) => AsyncGenerator<RunEventInput>;

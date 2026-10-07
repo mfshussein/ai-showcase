@@ -22,6 +22,11 @@ describe("buildReport", () => {
     expect(text).toContain("Action: Hold the second payment.");
     expect(text).toContain(opts.link);
   });
+  it("omits the amount for findings without one, such as a login", () => {
+    const { text } = buildReport([{ kind: "Off-hours admin login", vendor: "Access log", amount: 0, en: "e", ar: "a", action: "x" }], opts);
+    expect(text).toContain("1. Off-hours admin login · Access log\n");
+    expect(text).not.toContain("QAR 0.00");
+  });
   it("escapes HTML and marks Arabic lines right-to-left", () => {
     const { html } = buildReport(lines, opts);
     expect(html).toContain("Gulf &lt;Steel&gt;");
