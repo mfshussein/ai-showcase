@@ -34,7 +34,7 @@ describe("resolveProvider", () => {
 });
 
 /** A fake OpenAI-compatible server: answers chat completions from a queue. */
-function fakeServer(responses: (string | { error: true })[]) {
+function fakeServer(responses: (string | { error: true })[], withCost = false) {
   const calls: { body: Record<string, unknown> }[] = [];
   const fetchImpl = async (_url: string | URL | Request, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>;
@@ -42,7 +42,7 @@ function fakeServer(responses: (string | { error: true })[]) {
     const next = responses.shift();
     if (!next) return new Response("no more", { status: 500 });
     if (typeof next !== "string") return new Response(JSON.stringify({ error: { message: "boom" } }), { status: 500 });
-    const json = { id: "x", object: "chat.completion", created: 0, model: String(body.model), choices: [{ index: 0, message: { role: "assistant", content: next }, finish_reason: "stop" }], usage: { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 } };
+    const json = { id: "x", object: "chat.completion", created: 0, model: String(body.model), choices: [{ index: 0, message: { role: "assistant", content: next }, finish_reason: "stop" }], usage: { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15, ...(withCost ? { cost: 0.0123 } : {}) } };
     return new Response(JSON.stringify(json), { status: 200, headers: { "content-type": "application/json" } });
   };
   return { calls, fetchImpl: fetchImpl as unknown as typeof fetch };
@@ -73,6 +73,22 @@ describe("createOpenAiCompatibleLlm", () => {
     expect(await llm.parse({ prompt: "p", schema: z.object({ ok: z.boolean() }) })).toEqual({ ok: true });
     const bad = fakeServer(["nope", "still nope"]);
     await expect(createOpenAiCompatibleLlm(provider, bad.fetchImpl).parse({ prompt: "p", schema: z.object({ ok: z.boolean() }) })).rejects.toThrow(/structured output/);
+  });
+  it("sends reasoning effort and a reasoning allowance on max_tokens for OpenRouter, and prefers the reported cost", async () => {
+    const srv = fakeServer(["ok"], true);
+    const or = { ...provider, baseURL: "https://openrouter.ai/api/v1" };
+    const llm = createOpenAiCompatibleLlm(or, srv.fetchImpl);
+    await llm.text({ prompt: "hi", maxTokens: 300, effort: "low" });
+    expect(srv.calls[0].body.reasoning).toEqual({ effort: "low" });
+    expect(srv.calls[0].body.max_tokens).toBe(300 + 4000);
+    expect(llm.usage().costUsd).toBeCloseTo(0.0123);
+  });
+  it("does not send reasoning options to other hosts", async () => {
+    const srv = fakeServer(["ok"]);
+    const llm = createOpenAiCompatibleLlm(provider, srv.fetchImpl);
+    await llm.text({ prompt: "hi", maxTokens: 300 });
+    expect(srv.calls[0].body.reasoning).toBeUndefined();
+    expect(srv.calls[0].body.max_tokens).toBe(300);
   });
   it("vision() sends an image_url data URL", async () => {
     const srv = fakeServer(["a chart"]);

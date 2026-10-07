@@ -102,6 +102,12 @@ function usageTracker(prices?: Prices) {
       u.outputTokens += outTok;
       u.costUsd += costUsd(model, inTok, outTok, prices);
     },
+    /** When the gateway reports the exact charge, use it instead of the price table. */
+    addExact(inTok: number, outTok: number, cost: number) {
+      u.inputTokens += inTok;
+      u.outputTokens += outTok;
+      u.costUsd += cost;
+    },
     get: () => ({ ...u }),
   };
 }
@@ -204,25 +210,37 @@ function schemaHint(schema: z.ZodType): string {
   }
 }
 
+/** Reasoning models count their thinking against max_tokens; keep room for it so visible answers are not truncated. */
+const REASONING_ALLOWANCE = 4000;
+
 export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "openai" }>, fetchImpl?: typeof fetch): Llm {
-  const client = new OpenAI({ baseURL: provider.baseURL, apiKey: provider.apiKey, timeout: 90_000, maxRetries: 1, ...(fetchImpl ? { fetch: fetchImpl } : {}) });
+  const client = new OpenAI({ baseURL: provider.baseURL, apiKey: provider.apiKey, timeout: 120_000, maxRetries: 1, ...(fetchImpl ? { fetch: fetchImpl } : {}) });
   const MODEL = provider.models;
+  const openRouter = new URL(provider.baseURL).hostname.endsWith("openrouter.ai");
   const track = usageTracker(provider.prices);
-  const add = (model: string, usage: { prompt_tokens?: number; completion_tokens?: number } | null | undefined) => track.add(model, usage?.prompt_tokens, usage?.completion_tokens);
+  type OrUsage = { prompt_tokens?: number; completion_tokens?: number; cost?: number } | null | undefined;
+  const add = (model: string, usage: OrUsage) => {
+    if (usage && typeof usage.cost === "number") track.addExact(usage.prompt_tokens ?? 0, usage.completion_tokens ?? 0, usage.cost);
+    else track.add(model, usage?.prompt_tokens, usage?.completion_tokens);
+  };
+  const budget = (maxTokens: number | undefined) => (maxTokens ?? 4000) + (openRouter ? REASONING_ALLOWANCE : 0);
+  const extra = (effort: "low" | "medium" | "high" | undefined) => (openRouter ? { reasoning: { effort: effort ?? "medium" } } : {});
   const msgs = (system: string | undefined, user: OpenAI.ChatCompletionUserMessageParam["content"]): OpenAI.ChatCompletionMessageParam[] =>
     [...(system ? [{ role: "system" as const, content: system }] : []), { role: "user" as const, content: user }];
 
-  async function complete(model: string, messages: OpenAI.ChatCompletionMessageParam[], maxTokens: number, json: boolean): Promise<string> {
+  type Effort = "low" | "medium" | "high" | undefined;
+  async function complete(model: string, messages: OpenAI.ChatCompletionMessageParam[], maxTokens: number | undefined, json: boolean, effort: Effort): Promise<string> {
     const res = await client.chat.completions.create({
-      model, messages, max_tokens: maxTokens,
+      model, messages, max_tokens: budget(maxTokens),
       ...(json ? { response_format: { type: "json_object" as const } } : {}),
+      ...extra(effort),
     });
     add(model, res.usage);
     return res.choices[0]?.message?.content ?? "";
   }
 
-  async function parseWith<T>(model: string, messages: OpenAI.ChatCompletionMessageParam[], schema: z.ZodType<T>, maxTokens: number): Promise<T> {
-    const first = await complete(model, messages, maxTokens, true);
+  async function parseWith<T>(model: string, messages: OpenAI.ChatCompletionMessageParam[], schema: z.ZodType<T>, maxTokens: number | undefined, effort: Effort): Promise<T> {
+    const first = await complete(model, messages, maxTokens, true, effort);
     let problem: string;
     try {
       return schema.parse(JSON.parse(stripFences(first)));
@@ -234,7 +252,7 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
       { role: "assistant", content: first },
       { role: "user", content: `That JSON did not match the schema: ${problem.slice(0, 400)}. Reply with only a corrected JSON object matching this schema: ${schemaHint(schema)}` },
     ];
-    const second = await complete(model, retry, maxTokens, true);
+    const second = await complete(model, retry, maxTokens, true, effort);
     try {
       return schema.parse(JSON.parse(stripFences(second)));
     } catch {
@@ -248,11 +266,11 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
   return {
     label: provider.label,
     async text(o) {
-      return complete(MODEL[o.model ?? "main"], msgs(o.system, o.prompt), o.maxTokens ?? 4000, false);
+      return complete(MODEL[o.model ?? "main"], msgs(o.system, o.prompt), o.maxTokens, false, o.effort);
     },
     async *stream(o) {
       const model = MODEL[o.model ?? "main"];
-      const s = await client.chat.completions.create({ model, messages: msgs(o.system, o.prompt), max_tokens: o.maxTokens ?? 4000, stream: true, stream_options: { include_usage: true } });
+      const s = await client.chat.completions.create({ model, messages: msgs(o.system, o.prompt), max_tokens: budget(o.maxTokens), stream: true, stream_options: { include_usage: true }, ...extra(o.effort) });
       for await (const chunk of s) {
         const d = chunk.choices[0]?.delta?.content;
         if (d) yield d;
@@ -260,7 +278,7 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
       }
     },
     async parse(o) {
-      return parseWith(MODEL[o.model ?? "main"], msgs(withSchema(o.system, o.schema), o.prompt), o.schema, o.maxTokens ?? 4000);
+      return parseWith(MODEL[o.model ?? "main"], msgs(withSchema(o.system, o.schema), o.prompt), o.schema, o.maxTokens, o.effort);
     },
     async vision(o) {
       const model = MODEL[o.model ?? "main"];
@@ -268,8 +286,8 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
         { type: "image_url", image_url: { url: `data:${o.image.mediaType};base64,${o.image.data}` } },
         { type: "text", text: o.prompt },
       ];
-      if (o.schema) return parseWith(model, msgs(withSchema(o.system, o.schema), content), o.schema, 4000);
-      return complete(model, msgs(o.system, content), 4000, false);
+      if (o.schema) return parseWith(model, msgs(withSchema(o.system, o.schema), content), o.schema, undefined, "medium");
+      return complete(model, msgs(o.system, content), undefined, false, "medium");
     },
     usage: track.get,
   };
