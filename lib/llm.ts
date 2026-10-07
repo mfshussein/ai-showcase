@@ -9,9 +9,11 @@ import { z } from "zod";
 
 export type Prices = Record<string, [number, number]>;
 
+/** `vision`, when set, is used for every image call (a fast multimodal model keeps "read in seconds" true). */
+type Models = { main: string; fast: string; vision?: string };
 export type Provider =
-  | { kind: "anthropic"; models: { main: string; fast: string }; label: string; prices?: Prices }
-  | { kind: "openai"; baseURL: string; apiKey: string; models: { main: string; fast: string }; label: string; prices?: Prices };
+  | { kind: "anthropic"; models: Models; label: string; prices?: Prices }
+  | { kind: "openai"; baseURL: string; apiKey: string; models: Models; label: string; prices?: Prices };
 
 /** USD per million tokens: [input, output]. Checked October 2026; override with LLM_PRICE_MAIN / LLM_PRICE_FAST ("in,out"). */
 const KNOWN_PRICES: Prices = {
@@ -51,7 +53,7 @@ export function resolveProvider(env: Record<string, string | undefined> = proces
     const baseURL = env.LLM_BASE_URL;
     const apiKey = env.LLM_API_KEY;
     if (!baseURL || !apiKey) throw new Error("LLM_PROVIDER=openai needs LLM_BASE_URL and LLM_API_KEY");
-    const models = { main: env.MODEL_MAIN ?? "qwen3.8-max", fast: env.MODEL_FAST ?? "qwen3.8-flash" };
+    const models: Models = { main: env.MODEL_MAIN ?? "qwen3.8-max", fast: env.MODEL_FAST ?? "qwen3.8-flash", ...(env.MODEL_VISION ? { vision: env.MODEL_VISION } : {}) };
     const pm = parsePrice(env.LLM_PRICE_MAIN);
     const pf = parsePrice(env.LLM_PRICE_FAST);
     if (pm) prices[models.main] = pm;
@@ -59,7 +61,7 @@ export function resolveProvider(env: Record<string, string | undefined> = proces
     const host = new URL(baseURL).hostname;
     return { kind: "openai", baseURL, apiKey, models, label: `${models.main} via ${host}`, ...(Object.keys(prices).length ? { prices } : {}) };
   }
-  const models = { main: env.MODEL_MAIN ?? "claude-opus-5-5", fast: env.MODEL_FAST ?? "claude-sonnet-5-5" };
+  const models: Models = { main: env.MODEL_MAIN ?? "claude-opus-5-5", fast: env.MODEL_FAST ?? "claude-sonnet-5-5", ...(env.MODEL_VISION ? { vision: env.MODEL_VISION } : {}) };
   return { kind: "anthropic", models, label: `${models.main} via Anthropic` };
 }
 
@@ -82,15 +84,26 @@ type Common = {
 };
 type ImageInput = { data: string; mediaType: "image/png" | "image/jpeg" | "image/webp" };
 
+/** A tool the model may call. `run` receives arguments already validated against `parameters`. */
+export type ToolDef = { name: string; description: string; parameters: z.ZodType; run: (args: unknown) => Promise<unknown> };
+export type ToolStep =
+  | { type: "call"; id: string; name: string; args: unknown }
+  | { type: "result"; id: string; name: string; result: unknown }
+  | { type: "final"; text: string };
+
 export interface Llm {
   text(o: Common): Promise<string>;
   /** Yields text deltas. */
   stream(o: Common): AsyncGenerator<string>;
   parse<T>(o: Common & { schema: z.ZodType<T> }): Promise<T>;
-  vision<T>(o: { image: ImageInput; prompt: string; system?: string; schema?: z.ZodType<T>; model?: "main" | "fast" }): Promise<T | string>;
+  vision<T>(o: { image: ImageInput; prompt: string; system?: string; schema?: z.ZodType<T>; model?: "main" | "fast"; effort?: "low" | "medium" | "high" }): Promise<T | string>;
+  /** Tool-calling loop: yields each call, its result, and the final reply. Stops after maxSteps (default 8) model turns. */
+  tools(o: Common & { tools: ToolDef[]; maxSteps?: number }): AsyncGenerator<ToolStep>;
   usage(): { inputTokens: number; outputTokens: number; costUsd: number };
   /** Human-readable "model via host" for the evidence drawer. */
   label: string;
+  /** The model image calls use, when it differs from main. */
+  visionModel?: string;
 }
 
 function usageTracker(prices?: Prices) {
@@ -130,6 +143,7 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
 
   return {
     label: provider.label,
+    visionModel: MODEL.vision,
     async text(o) {
       const model = MODEL[o.model ?? "main"];
       const res = await client.beta.messages.create({
@@ -168,7 +182,7 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
       return res.parsed_output as z.infer<typeof o.schema>;
     },
     async vision(o) {
-      const model = MODEL[o.model ?? "main"];
+      const model = MODEL.vision ?? MODEL[o.model ?? "main"];
       const content: Anthropic.ContentBlockParam[] = [
         { type: "image", source: { type: "base64", media_type: o.image.mediaType, data: o.image.data } },
         { type: "text", text: o.prompt },
@@ -176,7 +190,7 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
       if (o.schema) {
         const res = await client.messages.parse({
           model, max_tokens: 4000, system: o.system,
-          output_config: { effort: "medium", format: zodOutputFormat(o.schema) },
+          output_config: { effort: o.effort ?? "medium", format: zodOutputFormat(o.schema) },
           messages: [{ role: "user", content }],
         });
         add(model, res.usage);
@@ -184,10 +198,13 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
         return res.parsed_output as z.infer<typeof o.schema>;
       }
       const res = await client.messages.create({
-        model, max_tokens: 4000, system: o.system, output_config: { effort: "medium" }, messages: [{ role: "user", content }],
+        model, max_tokens: 4000, system: o.system, output_config: { effort: o.effort ?? "medium" }, messages: [{ role: "user", content }],
       });
       add(model, res.usage);
       return textOf(res.content);
+    },
+    async *tools() {
+      throw new Error("tools() is not implemented for the Anthropic provider yet; use LLM_PROVIDER=openai");
     },
     usage: track.get,
   };
@@ -265,6 +282,7 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
 
   return {
     label: provider.label,
+    visionModel: MODEL.vision,
     async text(o) {
       return complete(MODEL[o.model ?? "main"], msgs(o.system, o.prompt), o.maxTokens, false, o.effort);
     },
@@ -281,13 +299,61 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
       return parseWith(MODEL[o.model ?? "main"], msgs(withSchema(o.system, o.schema), o.prompt), o.schema, o.maxTokens, o.effort);
     },
     async vision(o) {
-      const model = MODEL[o.model ?? "main"];
+      const model = MODEL.vision ?? MODEL[o.model ?? "main"];
       const content: OpenAI.ChatCompletionContentPart[] = [
         { type: "image_url", image_url: { url: `data:${o.image.mediaType};base64,${o.image.data}` } },
         { type: "text", text: o.prompt },
       ];
-      if (o.schema) return parseWith(model, msgs(withSchema(o.system, o.schema), content), o.schema, undefined, "medium");
-      return complete(model, msgs(o.system, content), undefined, false, "medium");
+      if (o.schema) return parseWith(model, msgs(withSchema(o.system, o.schema), content), o.schema, undefined, o.effort ?? "medium");
+      return complete(model, msgs(o.system, content), undefined, false, o.effort ?? "medium");
+    },
+    async *tools(o) {
+      const model = MODEL[o.model ?? "main"];
+      const maxSteps = o.maxSteps ?? 8;
+      const byName = new Map(o.tools.map((t) => [t.name, t]));
+      const toolSpecs: OpenAI.ChatCompletionTool[] = o.tools.map((t) => ({
+        type: "function", function: { name: t.name, description: t.description, parameters: z.toJSONSchema(t.parameters) as Record<string, unknown> },
+      }));
+      const messages = msgs(o.system, o.prompt);
+      for (let step = 0; step < maxSteps; step++) {
+        const res = await client.chat.completions.create({ model, messages, tools: toolSpecs, max_tokens: budget(o.maxTokens), ...extra(o.effort) });
+        add(model, res.usage);
+        const msg = res.choices[0]?.message;
+        const calls = (msg?.tool_calls ?? []).filter((c) => c.type === "function");
+        if (!msg || calls.length === 0) {
+          yield { type: "final", text: msg?.content ?? "" };
+          return;
+        }
+        messages.push(msg);
+        for (const c of calls) {
+          let args: unknown = null;
+          let result: unknown;
+          const tool = byName.get(c.function.name);
+          try {
+            args = JSON.parse(c.function.arguments || "{}");
+          } catch {
+            result = { error: "invalid arguments: not valid JSON" };
+          }
+          yield { type: "call", id: c.id, name: c.function.name, args };
+          if (result === undefined) {
+            if (!tool) result = { error: `unknown tool ${c.function.name}` };
+            else {
+              const parsed = tool.parameters.safeParse(args);
+              if (!parsed.success) result = { error: `invalid arguments: ${parsed.error.message.slice(0, 300)}` };
+              else {
+                try {
+                  result = await tool.run(parsed.data);
+                } catch (e) {
+                  result = { error: e instanceof Error ? e.message : String(e) };
+                }
+              }
+            }
+          }
+          yield { type: "result", id: c.id, name: c.function.name, result };
+          messages.push({ role: "tool", tool_call_id: c.id, content: JSON.stringify(result) });
+        }
+      }
+      yield { type: "final", text: `(stopped after ${maxSteps} steps)` };
     },
     usage: track.get,
   };

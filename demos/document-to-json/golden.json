@@ -1,0 +1,640 @@
+{
+  "demo": "document-to-json",
+  "recordedAt": "2026-10-07T16:03:17.124Z",
+  "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
+  "events": [
+    {
+      "type": "run.start",
+      "t": 0,
+      "demo": "document-to-json",
+      "mode": "live",
+      "runId": "5a04cb2d-7e8a-4772-9dc1-9918c66346e6"
+    },
+    {
+      "type": "act.start",
+      "t": 1,
+      "act": 1,
+      "title": "The claim",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 2,
+      "id": "claim",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "size": "display",
+        "title": "Downstream systems only ever receive validated records.",
+        "text": "Reading documents is now easy. The damage comes from a total that does not add up, or an expired ID, flowing straight into the ERP or the onboarding system. Here the model reads, and code decides."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 2
+    },
+    {
+      "type": "act.start",
+      "t": 2,
+      "act": 2,
+      "title": "This morning's inbox",
+      "subtitle": "Three images, as they arrive: printed, photographed, handwritten.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 2,
+      "id": "inbox",
+      "kind": "image",
+      "slot": "main",
+      "props": {
+        "title": "Inbox",
+        "images": [
+          {
+            "src": "/fixtures/document-to-json/invoice.png",
+            "alt": "Tax invoice, Dubai supplier",
+            "caption": "Tax invoice, Dubai supplier"
+          },
+          {
+            "src": "/fixtures/document-to-json/qatar-id-specimen.png",
+            "alt": "Residency card (SPECIMEN)",
+            "caption": "Residency card (SPECIMEN)"
+          },
+          {
+            "src": "/fixtures/document-to-json/delivery-note.png",
+            "alt": "Handwritten delivery note",
+            "caption": "Handwritten delivery note"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 2,
+      "id": "caveat",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "info",
+        "text": "This is extraction and validation, not identity verification. In production, identity checks go through a licensed KYC provider (liveness, document authenticity, watchlists)."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 2
+    },
+    {
+      "type": "act.start",
+      "t": 2,
+      "act": 4,
+      "title": "Extract, then validate",
+      "subtitle": "Every field with a confidence. Every record through deterministic checks.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "doc",
+      "kind": "image",
+      "slot": "left",
+      "props": {
+        "title": "Tax invoice, Dubai supplier",
+        "src": "/fixtures/document-to-json/invoice.png",
+        "alt": "Tax invoice, Dubai supplier"
+      }
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "record",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "Extracting…",
+        "fields": []
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 2875,
+      "id": "record",
+      "patch": {
+        "title": "Record: Tax invoice, Dubai supplier",
+        "fields": [
+          {
+            "path": "supplier",
+            "value": "Ghaf Line Office Furniture L.L.C.",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "invoiceNumber",
+            "value": "GLF-2026-04417",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "date",
+            "value": "2026-09-28",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "currency",
+            "value": "AED",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "subtotal",
+            "value": 12400,
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "vatRate",
+            "value": 0.05,
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "vat",
+            "value": 680,
+            "confidence": 0.99,
+            "tone": "block",
+            "note": "fails check"
+          },
+          {
+            "path": "total",
+            "value": 13120,
+            "confidence": 0.99,
+            "tone": "block",
+            "note": "fails check"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 2876,
+      "id": "checks",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Validation: BLOCKED",
+        "columns": [
+          {
+            "key": "rule",
+            "label": "Check"
+          },
+          {
+            "key": "message",
+            "label": "Finding"
+          },
+          {
+            "key": "result",
+            "label": "Result"
+          }
+        ],
+        "rows": [
+          {
+            "rule": "vat",
+            "message": "VAT printed 680.00, but 5% of 12,400.00 is 620.00",
+            "result": {
+              "text": "BLOCK",
+              "tone": "block"
+            }
+          },
+          {
+            "rule": "total",
+            "message": "Total printed 13,120.00, but subtotal + VAT is 13,080.00",
+            "result": {
+              "text": "BLOCK",
+              "tone": "block"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 2876,
+      "detector": "doc.vat",
+      "policyId": "DOC-01",
+      "action": "block",
+      "recordId": "CE-7001",
+      "detail": "Tax invoice, Dubai supplier: VAT printed 680.00, but 5% of 12,400.00 is 620.00"
+    },
+    {
+      "type": "control.event",
+      "t": 2876,
+      "detector": "doc.total",
+      "policyId": "DOC-01",
+      "action": "block",
+      "recordId": "CE-7002",
+      "detail": "Tax invoice, Dubai supplier: Total printed 13,120.00, but subtotal + VAT is 13,080.00"
+    },
+    {
+      "type": "pause",
+      "t": 2876,
+      "label": "Next document"
+    },
+    {
+      "type": "panel",
+      "t": 2876,
+      "id": "doc",
+      "kind": "image",
+      "slot": "left",
+      "props": {
+        "title": "Residency card (SPECIMEN)",
+        "src": "/fixtures/document-to-json/qatar-id-specimen.png",
+        "alt": "Residency card (SPECIMEN)"
+      }
+    },
+    {
+      "type": "panel",
+      "t": 2876,
+      "id": "record",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "Extracting…",
+        "fields": []
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 5472,
+      "id": "record",
+      "patch": {
+        "title": "Record: Residency card (SPECIMEN)",
+        "fields": [
+          {
+            "path": "idNumber",
+            "value": "285 634 001 23",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "nameEnglish",
+            "value": "SAMPLE, AHMED",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "nameArabic",
+            "value": "أحمد نموذج",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "dateOfBirth",
+            "value": "1985-06-02",
+            "confidence": 0.99,
+            "tone": "ok"
+          },
+          {
+            "path": "expiry",
+            "value": "2025-03-14",
+            "confidence": 0.99,
+            "tone": "block",
+            "note": "fails check"
+          },
+          {
+            "path": "nationality",
+            "value": "SPECIMEN",
+            "confidence": 0.95,
+            "tone": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 5473,
+      "id": "checks",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Validation: BLOCKED",
+        "columns": [
+          {
+            "key": "rule",
+            "label": "Check"
+          },
+          {
+            "key": "message",
+            "label": "Finding"
+          },
+          {
+            "key": "result",
+            "label": "Result"
+          }
+        ],
+        "rows": [
+          {
+            "rule": "structure",
+            "message": "11 digits, century and birth year match the date of birth",
+            "result": {
+              "text": "PASS",
+              "tone": "ok"
+            }
+          },
+          {
+            "rule": "expiry",
+            "message": "Expired on 2025-03-14",
+            "result": {
+              "text": "BLOCK",
+              "tone": "block"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 5473,
+      "detector": "doc.expiry",
+      "policyId": "DOC-01",
+      "action": "block",
+      "recordId": "CE-7003",
+      "detail": "Residency card (SPECIMEN): Expired on 2025-03-14"
+    },
+    {
+      "type": "pause",
+      "t": 5473,
+      "label": "Next document"
+    },
+    {
+      "type": "panel",
+      "t": 5473,
+      "id": "doc",
+      "kind": "image",
+      "slot": "left",
+      "props": {
+        "title": "Handwritten delivery note",
+        "src": "/fixtures/document-to-json/delivery-note.png",
+        "alt": "Handwritten delivery note"
+      }
+    },
+    {
+      "type": "panel",
+      "t": 5473,
+      "id": "record",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "Extracting…",
+        "fields": []
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 8853,
+      "id": "record",
+      "patch": {
+        "title": "Record: Handwritten delivery note",
+        "fields": [
+          {
+            "path": "noteNumber",
+            "value": "DN 7731",
+            "confidence": 0.98,
+            "tone": "ok"
+          },
+          {
+            "path": "date",
+            "value": "2026-10-05",
+            "confidence": 0.95,
+            "tone": "ok"
+          },
+          {
+            "path": "deliverTo",
+            "value": "Marina Tower 3 site, Lusail",
+            "confidence": 0.98,
+            "tone": "ok"
+          },
+          {
+            "path": "receivedBy",
+            "value": "M. Farouk",
+            "confidence": 0.95,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[0].item",
+            "value": "Cement, OPC 50 kg bags",
+            "confidence": 0.95,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[0].qty",
+            "value": 17,
+            "confidence": 0.6,
+            "tone": "warn",
+            "note": "human check"
+          },
+          {
+            "path": "lines[0].unit",
+            "value": "pallets",
+            "confidence": 0.95,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[1].item",
+            "value": "Rebar 12 mm",
+            "confidence": 0.98,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[1].qty",
+            "value": 40,
+            "confidence": 0.98,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[1].unit",
+            "value": "bundles",
+            "confidence": 0.98,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[2].item",
+            "value": "Plywood 18 mm",
+            "confidence": 0.98,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[2].qty",
+            "value": 60,
+            "confidence": 0.98,
+            "tone": "ok"
+          },
+          {
+            "path": "lines[2].unit",
+            "value": "sheets",
+            "confidence": 0.98,
+            "tone": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 8854,
+      "id": "checks",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Validation: HUMAN CHECK",
+        "columns": [
+          {
+            "key": "rule",
+            "label": "Check"
+          },
+          {
+            "key": "message",
+            "label": "Finding"
+          },
+          {
+            "key": "result",
+            "label": "Result"
+          }
+        ],
+        "rows": [
+          {
+            "rule": "confidence",
+            "message": "Confidence 60%: human check",
+            "result": {
+              "text": "HUMAN CHECK",
+              "tone": "warn"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 8854,
+      "detector": "doc.confidence",
+      "policyId": "DOC-02",
+      "action": "hold",
+      "recordId": "CE-7004",
+      "detail": "Handwritten delivery note: Confidence 60%: human check"
+    },
+    {
+      "type": "verdict",
+      "t": 8854,
+      "id": "verdict",
+      "status": "0 OF 3 RELEASED",
+      "tone": "quarantine",
+      "headline": "Downstream systems only ever receive validated records.",
+      "reason": "2 blocked by validation, 1 waiting for a human check. Nothing reached the ERP or the onboarding system on the model's word alone.",
+      "evidence": [
+        {
+          "label": "Tax invoice",
+          "value": "BLOCKED: VAT wrong, total wrong"
+        },
+        {
+          "label": "Residency card",
+          "value": "BLOCKED: expired"
+        },
+        {
+          "label": "Handwritten delivery note",
+          "value": "HUMAN CHECK: low confidence"
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "t": 8855
+    },
+    {
+      "type": "act.start",
+      "t": 8855,
+      "act": 5,
+      "title": "Proof",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 8855,
+      "id": "batch",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Batch result, validated against today's date 2026-10-07",
+        "columns": [
+          {
+            "key": "doc",
+            "label": "Document"
+          },
+          {
+            "key": "result",
+            "label": "Result"
+          },
+          {
+            "key": "why",
+            "label": "Why"
+          }
+        ],
+        "rows": [
+          {
+            "doc": "Tax invoice, Dubai supplier",
+            "result": {
+              "text": "BLOCKED",
+              "tone": "block"
+            },
+            "why": "VAT printed 680.00, but 5% of 12,400.00 is 620.00; Total printed 13,120.00, but subtotal + VAT is 13,080.00"
+          },
+          {
+            "doc": "Residency card (SPECIMEN)",
+            "result": {
+              "text": "BLOCKED",
+              "tone": "block"
+            },
+            "why": "Expired on 2025-03-14"
+          },
+          {
+            "doc": "Handwritten delivery note",
+            "result": {
+              "text": "HUMAN CHECK",
+              "tone": "warn"
+            },
+            "why": "Confidence 60%: human check"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 8856,
+      "id": "caveat2",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "info",
+        "text": "This is extraction and validation, not identity verification. In production, identity checks go through a licensed KYC provider (liveness, document authenticity, watchlists)."
+      }
+    },
+    {
+      "type": "panel",
+      "t": 8856,
+      "id": "takeaway",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "ok",
+        "title": "The model reads. Code decides.",
+        "text": "Per-field confidence, arithmetic and date checks in code, and a human queue for anything uncertain. Downstream systems only ever receive validated records."
+      }
+    },
+    {
+      "type": "run.end",
+      "t": 8856,
+      "usage": {
+        "inputTokens": 4532,
+        "outputTokens": 525,
+        "costUsd": 0.00536775
+      }
+    }
+  ]
+}

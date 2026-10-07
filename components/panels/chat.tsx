@@ -8,7 +8,7 @@ function Bubble({ m }: { m: Msg }) {
   const user = m.role === "user";
   return (
     <div className={`flex ${user ? "justify-end" : "justify-start"}`}>
-      <div className={`max-w-[85%] rounded-md px-4 py-3 text-[17px] leading-relaxed ${user ? "bg-fg text-white" : "border border-line bg-bg"}`}>
+      <div dir="auto" className={`max-w-[85%] rounded-md px-4 py-3 text-[17px] leading-relaxed ${user ? "bg-fg text-white" : "border border-line bg-bg"}`}>
         {user ? m.text : <div className="prose-chat"><ReactMarkdown>{m.text}</ReactMarkdown></div>}
         {m.note && <p className="mt-2 text-sm opacity-70">{m.note}</p>}
       </div>

@@ -1,0 +1,16 @@
+[
+  { "date": "2026-09-23", "state": "quiet" },
+  { "date": "2026-09-24", "state": "quiet" },
+  { "date": "2026-09-25", "state": "alert", "count": 1, "note": "Vendor bank details changed and paid the same day" },
+  { "date": "2026-09-26", "state": "quiet" },
+  { "date": "2026-09-27", "state": "quiet" },
+  { "date": "2026-09-28", "state": "quiet" },
+  { "date": "2026-09-29", "state": "quiet" },
+  { "date": "2026-09-30", "state": "alert", "count": 2, "note": "Two invoices posted without purchase orders" },
+  { "date": "2026-10-01", "state": "quiet" },
+  { "date": "2026-10-02", "state": "quiet" },
+  { "date": "2026-10-03", "state": "quiet" },
+  { "date": "2026-10-04", "state": "alert", "count": 1, "note": "Payment approved by its own requester" },
+  { "date": "2026-10-05", "state": "quiet" },
+  { "date": "2026-10-06", "state": "quiet" }
+]

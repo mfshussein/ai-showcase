@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="size" content="1280x800">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dash.css"><script src="charts.js"></script></head><body>
+<header><h1>Contact centre · September 2026</h1><p>Rawda Telecom customer care · synthetic data</p></header>
+<div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="tile" data-tile="sla" data-title="Service level"><h2>Answered within 30 s</h2><div class="kpi">71%</div><div class="sub">target 80% · <span class="down">-6 pts</span></div></div>
+  <div class="tile" data-tile="aht" data-title="Average handle time"><h2>Average handle time</h2><div class="kpi">6m 48s</div><div class="sub"><span class="down">+41s</span> vs Aug</div></div>
+  <div class="tile" data-tile="abandon" data-title="Abandon rate"><h2>Abandon rate</h2><div class="kpi">9.8%</div><div class="sub"><span class="down">+3.1 pts</span></div></div>
+  <div class="tile" data-tile="csat" data-title="CSAT"><h2>CSAT</h2><div class="kpi">4.2 / 5</div><div class="sub"><span class="flat">flat</span></div></div>
+</div>
+<div class="grid" style="grid-template-columns: 1.4fr 1fr; margin-top: 14px;">
+  <div class="tile" data-tile="daily" data-title="Daily service level"><h2>Daily service level, %</h2><div id="l1"></div></div>
+  <div class="tile" data-tile="reasons" data-title="Top contact reasons"><h2>Top contact reasons, % of calls</h2><div id="b1"></div></div>
+</div>
+<div class="tile" data-tile="queues" data-title="Queues" style="margin-top: 14px;"><h2>Queues</h2><table><tr><th>Queue</th><th class="n">Calls</th><th class="n">SLA</th><th class="n">Agents</th></tr>
+<tr><td>Arabic general</td><td class="n">41,220</td><td class="n">74%</td><td class="n">58</td></tr><tr><td>English general</td><td class="n">18,905</td><td class="n">79%</td><td class="n">24</td></tr><tr><td>Business</td><td class="n">6,410</td><td class="n">88%</td><td class="n">12</td></tr></table></div>
+<script>
+lines("l1", Array.from({length: 30}, (_, i) => String(i + 1)), [{ values: [82,81,83,80,79,81,80,82,78,77,79,76,74,72,70,66,63,61,64,66,68,67,65,63,62,64,66,67,68,69], color: "#3b6fe0", label: "Service level" }, { values: Array(30).fill(80), color: "#98a2b3", dash: "5 4", label: "Target" }], { h: 270, min: 50, max: 90, every: 3 });
+bars("b1", ["Billing", "Roaming", "5G home", "Outage", "Other"], [31, 14, 22, 18, 15], { h: 270, labelValues: true, fmt: (v) => Math.round(v) + "%" });
+</script></body></html>

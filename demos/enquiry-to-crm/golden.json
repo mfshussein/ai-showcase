@@ -1,0 +1,1586 @@
+{
+  "demo": "enquiry-to-crm",
+  "recordedAt": "2026-10-07T16:05:22.733Z",
+  "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
+  "events": [
+    {
+      "type": "run.start",
+      "t": 0,
+      "demo": "enquiry-to-crm",
+      "mode": "live",
+      "runId": "45403144-e443-4cb7-a7ee-128df3f40bb7"
+    },
+    {
+      "type": "act.start",
+      "t": 2,
+      "act": 1,
+      "title": "The claim",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 2,
+      "id": "claim",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "size": "display",
+        "title": "It does the legwork. It cannot press send.",
+        "text": "A buyer messages on WhatsApp, in Arabic, at nine in the morning. The agent classifies it, finds the customer, reads the policy, drafts a bilingual reply and logs it. Sending waits for a person, because the system says so, not the prompt."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 3
+    },
+    {
+      "type": "act.start",
+      "t": 3,
+      "act": 2,
+      "title": "The enquiry",
+      "subtitle": "Lusail Residences, a fictional development. One message, five tools.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "plan",
+      "kind": "gate",
+      "slot": "main",
+      "props": {
+        "title": "The agent's plan",
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "idle"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "idle"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "idle"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "inbound",
+      "kind": "chat",
+      "slot": "left",
+      "props": {
+        "title": "WhatsApp, +974 5512 3487, 2026-10-07 09:12",
+        "messages": [
+          {
+            "role": "user",
+            "text": "السلام عليكم، أنا مهتمة بشقة غرفتين نوم في لوسيل ريزيدنسز. ميزانيتي حوالي 1.8 مليون ريال. هل يوجد تمويل عقاري أو خطة دفع؟ وهل يمكن ترتيب معاينة يوم السبت القادم؟ شكراً، سارة"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 4,
+      "id": "toolbox",
+      "kind": "table",
+      "slot": "right",
+      "props": {
+        "title": "Tools the agent may call",
+        "columns": [
+          {
+            "key": "tool",
+            "label": "Tool"
+          },
+          {
+            "key": "what",
+            "label": "What it does"
+          }
+        ],
+        "rows": [
+          {
+            "tool": "classify_enquiry",
+            "what": "Record the classification of the inbound message and get the queue it routes to."
+          },
+          {
+            "tool": "lookup_customer",
+            "what": "Look up a customer in the CRM by phone number."
+          },
+          {
+            "tool": "check_policy",
+            "what": "Read the company policy for a topic before replying: pricing, financing, viewing or communication."
+          },
+          {
+            "tool": "log_to_crm",
+            "what": "Create a CRM activity for this enquiry."
+          },
+          {
+            "tool": "send_whatsapp",
+            "what": {
+              "text": "Held for human approval by the harness",
+              "tone": "warn"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "pause",
+      "t": 4
+    },
+    {
+      "type": "act.start",
+      "t": 4,
+      "act": 4,
+      "title": "The agent works",
+      "subtitle": "Every tool call is visible: what went in, what came out.",
+      "keep": [
+        "plan"
+      ]
+    },
+    {
+      "type": "panel",
+      "t": 4,
+      "id": "trace",
+      "kind": "table",
+      "slot": "left",
+      "props": {
+        "title": "Tool calls",
+        "columns": [
+          {
+            "key": "step",
+            "label": "#"
+          },
+          {
+            "key": "tool",
+            "label": "Tool"
+          },
+          {
+            "key": "result",
+            "label": "Result"
+          }
+        ],
+        "rows": []
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 4857,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "idle"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "idle"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 4861,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "classify_enquiry: input",
+        "value": {
+          "intent": "purchase",
+          "language": "ar",
+          "summary": "Arabic-speaking customer Sara asks about a 2-bedroom apartment in Lusail Residences within a QAR 1.8M budget, inquires about mortgage financing/payment plans, and requests a viewing next Saturday."
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 4862,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 4862,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "classify_enquiry: input and output",
+        "value": {
+          "input": {
+            "intent": "purchase",
+            "language": "ar",
+            "summary": "Arabic-speaking customer Sara asks about a 2-bedroom apartment in Lusail Residences within a QAR 1.8M budget, inquires about mortgage financing/payment plans, and requests a viewing next Saturday."
+          },
+          "output": {
+            "recorded": true,
+            "queue": "Sales: residential"
+          }
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 4862,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "idle"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "idle"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 4862,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "idle"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 4863,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "lookup_customer: input",
+        "value": {
+          "phone": "+974 5512 3487"
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 4863,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          },
+          {
+            "step": 2,
+            "tool": "lookup_customer",
+            "result": "found Sara Nasser"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 4863,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "lookup_customer: input and output",
+        "value": {
+          "input": {
+            "phone": "+974 5512 3487"
+          },
+          "output": {
+            "found": true,
+            "customer": {
+              "id": "CUST-20418",
+              "phone": "+97455123487",
+              "name": "Sara Nasser",
+              "nameAr": "سارة ناصر",
+              "status": "Returning lead",
+              "lastContact": "2026-05-12",
+              "notes": "Asked about 1-bedroom units in May; preferred Arabic.",
+              "language": "ar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 4863,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "idle"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7899,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7900,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input",
+        "value": {
+          "topic": "pricing"
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7900,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          },
+          {
+            "step": 2,
+            "tool": "lookup_customer",
+            "result": "found Sara Nasser"
+          },
+          {
+            "step": 3,
+            "tool": "check_policy",
+            "result": "pricing"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7900,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input and output",
+        "value": {
+          "input": {
+            "topic": "pricing"
+          },
+          "output": {
+            "topic": "pricing",
+            "policy": "Lusail Residences 2-bedroom units are listed from QAR 1,650,000 to QAR 2,150,000. A 10% booking deposit reserves a unit for 14 days. Never promise discounts."
+          }
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7900,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7900,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7901,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input",
+        "value": {
+          "topic": "financing"
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          },
+          {
+            "step": 2,
+            "tool": "lookup_customer",
+            "result": "found Sara Nasser"
+          },
+          {
+            "step": 3,
+            "tool": "check_policy",
+            "result": "pricing"
+          },
+          {
+            "step": 4,
+            "tool": "check_policy",
+            "result": "financing"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7901,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input and output",
+        "value": {
+          "input": {
+            "topic": "financing"
+          },
+          "output": {
+            "topic": "financing",
+            "policy": "We do not give financing advice. Customers arrange financing with their own bank; we can share the developer payment plan: 10% on booking, 40% during construction, 50% on handover."
+          }
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7901,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input",
+        "value": {
+          "topic": "viewing"
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          },
+          {
+            "step": 2,
+            "tool": "lookup_customer",
+            "result": "found Sara Nasser"
+          },
+          {
+            "step": 3,
+            "tool": "check_policy",
+            "result": "pricing"
+          },
+          {
+            "step": 4,
+            "tool": "check_policy",
+            "result": "financing"
+          },
+          {
+            "step": 5,
+            "tool": "check_policy",
+            "result": "viewing"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7901,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input and output",
+        "value": {
+          "input": {
+            "topic": "viewing"
+          },
+          "output": {
+            "topic": "viewing",
+            "policy": "Viewings of the show apartment in Tower B run Saturday to Thursday, 09:00 to 19:00. Offer a specific slot and ask the customer to confirm."
+          }
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7901,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input",
+        "value": {
+          "topic": "communication"
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          },
+          {
+            "step": 2,
+            "tool": "lookup_customer",
+            "result": "found Sara Nasser"
+          },
+          {
+            "step": 3,
+            "tool": "check_policy",
+            "result": "pricing"
+          },
+          {
+            "step": 4,
+            "tool": "check_policy",
+            "result": "financing"
+          },
+          {
+            "step": 5,
+            "tool": "check_policy",
+            "result": "viewing"
+          },
+          {
+            "step": 6,
+            "tool": "check_policy",
+            "result": "communication"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 7901,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "check_policy: input and output",
+        "value": {
+          "input": {
+            "topic": "communication"
+          },
+          "output": {
+            "topic": "communication",
+            "policy": "Reply in the customer's language. First replies to Arabic enquiries are bilingual, Arabic first."
+          }
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 7901,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "idle"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 11540,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 11540,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "log_to_crm: input",
+        "value": {
+          "customerId": "CUST-20418",
+          "intent": "purchase",
+          "summary": "Returning lead Sara Nasser wants a 2-bedroom unit (budget QAR 1.8M), asked about financing/payment plans and a Saturday viewing.",
+          "nextAction": "Await her confirmation of the Saturday 10 October 10:00 show-apartment viewing slot in Tower B."
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 11542,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          },
+          {
+            "step": 2,
+            "tool": "lookup_customer",
+            "result": "found Sara Nasser"
+          },
+          {
+            "step": 3,
+            "tool": "check_policy",
+            "result": "pricing"
+          },
+          {
+            "step": 4,
+            "tool": "check_policy",
+            "result": "financing"
+          },
+          {
+            "step": 5,
+            "tool": "check_policy",
+            "result": "viewing"
+          },
+          {
+            "step": 6,
+            "tool": "check_policy",
+            "result": "communication"
+          },
+          {
+            "step": 7,
+            "tool": "log_to_crm",
+            "result": "created CRM-88267"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 11542,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "log_to_crm: input and output",
+        "value": {
+          "input": {
+            "customerId": "CUST-20418",
+            "intent": "purchase",
+            "summary": "Returning lead Sara Nasser wants a 2-bedroom unit (budget QAR 1.8M), asked about financing/payment plans and a Saturday viewing.",
+            "nextAction": "Await her confirmation of the Saturday 10 October 10:00 show-apartment viewing slot in Tower B."
+          },
+          "output": {
+            "created": true,
+            "id": "CRM-88267"
+          }
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 11542,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "idle"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "pass"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 19332,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "hold",
+            "note": "working"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "pass"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 19333,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "send_whatsapp: input",
+        "value": {
+          "to": "+97455123487",
+          "text": "وعليكم السلام، أهلاً بعودتك أستاذة سارة ناصر، سعداء بتواصلك معنا.\n\nشقق غرفتي النوم في لوسيل ريزيدنسز متوفرة بأسعار من 1,650,000 إلى 2,150,000 ريال قطري، أي ضمن ميزانيتك، مع عربون حجز 10٪ يحتفظ بالوحدة لمدة 14 يوماً.\n\nبخصوص التمويل، لا نقدم استشارات تمويلية؛ يُرجى الترتيب مع بنكك، وخطة المطور للدفع هي: 10٪ عند الحجز، 40٪ أثناء الإنشاء، و50٪ عند التسليم.\n\nهل يناسبك معاينة الشقة النموذجية في البرج B يوم السبت القادم 10 أكتوبر الساعة 10:00 صباحاً؟\n\n---\n\nWelcome back, Sara Nasser. Two-bedroom apartments at Lusail Residences are listed from QAR 1,650,000 to QAR 2,150,000, within your budget, with a 10% booking deposit reserving a unit for 14 days. We do not give financing advice; please arrange this with your bank. The developer payment plan is 10% on booking, 40% during construction and 50% on handover. May I book you a show-apartment viewing in Tower B on Saturday 10 October at 10:00?"
+        }
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 19335,
+      "id": "trace",
+      "patch": {
+        "rows": [
+          {
+            "step": 1,
+            "tool": "classify_enquiry",
+            "result": "purchase → Sales: residential"
+          },
+          {
+            "step": 2,
+            "tool": "lookup_customer",
+            "result": "found Sara Nasser"
+          },
+          {
+            "step": 3,
+            "tool": "check_policy",
+            "result": "pricing"
+          },
+          {
+            "step": 4,
+            "tool": "check_policy",
+            "result": "financing"
+          },
+          {
+            "step": 5,
+            "tool": "check_policy",
+            "result": "viewing"
+          },
+          {
+            "step": 6,
+            "tool": "check_policy",
+            "result": "communication"
+          },
+          {
+            "step": 7,
+            "tool": "log_to_crm",
+            "result": "created CRM-88267"
+          },
+          {
+            "step": 8,
+            "tool": "send_whatsapp",
+            "result": "HELD: awaiting approval"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 19335,
+      "id": "tool",
+      "kind": "json",
+      "slot": "right",
+      "props": {
+        "title": "send_whatsapp: input and output",
+        "value": {
+          "input": {
+            "to": "+97455123487",
+            "text": "وعليكم السلام، أهلاً بعودتك أستاذة سارة ناصر، سعداء بتواصلك معنا.\n\nشقق غرفتي النوم في لوسيل ريزيدنسز متوفرة بأسعار من 1,650,000 إلى 2,150,000 ريال قطري، أي ضمن ميزانيتك، مع عربون حجز 10٪ يحتفظ بالوحدة لمدة 14 يوماً.\n\nبخصوص التمويل، لا نقدم استشارات تمويلية؛ يُرجى الترتيب مع بنكك، وخطة المطور للدفع هي: 10٪ عند الحجز، 40٪ أثناء الإنشاء، و50٪ عند التسليم.\n\nهل يناسبك معاينة الشقة النموذجية في البرج B يوم السبت القادم 10 أكتوبر الساعة 10:00 صباحاً؟\n\n---\n\nWelcome back, Sara Nasser. Two-bedroom apartments at Lusail Residences are listed from QAR 1,650,000 to QAR 2,150,000, within your budget, with a 10% booking deposit reserving a unit for 14 days. We do not give financing advice; please arrange this with your bank. The developer payment plan is 10% on booking, 40% during construction and 50% on handover. May I book you a show-apartment viewing in Tower B on Saturday 10 October at 10:00?"
+          },
+          "output": {
+            "status": "HELD",
+            "reason": "Outbound customer messages need human approval before sending."
+          }
+        }
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 19335,
+      "detector": "approval.gate",
+      "policyId": "GOV-03",
+      "action": "hold",
+      "recordId": "CE-5001",
+      "detail": "send_whatsapp to +97455123487 intercepted: Outbound customer messages need human approval before sending."
+    },
+    {
+      "type": "panel.patch",
+      "t": 19336,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "pass"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "pass"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "hold",
+            "note": "awaiting approval"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.remove",
+      "t": 21539,
+      "id": "tool"
+    },
+    {
+      "type": "panel",
+      "t": 21549,
+      "id": "reply",
+      "kind": "chat",
+      "slot": "right",
+      "props": {
+        "title": "Draft reply, not sent",
+        "messages": [
+          {
+            "role": "assistant",
+            "text": "وعليكم السلام، أهلاً بعودتك أستاذة سارة ناصر، سعداء بتواصلك معنا.\n\nشقق غرفتي النوم في لوسيل ريزيدنسز متوفرة بأسعار من 1,650,000 إلى 2,150,000 ريال قطري، أي ضمن ميزانيتك، مع عربون حجز 10٪ يحتفظ بالوحدة لمدة 14 يوماً.\n\nبخصوص التمويل، لا نقدم استشارات تمويلية؛ يُرجى الترتيب مع بنكك، وخطة المطور للدفع هي: 10٪ عند الحجز، 40٪ أثناء الإنشاء، و50٪ عند التسليم.\n\nهل يناسبك معاينة الشقة النموذجية في البرج B يوم السبت القادم 10 أكتوبر الساعة 10:00 صباحاً؟\n\n---\n\nWelcome back, Sara Nasser. Two-bedroom apartments at Lusail Residences are listed from QAR 1,650,000 to QAR 2,150,000, within your budget, with a 10% booking deposit reserving a unit for 14 days. We do not give financing advice; please arrange this with your bank. The developer payment plan is 10% on booking, 40% during construction and 50% on handover. May I book you a show-apartment viewing in Tower B on Saturday 10 October at 10:00?",
+            "note": "Held: waiting for a person to approve"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 21549,
+      "id": "crm",
+      "kind": "table",
+      "slot": "left",
+      "props": {
+        "title": "CRM activity CRM-88267",
+        "columns": [
+          {
+            "key": "k",
+            "label": "Field"
+          },
+          {
+            "key": "v",
+            "label": "Value"
+          }
+        ],
+        "rows": [
+          {
+            "k": "Customer",
+            "v": "Sara Nasser (CUST-20418), Returning lead"
+          },
+          {
+            "k": "Intent",
+            "v": "purchase"
+          },
+          {
+            "k": "Summary",
+            "v": "Returning lead Sara Nasser wants a 2-bedroom unit (budget QAR 1.8M), asked about financing/payment plans and a Saturday viewing."
+          },
+          {
+            "k": "Next action",
+            "v": "Await her confirmation of the Saturday 10 October 10:00 show-apartment viewing slot in Tower B."
+          },
+          {
+            "k": "Reply",
+            "v": {
+              "text": "HELD FOR APPROVAL",
+              "tone": "warn"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "verdict",
+      "t": 21549,
+      "id": "verdict",
+      "status": "HOLD",
+      "tone": "warn",
+      "headline": "Reply drafted and logged. Sending waits for a person.",
+      "reason": "send_whatsapp is a tool the harness intercepts. The agent can ask to send; only an approver can release it.",
+      "evidence": [
+        {
+          "label": "Tool calls",
+          "value": "8"
+        },
+        {
+          "label": "CRM",
+          "value": "CRM-88267"
+        },
+        {
+          "label": "Policy",
+          "value": "Outbound customer messages need human approval before sending."
+        },
+        {
+          "label": "Model",
+          "value": "qwen/qwen3.8-max-0902 via openrouter.ai"
+        }
+      ]
+    },
+    {
+      "type": "pause",
+      "t": 21550,
+      "label": "Approve and send"
+    },
+    {
+      "type": "act.start",
+      "t": 21550,
+      "act": 5,
+      "title": "A person approves",
+      "keep": [
+        "plan",
+        "reply",
+        "crm"
+      ]
+    },
+    {
+      "type": "panel.patch",
+      "t": 21550,
+      "id": "plan",
+      "patch": {
+        "stages": [
+          {
+            "id": "classify",
+            "label": "Classify",
+            "state": "pass"
+          },
+          {
+            "id": "lookup",
+            "label": "Look up customer",
+            "state": "pass"
+          },
+          {
+            "id": "policy",
+            "label": "Check policy",
+            "state": "pass"
+          },
+          {
+            "id": "draft",
+            "label": "Draft reply",
+            "state": "pass"
+          },
+          {
+            "id": "crm",
+            "label": "Log to CRM",
+            "state": "pass"
+          },
+          {
+            "id": "send",
+            "label": "Send",
+            "state": "pass",
+            "note": "sent 09:41"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 21550,
+      "id": "reply",
+      "kind": "chat",
+      "slot": "right",
+      "props": {
+        "title": "Reply, sent",
+        "messages": [
+          {
+            "role": "assistant",
+            "text": "وعليكم السلام، أهلاً بعودتك أستاذة سارة ناصر، سعداء بتواصلك معنا.\n\nشقق غرفتي النوم في لوسيل ريزيدنسز متوفرة بأسعار من 1,650,000 إلى 2,150,000 ريال قطري، أي ضمن ميزانيتك، مع عربون حجز 10٪ يحتفظ بالوحدة لمدة 14 يوماً.\n\nبخصوص التمويل، لا نقدم استشارات تمويلية؛ يُرجى الترتيب مع بنكك، وخطة المطور للدفع هي: 10٪ عند الحجز، 40٪ أثناء الإنشاء، و50٪ عند التسليم.\n\nهل يناسبك معاينة الشقة النموذجية في البرج B يوم السبت القادم 10 أكتوبر الساعة 10:00 صباحاً؟\n\n---\n\nWelcome back, Sara Nasser. Two-bedroom apartments at Lusail Residences are listed from QAR 1,650,000 to QAR 2,150,000, within your budget, with a 10% booking deposit reserving a unit for 14 days. We do not give financing advice; please arrange this with your bank. The developer payment plan is 10% on booking, 40% during construction and 50% on handover. May I book you a show-apartment viewing in Tower B on Saturday 10 October at 10:00?",
+            "note": "Approved by Noora, Sales, 09:41. Sent."
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 21550,
+      "id": "crm",
+      "patch": {
+        "title": "CRM activity CRM-88267, updated"
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 21550,
+      "detector": "approval.gate",
+      "policyId": "GOV-03",
+      "action": "release",
+      "recordId": "CE-5002",
+      "detail": "approved by Noora (Sales) at 09:41"
+    },
+    {
+      "type": "verdict",
+      "t": 21550,
+      "id": "verdict",
+      "status": "SENT",
+      "tone": "ok",
+      "headline": "Approved by Noora at 09:41, then sent. The audit trail has both.",
+      "reason": "The agent did minutes of work in seconds. A named person made the one decision that reaches a customer.",
+      "evidence": [
+        {
+          "label": "Approver",
+          "value": "Noora, Sales"
+        },
+        {
+          "label": "Approved",
+          "value": "09:41"
+        },
+        {
+          "label": "CRM",
+          "value": "CRM-88267"
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "t": 21550,
+      "id": "takeaway",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "ok",
+        "title": "Agents that act need a gate that is code.",
+        "text": "Every step visible, every tool call logged, and the actions that reach customers or money wait for a named approver."
+      }
+    },
+    {
+      "type": "run.end",
+      "t": 21550,
+      "usage": {
+        "inputTokens": 8441,
+        "outputTokens": 926,
+        "costUsd": 0.013478
+      }
+    }
+  ]
+}

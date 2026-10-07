@@ -1,10 +1,11 @@
 import { Card } from "./card";
 
-type Stage = { id: string; label: string; state: "idle" | "pass" | "fire" | "skip"; note?: string };
+type Stage = { id: string; label: string; state: "idle" | "pass" | "fire" | "hold" | "skip"; note?: string };
 const cls: Record<Stage["state"], string> = {
   idle: "border-line text-muted",
   pass: "border-ok text-ok",
   fire: "border-block bg-block text-white",
+  hold: "border-warn bg-warn/10 text-warn",
   skip: "border-line text-muted opacity-50",
 };
 

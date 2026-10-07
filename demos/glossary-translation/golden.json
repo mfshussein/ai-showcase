@@ -1,0 +1,1111 @@
+{
+  "demo": "glossary-translation",
+  "recordedAt": "2026-10-07T16:04:03.723Z",
+  "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
+  "events": [
+    {
+      "type": "run.start",
+      "t": 0,
+      "demo": "glossary-translation",
+      "mode": "live",
+      "runId": "be7d641d-0a38-4ee1-b4a7-e97d80634a69"
+    },
+    {
+      "type": "act.start",
+      "t": 2,
+      "act": 1,
+      "title": "The claim",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 2,
+      "id": "claim",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "size": "display",
+        "title": "Fluent is not the same as correct.",
+        "text": "A bank's product names, its Sharia structures and its regulator have exact English names. A translation that reads beautifully and renames them is a compliance problem. We make the glossary a control, and we count."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 3
+    },
+    {
+      "type": "act.start",
+      "t": 3,
+      "act": 2,
+      "title": "The notice and the glossary",
+      "subtitle": "Murjan Islamic Bank, a fictional bank. One customer notice, fourteen house terms.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "source",
+      "kind": "document",
+      "slot": "left",
+      "props": {
+        "title": "Customer notice (Arabic original)",
+        "text": "إشعار للعملاء: الاكتتاب في الإصدار الجديد\n\nوفقاً لتعليمات مصرف قطر المركزي، يسرّ بنك المرجان الإسلامي إبلاغ عملائه بأن الاكتتاب في صكوك المرجان سيكون متاحاً لحاملي حساب التوفير الذهبي اعتباراً من الأول من نوفمبر 2026. وقد اعتمدت هيئة الرقابة الشرعية هيكل الإصدار القائم على المرابحة، مع خيار الإجارة المنتهية بالتمليك لتمويل العقارات. تُحتسب نسبة توزيع الأرباح كل ستة أشهر حتى تاريخ الاستحقاق، ولا تُفرض رسوم السداد المبكر خلال فترة التروي البالغة أربعة عشر يوماً. يمكن لحاملي بطاقة المرجان البلاتينية الاكتتاب مباشرة عبر تطبيق المرجان. لا تشمل العوائد الزكاة، إذ يتولى العميل إخراجها. للاستفسار، يرجى التواصل مع إدارة خدمة العملاء.",
+        "lang": "ar"
+      }
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "glossary",
+      "kind": "table",
+      "slot": "right",
+      "props": {
+        "title": "House glossary, 14 terms",
+        "columns": [
+          {
+            "key": "ar",
+            "label": "Arabic"
+          },
+          {
+            "key": "en",
+            "label": "House English"
+          }
+        ],
+        "rows": [
+          {
+            "ar": "مصرف قطر المركزي",
+            "en": "Qatar Central Bank (QCB)"
+          },
+          {
+            "ar": "صكوك المرجان",
+            "en": "Murjan Sukuk Certificates"
+          },
+          {
+            "ar": "حساب التوفير الذهبي",
+            "en": "Golden Saver Account"
+          },
+          {
+            "ar": "هيئة الرقابة الشرعية",
+            "en": "Sharia Supervisory Board"
+          },
+          {
+            "ar": "المرابحة",
+            "en": "Murabaha"
+          },
+          {
+            "ar": "الإجارة المنتهية بالتمليك",
+            "en": "Ijara Muntahia Bittamleek"
+          },
+          {
+            "ar": "نسبة توزيع الأرباح",
+            "en": "Profit Distribution Ratio"
+          },
+          {
+            "ar": "تاريخ الاستحقاق",
+            "en": "Maturity Date"
+          },
+          {
+            "ar": "رسوم السداد المبكر",
+            "en": "Early Settlement Fee"
+          },
+          {
+            "ar": "فترة التروي",
+            "en": "Cooling-off Period"
+          },
+          {
+            "ar": "بطاقة المرجان البلاتينية",
+            "en": "Murjan Platinum Card"
+          },
+          {
+            "ar": "تطبيق المرجان",
+            "en": "Murjan Mobile"
+          },
+          {
+            "ar": "الزكاة",
+            "en": "Zakat"
+          },
+          {
+            "ar": "إدارة خدمة العملاء",
+            "en": "Customer Care Unit"
+          }
+        ]
+      }
+    },
+    {
+      "type": "pause",
+      "t": 3
+    },
+    {
+      "type": "act.start",
+      "t": 3,
+      "act": 3,
+      "title": "Without the glossary",
+      "subtitle": "A capable model, asked for a natural translation.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "plain",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "title": "Translating…",
+        "text": ""
+      }
+    },
+    {
+      "type": "text.delta",
+      "t": 9300,
+      "id": "plain",
+      "delta": "Customer Notice: Subscription"
+    },
+    {
+      "type": "text.delta",
+      "t": 9446,
+      "id": "plain",
+      "delta": " to the New Issue"
+    },
+    {
+      "type": "text.delta",
+      "t": 9521,
+      "id": "plain",
+      "delta": "\n\nIn accordance with"
+    },
+    {
+      "type": "text.delta",
+      "t": 9524,
+      "id": "plain",
+      "delta": " the directives"
+    },
+    {
+      "type": "text.delta",
+      "t": 9663,
+      "id": "plain",
+      "delta": " of Qatar Central Bank"
+    },
+    {
+      "type": "text.delta",
+      "t": 9819,
+      "id": "plain",
+      "delta": ", Al Murjan"
+    },
+    {
+      "type": "text.delta",
+      "t": 9820,
+      "id": "plain",
+      "delta": " Islamic Bank is"
+    },
+    {
+      "type": "text.delta",
+      "t": 9882,
+      "id": "plain",
+      "delta": " pleased to inform its"
+    },
+    {
+      "type": "text.delta",
+      "t": 9953,
+      "id": "plain",
+      "delta": " customers that subscriptions to"
+    },
+    {
+      "type": "text.delta",
+      "t": 9954,
+      "id": "plain",
+      "delta": " Al Murjan"
+    },
+    {
+      "type": "text.delta",
+      "t": 10025,
+      "id": "plain",
+      "delta": " Sukuk will be"
+    },
+    {
+      "type": "text.delta",
+      "t": 10099,
+      "id": "plain",
+      "delta": " available to Golden Savings"
+    },
+    {
+      "type": "text.delta",
+      "t": 10174,
+      "id": "plain",
+      "delta": " Account holders starting "
+    },
+    {
+      "type": "text.delta",
+      "t": 10244,
+      "id": "plain",
+      "delta": "1 November 2"
+    },
+    {
+      "type": "text.delta",
+      "t": 10314,
+      "id": "plain",
+      "delta": "026."
+    },
+    {
+      "type": "text.delta",
+      "t": 10390,
+      "id": "plain",
+      "delta": " The Sharia Supervisory"
+    },
+    {
+      "type": "text.delta",
+      "t": 10541,
+      "id": "plain",
+      "delta": " Board has approved the"
+    },
+    {
+      "type": "text.delta",
+      "t": 10603,
+      "id": "plain",
+      "delta": " Murabaha-based"
+    },
+    {
+      "type": "text.delta",
+      "t": 10603,
+      "id": "plain",
+      "delta": " issuance"
+    },
+    {
+      "type": "text.delta",
+      "t": 10678,
+      "id": "plain",
+      "delta": " structure, with an"
+    },
+    {
+      "type": "text.delta",
+      "t": 10750,
+      "id": "plain",
+      "delta": " Ijara M"
+    },
+    {
+      "type": "text.delta",
+      "t": 10867,
+      "id": "plain",
+      "delta": "untahia B"
+    },
+    {
+      "type": "text.delta",
+      "t": 10897,
+      "id": "plain",
+      "delta": "ittamleek"
+    },
+    {
+      "type": "text.delta",
+      "t": 10968,
+      "id": "plain",
+      "delta": " option for real estate"
+    },
+    {
+      "type": "text.delta",
+      "t": 11110,
+      "id": "plain",
+      "delta": " financing. Profit distribution"
+    },
+    {
+      "type": "text.delta",
+      "t": 11186,
+      "id": "plain",
+      "delta": " is calculated on a"
+    },
+    {
+      "type": "text.delta",
+      "t": 11187,
+      "id": "plain",
+      "delta": " semi"
+    },
+    {
+      "type": "text.delta",
+      "t": 11255,
+      "id": "plain",
+      "delta": "-annual basis until"
+    },
+    {
+      "type": "text.delta",
+      "t": 11361,
+      "id": "plain",
+      "delta": " the maturity date,"
+    },
+    {
+      "type": "text.delta",
+      "t": 11402,
+      "id": "plain",
+      "delta": " and no early redemption"
+    },
+    {
+      "type": "text.delta",
+      "t": 11471,
+      "id": "plain",
+      "delta": " fees apply during the"
+    },
+    {
+      "type": "text.delta",
+      "t": 11618,
+      "id": "plain",
+      "delta": " fourteen-day cooling-off"
+    },
+    {
+      "type": "text.delta",
+      "t": 11762,
+      "id": "plain",
+      "delta": " period. Al Mur"
+    },
+    {
+      "type": "text.delta",
+      "t": 11762,
+      "id": "plain",
+      "delta": "jan Platinum Card"
+    },
+    {
+      "type": "text.delta",
+      "t": 11915,
+      "id": "plain",
+      "delta": " holders may subscribe directly"
+    },
+    {
+      "type": "text.delta",
+      "t": 11915,
+      "id": "plain",
+      "delta": " through the"
+    },
+    {
+      "type": "text.delta",
+      "t": 11980,
+      "id": "plain",
+      "delta": " Al Murjan App"
+    },
+    {
+      "type": "text.delta",
+      "t": 12121,
+      "id": "plain",
+      "delta": ". Returns are exclusive"
+    },
+    {
+      "type": "text.delta",
+      "t": 12122,
+      "id": "plain",
+      "delta": " of Zakat"
+    },
+    {
+      "type": "text.delta",
+      "t": 12195,
+      "id": "plain",
+      "delta": ", which remains the"
+    },
+    {
+      "type": "text.delta",
+      "t": 12196,
+      "id": "plain",
+      "delta": " customer"
+    },
+    {
+      "type": "text.delta",
+      "t": 12339,
+      "id": "plain",
+      "delta": "'s responsibility. For"
+    },
+    {
+      "type": "text.delta",
+      "t": 12415,
+      "id": "plain",
+      "delta": " inquiries, please contact"
+    },
+    {
+      "type": "text.delta",
+      "t": 12415,
+      "id": "plain",
+      "delta": " our"
+    },
+    {
+      "type": "text.delta",
+      "t": 12487,
+      "id": "plain",
+      "delta": " Customer Service Department."
+    },
+    {
+      "type": "panel",
+      "t": 12560,
+      "id": "plain",
+      "kind": "counter",
+      "slot": "main",
+      "props": {
+        "title": "Natural translation",
+        "value": 7,
+        "total": 14,
+        "tone": "block",
+        "label": "house terms honoured",
+        "missed": [
+          "Qatar Central Bank (QCB)",
+          "Murjan Sukuk Certificates",
+          "Golden Saver Account",
+          "Profit Distribution Ratio",
+          "Early Settlement Fee",
+          "Murjan Mobile",
+          "Customer Care Unit"
+        ],
+        "text": "Customer Notice: Subscription to the New Issue\n\nIn accordance with the directives of Qatar Central Bank, Al Murjan Islamic Bank is pleased to inform its customers that subscriptions to Al Murjan Sukuk will be available to Golden Savings Account holders starting 1 November 2026. The Sharia Supervisory Board has approved the Murabaha-based issuance structure, with an Ijara Muntahia Bittamleek option for real estate financing. Profit distribution is calculated on a semi-annual basis until the maturity date, and no early redemption fees apply during the fourteen-day cooling-off period. Al Murjan Platinum Card holders may subscribe directly through the Al Murjan App. Returns are exclusive of Zakat, which remains the customer's responsibility. For inquiries, please contact our Customer Service Department.",
+        "highlights": [
+          {
+            "text": "Sharia Supervisory Board",
+            "tone": "ok"
+          },
+          {
+            "text": "Murabaha",
+            "tone": "ok"
+          },
+          {
+            "text": "Ijara Muntahia Bittamleek",
+            "tone": "ok"
+          },
+          {
+            "text": "maturity date",
+            "tone": "ok"
+          },
+          {
+            "text": "cooling-off period",
+            "tone": "ok"
+          },
+          {
+            "text": "Murjan Platinum Card",
+            "tone": "ok"
+          },
+          {
+            "text": "Zakat",
+            "tone": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 12561,
+      "detector": "glossary.check",
+      "policyId": "LANG-01",
+      "score": 0.5,
+      "action": "flag",
+      "recordId": "CE-8001",
+      "detail": "7/14 without glossary"
+    },
+    {
+      "type": "pause",
+      "t": 12562
+    },
+    {
+      "type": "act.start",
+      "t": 12562,
+      "act": 4,
+      "title": "With the glossary",
+      "subtitle": "Same model, glossary injected, every term checked in code.",
+      "keep": [
+        "plain"
+      ]
+    },
+    {
+      "type": "panel",
+      "t": 12562,
+      "id": "plain",
+      "kind": "counter",
+      "slot": "left",
+      "props": {
+        "title": "Without the glossary",
+        "value": 7,
+        "total": 14,
+        "tone": "block",
+        "label": "house terms honoured",
+        "missed": [
+          "Qatar Central Bank (QCB)",
+          "Murjan Sukuk Certificates",
+          "Golden Saver Account",
+          "Profit Distribution Ratio",
+          "Early Settlement Fee",
+          "Murjan Mobile",
+          "Customer Care Unit"
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 12562,
+      "id": "locked",
+      "kind": "markdown",
+      "slot": "right",
+      "props": {
+        "title": "Translating with the glossary…",
+        "text": ""
+      }
+    },
+    {
+      "type": "text.delta",
+      "t": 22523,
+      "id": "locked",
+      "delta": "Customer Notice:"
+    },
+    {
+      "type": "text.delta",
+      "t": 22597,
+      "id": "locked",
+      "delta": " Subscription to the New"
+    },
+    {
+      "type": "text.delta",
+      "t": 22661,
+      "id": "locked",
+      "delta": " Issue\n\nIn accordance"
+    },
+    {
+      "type": "text.delta",
+      "t": 22730,
+      "id": "locked",
+      "delta": " with the directives of"
+    },
+    {
+      "type": "text.delta",
+      "t": 22821,
+      "id": "locked",
+      "delta": " Qatar Central Bank ("
+    },
+    {
+      "type": "text.delta",
+      "t": 22869,
+      "id": "locked",
+      "delta": "QCB), Mur"
+    },
+    {
+      "type": "text.delta",
+      "t": 22933,
+      "id": "locked",
+      "delta": "jan Islamic Bank is"
+    },
+    {
+      "type": "text.delta",
+      "t": 23002,
+      "id": "locked",
+      "delta": " pleased to inform its"
+    },
+    {
+      "type": "text.delta",
+      "t": 23074,
+      "id": "locked",
+      "delta": " customers that subscription to"
+    },
+    {
+      "type": "text.delta",
+      "t": 23149,
+      "id": "locked",
+      "delta": " Murjan Sukuk"
+    },
+    {
+      "type": "text.delta",
+      "t": 23213,
+      "id": "locked",
+      "delta": " Certificates will be"
+    },
+    {
+      "type": "text.delta",
+      "t": 23276,
+      "id": "locked",
+      "delta": " available to Golden S"
+    },
+    {
+      "type": "text.delta",
+      "t": 23345,
+      "id": "locked",
+      "delta": "aver Account holders starting"
+    },
+    {
+      "type": "text.delta",
+      "t": 23450,
+      "id": "locked",
+      "delta": " 1 November "
+    },
+    {
+      "type": "text.delta",
+      "t": 23491,
+      "id": "locked",
+      "delta": "2026"
+    },
+    {
+      "type": "text.delta",
+      "t": 23563,
+      "id": "locked",
+      "delta": ". The Sharia Superv"
+    },
+    {
+      "type": "text.delta",
+      "t": 23663,
+      "id": "locked",
+      "delta": "isory Board has approved"
+    },
+    {
+      "type": "text.delta",
+      "t": 23692,
+      "id": "locked",
+      "delta": " the Murabaha"
+    },
+    {
+      "type": "text.delta",
+      "t": 23761,
+      "id": "locked",
+      "delta": "-based issuance structure,"
+    },
+    {
+      "type": "text.delta",
+      "t": 23827,
+      "id": "locked",
+      "delta": " with an Ij"
+    },
+    {
+      "type": "text.delta",
+      "t": 23896,
+      "id": "locked",
+      "delta": "ara Muntah"
+    },
+    {
+      "type": "text.delta",
+      "t": 23971,
+      "id": "locked",
+      "delta": "ia Bittam"
+    },
+    {
+      "type": "text.delta",
+      "t": 24036,
+      "id": "locked",
+      "delta": "leek option for"
+    },
+    {
+      "type": "text.delta",
+      "t": 24106,
+      "id": "locked",
+      "delta": " real estate financing."
+    },
+    {
+      "type": "text.delta",
+      "t": 24173,
+      "id": "locked",
+      "delta": " The Profit Distribution Ratio"
+    },
+    {
+      "type": "text.delta",
+      "t": 24242,
+      "id": "locked",
+      "delta": " is calculated every six"
+    },
+    {
+      "type": "text.delta",
+      "t": 24310,
+      "id": "locked",
+      "delta": " months until the M"
+    },
+    {
+      "type": "text.delta",
+      "t": 24377,
+      "id": "locked",
+      "delta": "aturity Date, and"
+    },
+    {
+      "type": "text.delta",
+      "t": 24499,
+      "id": "locked",
+      "delta": " no Early Settlement Fee"
+    },
+    {
+      "type": "text.delta",
+      "t": 24516,
+      "id": "locked",
+      "delta": " is charged during the"
+    },
+    {
+      "type": "text.delta",
+      "t": 24585,
+      "id": "locked",
+      "delta": " fourteen-day Cooling-off"
+    },
+    {
+      "type": "text.delta",
+      "t": 24653,
+      "id": "locked",
+      "delta": " Period. Murjan"
+    },
+    {
+      "type": "text.delta",
+      "t": 24728,
+      "id": "locked",
+      "delta": " Platinum Card holders can"
+    },
+    {
+      "type": "text.delta",
+      "t": 24791,
+      "id": "locked",
+      "delta": " subscribe directly through Mur"
+    },
+    {
+      "type": "text.delta",
+      "t": 24860,
+      "id": "locked",
+      "delta": "jan Mobile. Returns"
+    },
+    {
+      "type": "text.delta",
+      "t": 24932,
+      "id": "locked",
+      "delta": " do not include Zak"
+    },
+    {
+      "type": "text.delta",
+      "t": 25008,
+      "id": "locked",
+      "delta": "at, as customers"
+    },
+    {
+      "type": "text.delta",
+      "t": 25076,
+      "id": "locked",
+      "delta": " are responsible for dis"
+    },
+    {
+      "type": "text.delta",
+      "t": 25148,
+      "id": "locked",
+      "delta": "charging it themselves."
+    },
+    {
+      "type": "text.delta",
+      "t": 25213,
+      "id": "locked",
+      "delta": " For enquiries, please"
+    },
+    {
+      "type": "text.delta",
+      "t": 25288,
+      "id": "locked",
+      "delta": " contact the Customer Care"
+    },
+    {
+      "type": "text.delta",
+      "t": 25371,
+      "id": "locked",
+      "delta": " Unit."
+    },
+    {
+      "type": "panel",
+      "t": 25420,
+      "id": "locked",
+      "kind": "counter",
+      "slot": "right",
+      "props": {
+        "title": "With the glossary",
+        "value": 14,
+        "total": 14,
+        "tone": "ok",
+        "label": "house terms honoured",
+        "missed": [],
+        "text": "Customer Notice: Subscription to the New Issue\n\nIn accordance with the directives of Qatar Central Bank (QCB), Murjan Islamic Bank is pleased to inform its customers that subscription to Murjan Sukuk Certificates will be available to Golden Saver Account holders starting 1 November 2026. The Sharia Supervisory Board has approved the Murabaha-based issuance structure, with an Ijara Muntahia Bittamleek option for real estate financing. The Profit Distribution Ratio is calculated every six months until the Maturity Date, and no Early Settlement Fee is charged during the fourteen-day Cooling-off Period. Murjan Platinum Card holders can subscribe directly through Murjan Mobile. Returns do not include Zakat, as customers are responsible for discharging it themselves. For enquiries, please contact the Customer Care Unit.",
+        "highlights": [
+          {
+            "text": "Qatar Central Bank (QCB)",
+            "tone": "ok"
+          },
+          {
+            "text": "Murjan Sukuk Certificates",
+            "tone": "ok"
+          },
+          {
+            "text": "Golden Saver Account",
+            "tone": "ok"
+          },
+          {
+            "text": "Sharia Supervisory Board",
+            "tone": "ok"
+          },
+          {
+            "text": "Murabaha",
+            "tone": "ok"
+          },
+          {
+            "text": "Ijara Muntahia Bittamleek",
+            "tone": "ok"
+          },
+          {
+            "text": "Profit Distribution Ratio",
+            "tone": "ok"
+          },
+          {
+            "text": "Maturity Date",
+            "tone": "ok"
+          },
+          {
+            "text": "Early Settlement Fee",
+            "tone": "ok"
+          },
+          {
+            "text": "Cooling-off Period",
+            "tone": "ok"
+          },
+          {
+            "text": "Murjan Platinum Card",
+            "tone": "ok"
+          },
+          {
+            "text": "Murjan Mobile",
+            "tone": "ok"
+          },
+          {
+            "text": "Zakat",
+            "tone": "ok"
+          },
+          {
+            "text": "Customer Care Unit",
+            "tone": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "type": "verdict",
+      "t": 25421,
+      "id": "verdict",
+      "status": "GLOSSARY 14/14",
+      "tone": "ok",
+      "headline": "Every product, structure and regulator named exactly as the bank names them.",
+      "reason": "Without the glossary: 7/14. With it: 14/14. The count is code, not the model's opinion.",
+      "evidence": [
+        {
+          "label": "Before",
+          "value": "7 of 14 terms missed"
+        },
+        {
+          "label": "After",
+          "value": "none missed"
+        },
+        {
+          "label": "Model",
+          "value": "qwen/qwen3.8-max-0902 via openrouter.ai"
+        }
+      ]
+    },
+    {
+      "type": "control.event",
+      "t": 25423,
+      "detector": "glossary.check",
+      "policyId": "LANG-01",
+      "score": 1,
+      "action": "allow",
+      "recordId": "CE-8003",
+      "detail": "14/14 with glossary"
+    },
+    {
+      "type": "pause",
+      "t": 25423
+    },
+    {
+      "type": "act.start",
+      "t": 25423,
+      "act": 5,
+      "title": "Proof",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 25423,
+      "id": "terms",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Term by term",
+        "columns": [
+          {
+            "key": "term",
+            "label": "House term"
+          },
+          {
+            "key": "before",
+            "label": "Without"
+          },
+          {
+            "key": "after",
+            "label": "With"
+          }
+        ],
+        "rows": [
+          {
+            "term": "Qatar Central Bank (QCB)",
+            "before": {
+              "text": "MISSED",
+              "tone": "block"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Murjan Sukuk Certificates",
+            "before": {
+              "text": "MISSED",
+              "tone": "block"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Golden Saver Account",
+            "before": {
+              "text": "MISSED",
+              "tone": "block"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Sharia Supervisory Board",
+            "before": {
+              "text": "YES",
+              "tone": "ok"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Murabaha",
+            "before": {
+              "text": "YES",
+              "tone": "ok"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Ijara Muntahia Bittamleek",
+            "before": {
+              "text": "YES",
+              "tone": "ok"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Profit Distribution Ratio",
+            "before": {
+              "text": "MISSED",
+              "tone": "block"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Maturity Date",
+            "before": {
+              "text": "YES",
+              "tone": "ok"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Early Settlement Fee",
+            "before": {
+              "text": "MISSED",
+              "tone": "block"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Cooling-off Period",
+            "before": {
+              "text": "YES",
+              "tone": "ok"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Murjan Platinum Card",
+            "before": {
+              "text": "YES",
+              "tone": "ok"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Murjan Mobile",
+            "before": {
+              "text": "MISSED",
+              "tone": "block"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Zakat",
+            "before": {
+              "text": "YES",
+              "tone": "ok"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          },
+          {
+            "term": "Customer Care Unit",
+            "before": {
+              "text": "MISSED",
+              "tone": "block"
+            },
+            "after": {
+              "text": "YES",
+              "tone": "ok"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 25423,
+      "id": "takeaway",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "ok",
+        "title": "Terminology is a control, not a style guide.",
+        "text": "The glossary is injected, every term is checked in code, the model gets one automatic re-ask, and anything still off waits for a reviewer. The thing Arabic-first teams distrust most, handled by a system."
+      }
+    },
+    {
+      "type": "run.end",
+      "t": 25424,
+      "usage": {
+        "inputTokens": 715,
+        "outputTokens": 1161,
+        "costUsd": 0.008396
+      }
+    }
+  ]
+}

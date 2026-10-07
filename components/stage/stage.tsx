@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { DemoManifest } from "@/demos/types";
@@ -11,6 +11,9 @@ import { Brand } from "@/components/brand";
 import { ActStrip } from "./act-strip";
 import { PanelHost } from "./panel-host";
 import { EvidenceDrawer } from "./evidence-drawer";
+import { stageExtras } from "@/lib/stage-extras";
+
+const NO_CONTROLS: never[] = [];
 
 export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
   manifest: DemoManifest; golden: GoldenRun; presenter: boolean; walk: boolean; nextSlug?: string;
@@ -18,6 +21,9 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
   const router = useRouter();
   const [evidence, setEvidence] = useState(false);
   const acts = actsInRun(golden.events);
+  // Evidence records added by the stage itself (for example, whether the alert email was sent) sit beside the run's own.
+  const extraControls = useSyncExternalStore(stageExtras.subscribe, stageExtras.getControls, () => NO_CONTROLS);
+  useEffect(() => { stageExtras.reset(); }, [manifest.slug]);
   const { state, segment, atEnd, mode, liveError, next, back, startLive, stopLive } = useStagePlayer(manifest.slug, golden);
 
   useEffect(() => {
@@ -39,6 +45,7 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
   }, [next, back, evidence, router, presenter, mode, startLive, stopLive]);
 
   const actIndex = Math.max(0, acts.findIndex((a) => a.act === state.act));
+  const evidenceState = extraControls.length ? { ...state, controls: [...state.controls, ...extraControls] } : state;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -58,7 +65,7 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
                 : <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={startLive} className="rounded-md border border-line px-3 py-1 hover:border-fg">Run live</button>
             )}
             <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => setEvidence((v) => !v)} className="rounded-md border border-line px-3 py-1 hover:border-fg">
-              Evidence{state.controls.length ? ` (${state.controls.length})` : ""}
+              Evidence{evidenceState.controls.length ? ` (${evidenceState.controls.length})` : ""}
             </button>
             {presenter && <span className="text-muted">Presenter</span>}
           </div>
@@ -97,7 +104,7 @@ export function Stage({ manifest, golden, presenter, walk, nextSlug }: {
         </div>
       </footer>
 
-      <EvidenceDrawer open={evidence} onClose={() => setEvidence(false)} state={state} model={golden.model} mode={mode} />
+      <EvidenceDrawer open={evidence} onClose={() => setEvidence(false)} state={evidenceState} model={golden.model} mode={mode} />
     </div>
   );
 }

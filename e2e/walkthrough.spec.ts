@@ -23,7 +23,7 @@ for (const demo of ready) {
     page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
     await unlock(page);
     await page.goto(`/demo/${demo.slug}`);
-    await expect(page.getByRole("heading", { name: demo.title })).toBeVisible();
+    await expect(page.getByRole("heading", { name: demo.title, exact: true, level: 1 })).toBeVisible();
     let presses = 0;
     let sawVerdict = false;
     while (presses < 40 && (await page.getByRole("link", { name: "Back to all cases" }).count()) === 0) {

@@ -7,6 +7,11 @@ import type { DemoRunner } from "../demos/types";
 const runners: Record<string, () => Promise<{ run: DemoRunner }>> = {
   "conflicting-docs": () => import("../demos/conflicting-docs/run"),
   guardrails: () => import("../demos/guardrails/run"),
+  "night-watchman": () => import("../demos/night-watchman/run"),
+  "enquiry-to-crm": () => import("../demos/enquiry-to-crm/run"),
+  "glossary-translation": () => import("../demos/glossary-translation/run"),
+  "document-to-json": () => import("../demos/document-to-json/run"),
+  "read-my-dashboard": () => import("../demos/read-my-dashboard/run"),
 };
 import { createLlm, resolveProvider } from "../lib/llm";
 import { stamp } from "../lib/stamp";

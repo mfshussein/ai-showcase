@@ -39,6 +39,7 @@ function fakeLlm(contradicts: boolean): Llm {
     async *stream() { yield "answer"; },
     async parse() { return { contradicts, topic: "t", aQuote: "a", bQuote: "b", explanation: "because" } as never; },
     async vision() { return "img"; },
+    async *tools() { throw new Error("unused"); },
     usage: () => ({ inputTokens: 0, outputTokens: 0, costUsd: 0 }),
   };
 }

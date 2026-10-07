@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Browser scripts inside image templates (rendered by scripts/make-images.mts).
+    "demos/*/fixtures/src/**",
   ]),
 ]);
 
