@@ -1,0 +1,1029 @@
+{
+  "demo": "conflicting-docs",
+  "recordedAt": "2026-10-07T14:27:05.393Z",
+  "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
+  "events": [
+    {
+      "type": "run.start",
+      "t": 0,
+      "demo": "conflicting-docs",
+      "mode": "live",
+      "runId": "df3674f4-3d26-4f63-88d0-fa4a597e7895"
+    },
+    {
+      "type": "act.start",
+      "t": 3,
+      "act": 1,
+      "title": "The claim",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 4,
+      "id": "claim",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "size": "display",
+        "title": "Your chatbot will cite whichever version of the policy it finds first.",
+        "text": "Marsa Airways keeps its bereavement policy in a shared drive. Three files are in there. Two of them disagree. A grieving customer is about to ask the question that cost Air Canada a tribunal case."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 5
+    },
+    {
+      "type": "act.start",
+      "t": 6,
+      "act": 2,
+      "title": "Three files",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 6,
+      "id": "files",
+      "kind": "files",
+      "slot": "left",
+      "props": {
+        "title": "Shared drive, Policies folder",
+        "files": [
+          {
+            "name": "bereavement-policy-v1.md",
+            "size": "1.0 KB",
+            "meta": "Version 1.0, effective 2022-03-01"
+          },
+          {
+            "name": "Bereavement_Policy_FINAL (copy).md",
+            "size": "1.1 KB",
+            "meta": "Version 1.0, effective 2022-03-01"
+          },
+          {
+            "name": "bereavement-policy-v2.md",
+            "size": "1.1 KB",
+            "meta": "Version 2.0, effective 2024-06-01"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 6,
+      "id": "doc",
+      "kind": "document",
+      "slot": "right",
+      "props": {
+        "title": "bereavement-policy-v1.md",
+        "text": "# Marsa Airways Bereavement Fare Policy\nVersion: 1.0\nEffective: 2022-03-01\nOwner: Customer Relations\n\n## 1 Purpose\nThis policy sets out how Marsa Airways supports customers who must travel because of the death of an immediate family member.\n\n## 2 Eligibility\nImmediate family means spouse, parent, child, sibling, grandparent or grandchild. The customer must be the person travelling.\n\n## 3 Fare\nA discount of up to 30% applies to the lowest available economy fare on the day of booking. The discount cannot be combined with promotional fares.\n\n## 4 Claims\n### 4.1 Documentation\nA death certificate, funeral notice or letter from the hospital must be provided within 14 days of booking.\n### 4.2 Retroactive claims\nA customer who travels before applying may submit a request for a bereavement refund within 90 days of the ticket issue date, and the difference between the fare paid and the bereavement fare will be refunded to the original form of payment.\n\n## 5 Contact\nRequests are handled by Customer Relations at care@marsa.example or through the Marsa app.\n",
+        "highlight": "within 90 days of the ticket issue date"
+      }
+    },
+    {
+      "type": "pause",
+      "t": 6
+    },
+    {
+      "type": "act.start",
+      "t": 6,
+      "act": 3,
+      "title": "Without the harness",
+      "subtitle": "A typical chatbot: find the best-matching passages, answer from them.",
+      "keep": [
+        "files"
+      ]
+    },
+    {
+      "type": "panel",
+      "t": 10,
+      "id": "retrieval",
+      "kind": "table",
+      "slot": "right",
+      "props": {
+        "title": "Retrieved passages, best two matches",
+        "columns": [
+          {
+            "key": "source",
+            "label": "Source"
+          },
+          {
+            "key": "score",
+            "label": "Score"
+          },
+          {
+            "key": "text",
+            "label": "Passage"
+          }
+        ],
+        "rows": [
+          {
+            "source": "bereavement-policy-v1.md",
+            "score": 7.137,
+            "text": "may submit a request for a bereavement refund within 90 days of the ticket issue date, and the difference between the fare paid and the bereavement fare will be…"
+          },
+          {
+            "source": "Bereavement_Policy_FINAL (copy).md",
+            "score": 7.088,
+            "text": "applying may submit a request for a bereavement refund within 90 days of the ticket issue date, and the difference between the fare paid and the bereavement far…"
+          }
+        ]
+      }
+    },
+    {
+      "type": "pause",
+      "t": 10
+    },
+    {
+      "type": "panel",
+      "t": 10,
+      "id": "chat1",
+      "kind": "chat",
+      "slot": "main",
+      "props": {
+        "title": "Customer chat, no harness",
+        "messages": [
+          {
+            "role": "user",
+            "text": "My father passed away last month and I had to fly to Doha for the funeral at short notice. I have already travelled. Can I still claim the bereavement refund?"
+          }
+        ],
+        "text": ""
+      }
+    },
+    {
+      "type": "text.delta",
+      "t": 4909,
+      "id": "chat1",
+      "delta": "I'm very"
+    },
+    {
+      "type": "text.delta",
+      "t": 5364,
+      "id": "chat1",
+      "delta": " sorry for your loss"
+    },
+    {
+      "type": "text.delta",
+      "t": 5364,
+      "id": "chat1",
+      "delta": ". Yes, you"
+    },
+    {
+      "type": "text.delta",
+      "t": 5364,
+      "id": "chat1",
+      "delta": " can still"
+    },
+    {
+      "type": "text.delta",
+      "t": 5447,
+      "id": "chat1",
+      "delta": " claim the bereav"
+    },
+    {
+      "type": "text.delta",
+      "t": 5448,
+      "id": "chat1",
+      "delta": "ement refund"
+    },
+    {
+      "type": "text.delta",
+      "t": 5590,
+      "id": "chat1",
+      "delta": " even after you have"
+    },
+    {
+      "type": "text.delta",
+      "t": 5592,
+      "id": "chat1",
+      "delta": " travelled. You"
+    },
+    {
+      "type": "text.delta",
+      "t": 5661,
+      "id": "chat1",
+      "delta": " have 90"
+    },
+    {
+      "type": "text.delta",
+      "t": 5909,
+      "id": "chat1",
+      "delta": " days"
+    },
+    {
+      "type": "text.delta",
+      "t": 5909,
+      "id": "chat1",
+      "delta": " from the ticket issue"
+    },
+    {
+      "type": "text.delta",
+      "t": 5909,
+      "id": "chat1",
+      "delta": " date to submit your"
+    },
+    {
+      "type": "text.delta",
+      "t": 5917,
+      "id": "chat1",
+      "delta": " request, and the"
+    },
+    {
+      "type": "text.delta",
+      "t": 6311,
+      "id": "chat1",
+      "delta": " difference between"
+    },
+    {
+      "type": "text.delta",
+      "t": 6312,
+      "id": "chat1",
+      "delta": " the fare you paid"
+    },
+    {
+      "type": "text.delta",
+      "t": 6312,
+      "id": "chat1",
+      "delta": " and the bereav"
+    },
+    {
+      "type": "text.delta",
+      "t": 6313,
+      "id": "chat1",
+      "delta": "ement fare will be"
+    },
+    {
+      "type": "text.delta",
+      "t": 6350,
+      "id": "chat1",
+      "delta": " refunded to your original"
+    },
+    {
+      "type": "text.delta",
+      "t": 6350,
+      "id": "chat1",
+      "delta": " form of payment."
+    },
+    {
+      "type": "text.delta",
+      "t": 6544,
+      "id": "chat1",
+      "delta": "\n\nTo proceed,"
+    },
+    {
+      "type": "text.delta",
+      "t": 6545,
+      "id": "chat1",
+      "delta": " please contact our"
+    },
+    {
+      "type": "text.delta",
+      "t": 6545,
+      "id": "chat1",
+      "delta": " Customer Relations team at"
+    },
+    {
+      "type": "text.delta",
+      "t": 6545,
+      "id": "chat1",
+      "delta": " care@marsa"
+    },
+    {
+      "type": "text.delta",
+      "t": 6702,
+      "id": "chat1",
+      "delta": ".example or through the"
+    },
+    {
+      "type": "text.delta",
+      "t": 6702,
+      "id": "chat1",
+      "delta": " Marsa app."
+    },
+    {
+      "type": "panel",
+      "t": 6716,
+      "id": "gasp",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "block",
+        "title": "Confidently wrong.",
+        "text": "Both retrieved passages came from the 2022 policy, because the stray copy outvoted the current version. The customer has just been promised a refund the airline withdrew in 2024."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 6716
+    },
+    {
+      "type": "act.start",
+      "t": 6716,
+      "act": 4,
+      "title": "With the harness",
+      "subtitle": "Nothing is indexed until it passes the ingestion gate.",
+      "keep": [
+        "files"
+      ]
+    },
+    {
+      "type": "panel",
+      "t": 6717,
+      "id": "gate",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Ingestion gate",
+        "columns": [
+          {
+            "key": "file",
+            "label": "File"
+          },
+          {
+            "key": "step",
+            "label": "Check"
+          },
+          {
+            "key": "status",
+            "label": "Result"
+          }
+        ],
+        "rows": [
+          {
+            "file": "bereavement-policy-v1.md",
+            "step": "queued",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "step": "queued",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "bereavement-policy-v2.md",
+            "step": "queued",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 6717,
+      "id": "gate",
+      "patch": {
+        "rows": [
+          {
+            "file": "bereavement-policy-v1.md",
+            "step": "sha256 9ed36b341096…",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "step": "sha256 5d4d9f118197…",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "bereavement-policy-v2.md",
+            "step": "sha256 377a90d2c8a7…",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 6717,
+      "id": "gate",
+      "patch": {
+        "rows": [
+          {
+            "file": "bereavement-policy-v1.md",
+            "step": "sha256 9ed36b341096…",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "step": "near-duplicate of bereavement-policy-v1.md, similarity 0.965",
+            "status": {
+              "text": "DUPLICATE, dropped",
+              "tone": "warn"
+            }
+          },
+          {
+            "file": "bereavement-policy-v2.md",
+            "step": "sha256 377a90d2c8a7…",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 6717,
+      "detector": "dedupe.shingles",
+      "policyId": "DATA-01",
+      "score": 0.965,
+      "action": "drop",
+      "recordId": "CE-1001",
+      "detail": "Bereavement_Policy_FINAL (copy).md duplicates bereavement-policy-v1.md"
+    },
+    {
+      "type": "panel.patch",
+      "t": 6718,
+      "id": "gate",
+      "patch": {
+        "rows": [
+          {
+            "file": "bereavement-policy-v1.md",
+            "step": "version 1.0 vs 2.0: 2 clauses differ",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "step": "near-duplicate of bereavement-policy-v1.md, similarity 0.965",
+            "status": {
+              "text": "DUPLICATE, dropped",
+              "tone": "warn"
+            }
+          },
+          {
+            "file": "bereavement-policy-v2.md",
+            "step": "version 1.0 vs 2.0: 2 clauses differ",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 17122,
+      "id": "gate",
+      "patch": {
+        "rows": [
+          {
+            "file": "bereavement-policy-v1.md",
+            "step": "clause 4.1: contradiction",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "step": "near-duplicate of bereavement-policy-v1.md, similarity 0.965",
+            "status": {
+              "text": "DUPLICATE, dropped",
+              "tone": "warn"
+            }
+          },
+          {
+            "file": "bereavement-policy-v2.md",
+            "step": "version 2.0: newest, effective 2024-06-01",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 23488,
+      "id": "gate",
+      "patch": {
+        "rows": [
+          {
+            "file": "bereavement-policy-v1.md",
+            "step": "clause 4.2: contradiction",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "step": "near-duplicate of bereavement-policy-v1.md, similarity 0.965",
+            "status": {
+              "text": "DUPLICATE, dropped",
+              "tone": "warn"
+            }
+          },
+          {
+            "file": "bereavement-policy-v2.md",
+            "step": "version 2.0: newest, effective 2024-06-01",
+            "status": {
+              "text": "PENDING",
+              "tone": "info"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 23488,
+      "id": "gate",
+      "patch": {
+        "rows": [
+          {
+            "file": "bereavement-policy-v1.md",
+            "step": "clause 4.2: contradiction",
+            "status": {
+              "text": "CONFLICT, superseded",
+              "tone": "quarantine"
+            }
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "step": "near-duplicate of bereavement-policy-v1.md, similarity 0.965",
+            "status": {
+              "text": "DUPLICATE, dropped",
+              "tone": "warn"
+            }
+          },
+          {
+            "file": "bereavement-policy-v2.md",
+            "step": "version 2.0: newest, effective 2024-06-01",
+            "status": {
+              "text": "INGESTED, current",
+              "tone": "ok"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 23488,
+      "id": "diff",
+      "kind": "diff",
+      "slot": "main",
+      "props": {
+        "title": "Clause 4.2 Retroactive claims: the two versions contradict",
+        "leftTitle": "Version 1.0, effective 2022-03-01",
+        "rightTitle": "Version 2.0, effective 2024-06-01",
+        "left": "A customer who travels before applying may submit a request for a bereavement refund within 90 days of the ticket issue date, and the difference between the fare paid and the bereavement fare will be refunded to the original form of payment.",
+        "right": "Bereavement fares must be requested before travel. Refund requests submitted after travel has taken place will not be approved. Customers who are unable to apply before travel should contact Customer Relations before departure so that a note can be placed on the booking.",
+        "leftHighlight": "A customer who travels before applying may submit a request for a bereavement refund within 90 days of the ticket issue date",
+        "rightHighlight": "Bereavement fares must be requested before travel. Refund requests submitted after travel has taken place will not be approved."
+      }
+    },
+    {
+      "type": "verdict",
+      "t": 23488,
+      "id": "verdict",
+      "status": "QUARANTINED",
+      "tone": "quarantine",
+      "headline": "Version 1.0 quarantined and its owner notified. Only version 2.0 is indexed.",
+      "reason": "Version A allows a bereavement refund request after travel within 90 days of ticket issue, while Version B reverses that rule by requiring requests before travel and denying refund requests submitted after travel has taken place.",
+      "evidence": [
+        {
+          "label": "Clause",
+          "value": "4.2 Retroactive claims"
+        },
+        {
+          "label": "Owner",
+          "value": "Customer Relations"
+        },
+        {
+          "label": "v1 says",
+          "value": "A customer who travels before applying may submit a request for a bereavement refund within 90 days of the ticket issue date"
+        },
+        {
+          "label": "v2 says",
+          "value": "Bereavement fares must be requested before travel. Refund requests submitted after travel has taken place will not be approved."
+        }
+      ]
+    },
+    {
+      "type": "control.event",
+      "t": 23489,
+      "detector": "conflict.clause",
+      "policyId": "DATA-02",
+      "action": "quarantine",
+      "recordId": "CE-1002",
+      "detail": "clause 4.2, version 1.0 vs 2.0"
+    },
+    {
+      "type": "pause",
+      "t": 23489
+    },
+    {
+      "type": "panel",
+      "t": 23489,
+      "id": "chat2",
+      "kind": "chat",
+      "slot": "main",
+      "props": {
+        "title": "Customer chat, with the harness",
+        "messages": [
+          {
+            "role": "system",
+            "text": "1 document quarantined pending owner review. Answering from version 2.0 only."
+          },
+          {
+            "role": "user",
+            "text": "My father passed away last month and I had to fly to Doha for the funeral at short notice. I have already travelled. Can I still claim the bereavement refund?"
+          }
+        ],
+        "text": ""
+      }
+    },
+    {
+      "type": "text.delta",
+      "t": 28055,
+      "id": "chat2",
+      "delta": "I am sorry"
+    },
+    {
+      "type": "text.delta",
+      "t": 28403,
+      "id": "chat2",
+      "delta": " for your loss."
+    },
+    {
+      "type": "text.delta",
+      "t": 28403,
+      "id": "chat2",
+      "delta": " I understand"
+    },
+    {
+      "type": "text.delta",
+      "t": 28561,
+      "id": "chat2",
+      "delta": " this was a difficult"
+    },
+    {
+      "type": "text.delta",
+      "t": 28561,
+      "id": "chat2",
+      "delta": " time,"
+    },
+    {
+      "type": "text.delta",
+      "t": 28683,
+      "id": "chat2",
+      "delta": " and I appreciate you"
+    },
+    {
+      "type": "text.delta",
+      "t": 28685,
+      "id": "chat2",
+      "delta": " reaching out"
+    },
+    {
+      "type": "text.delta",
+      "t": 29003,
+      "id": "chat2",
+      "delta": ".\n\nUnfortunately,"
+    },
+    {
+      "type": "text.delta",
+      "t": 29004,
+      "id": "chat2",
+      "delta": " under clause"
+    },
+    {
+      "type": "text.delta",
+      "t": 29004,
+      "id": "chat2",
+      "delta": " 4.2"
+    },
+    {
+      "type": "text.delta",
+      "t": 29033,
+      "id": "chat2",
+      "delta": " of our bereav"
+    },
+    {
+      "type": "text.delta",
+      "t": 29033,
+      "id": "chat2",
+      "delta": "ement policy,"
+    },
+    {
+      "type": "text.delta",
+      "t": 29103,
+      "id": "chat2",
+      "delta": " bereavement fares"
+    },
+    {
+      "type": "text.delta",
+      "t": 29104,
+      "id": "chat2",
+      "delta": " must"
+    },
+    {
+      "type": "text.delta",
+      "t": 29216,
+      "id": "chat2",
+      "delta": " be requested before travel"
+    },
+    {
+      "type": "text.delta",
+      "t": 29242,
+      "id": "chat2",
+      "delta": ", and refund requests"
+    },
+    {
+      "type": "text.delta",
+      "t": 29313,
+      "id": "chat2",
+      "delta": " submitted after travel has"
+    },
+    {
+      "type": "text.delta",
+      "t": 29378,
+      "id": "chat2",
+      "delta": " taken place will not"
+    },
+    {
+      "type": "text.delta",
+      "t": 29518,
+      "id": "chat2",
+      "delta": " be approved. The"
+    },
+    {
+      "type": "text.delta",
+      "t": 29588,
+      "id": "chat2",
+      "delta": " policy also notes that"
+    },
+    {
+      "type": "text.delta",
+      "t": 29588,
+      "id": "chat2",
+      "delta": " customers who"
+    },
+    {
+      "type": "text.delta",
+      "t": 29667,
+      "id": "chat2",
+      "delta": " are unable to apply"
+    },
+    {
+      "type": "text.delta",
+      "t": 29731,
+      "id": "chat2",
+      "delta": " before travel should contact"
+    },
+    {
+      "type": "text.delta",
+      "t": 29805,
+      "id": "chat2",
+      "delta": " Customer Relations before departure"
+    },
+    {
+      "type": "text.delta",
+      "t": 29871,
+      "id": "chat2",
+      "delta": " so that a note"
+    },
+    {
+      "type": "text.delta",
+      "t": 29939,
+      "id": "chat2",
+      "delta": " can be placed on"
+    },
+    {
+      "type": "text.delta",
+      "t": 30080,
+      "id": "chat2",
+      "delta": " the booking.\n\n"
+    },
+    {
+      "type": "text.delta",
+      "t": 30151,
+      "id": "chat2",
+      "delta": "Since your travel has"
+    },
+    {
+      "type": "text.delta",
+      "t": 30153,
+      "id": "chat2",
+      "delta": " already taken"
+    },
+    {
+      "type": "text.delta",
+      "t": 30467,
+      "id": "chat2",
+      "delta": " place, I am"
+    },
+    {
+      "type": "text.delta",
+      "t": 30467,
+      "id": "chat2",
+      "delta": " not able to approve"
+    },
+    {
+      "type": "text.delta",
+      "t": 30467,
+      "id": "chat2",
+      "delta": " a refund under the"
+    },
+    {
+      "type": "text.delta",
+      "t": 30498,
+      "id": "chat2",
+      "delta": " current policy. However"
+    },
+    {
+      "type": "text.delta",
+      "t": 30640,
+      "id": "chat2",
+      "delta": ", if you feel"
+    },
+    {
+      "type": "text.delta",
+      "t": 30774,
+      "id": "chat2",
+      "delta": " there are exceptional circumstances"
+    },
+    {
+      "type": "text.delta",
+      "t": 30780,
+      "id": "chat2",
+      "delta": ","
+    },
+    {
+      "type": "text.delta",
+      "t": 30914,
+      "id": "chat2",
+      "delta": " I can raise your"
+    },
+    {
+      "type": "text.delta",
+      "t": 30992,
+      "id": "chat2",
+      "delta": " case with our Customer"
+    },
+    {
+      "type": "text.delta",
+      "t": 30992,
+      "id": "chat2",
+      "delta": " Relations team for"
+    },
+    {
+      "type": "text.delta",
+      "t": 31065,
+      "id": "chat2",
+      "delta": " further review. They"
+    },
+    {
+      "type": "text.delta",
+      "t": 31136,
+      "id": "chat2",
+      "delta": " can be reached at"
+    },
+    {
+      "type": "text.delta",
+      "t": 31208,
+      "id": "chat2",
+      "delta": " care@marsa"
+    },
+    {
+      "type": "text.delta",
+      "t": 31311,
+      "id": "chat2",
+      "delta": ".example or through the"
+    },
+    {
+      "type": "text.delta",
+      "t": 31347,
+      "id": "chat2",
+      "delta": " Marsa app."
+    },
+    {
+      "type": "text.delta",
+      "t": 31418,
+      "id": "chat2",
+      "delta": "\n\nWould you like"
+    },
+    {
+      "type": "text.delta",
+      "t": 31486,
+      "id": "chat2",
+      "delta": " me to help you"
+    },
+    {
+      "type": "text.delta",
+      "t": 31506,
+      "id": "chat2",
+      "delta": " with that?"
+    },
+    {
+      "type": "pause",
+      "t": 31530
+    },
+    {
+      "type": "act.start",
+      "t": 31531,
+      "act": 5,
+      "title": "Proof",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 31531,
+      "id": "lifecycle",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Document lifecycle after the gate",
+        "columns": [
+          {
+            "key": "file",
+            "label": "File"
+          },
+          {
+            "key": "state",
+            "label": "State"
+          },
+          {
+            "key": "why",
+            "label": "Why"
+          }
+        ],
+        "rows": [
+          {
+            "file": "bereavement-policy-v2.md",
+            "state": {
+              "text": "CURRENT",
+              "tone": "ok"
+            },
+            "why": "Effective 2024-06-01, newest version"
+          },
+          {
+            "file": "bereavement-policy-v1.md",
+            "state": {
+              "text": "SUPERSEDED, QUARANTINED",
+              "tone": "quarantine"
+            },
+            "why": "Clause 4.2 contradicts the current version"
+          },
+          {
+            "file": "Bereavement_Policy_FINAL (copy).md",
+            "state": {
+              "text": "DROPPED",
+              "tone": "warn"
+            },
+            "why": "Duplicate of version 1.0, similarity 0.965"
+          }
+        ]
+      }
+    },
+    {
+      "type": "panel",
+      "t": 31531,
+      "id": "takeaway",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "ok",
+        "title": "This is the control that would have stopped Air Canada.",
+        "text": "Responses drawn only from approved sources. Conflicting versions quarantined before indexing. The owner notified. Every decision logged."
+      }
+    },
+    {
+      "type": "run.end",
+      "t": 31531,
+      "usage": {
+        "inputTokens": 1256,
+        "outputTokens": 1343,
+        "costUsd": 0.0050553920000000006
+      }
+    }
+  ]
+}

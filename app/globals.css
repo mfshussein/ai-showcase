@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f2f4f7;
+  --fg: #0f1720;
+  --muted: #5b6472;
+  --line: #d9dee5;
+  --card: #ffffff;
+  --accent: #1646d6;
+  --ok: #15803d;
+  --warn: #b45309;
+  --block: #b91c1c;
+  --quarantine: #6d28d9;
+  --info: #1646d6;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-block: var(--block);
+  --color-quarantine: var(--quarantine);
+  --color-info: var(--info);
+  --font-sans: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-plex), sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
+}
+
+html { background: var(--bg); color: var(--fg); }
+body { font-family: var(--font-sans); font-feature-settings: "ss01", "cv05"; }
+[dir="rtl"], .ar { font-family: var(--font-arabic); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Stage typography: projector-safe sizes. */
+.prose-stage { font-size: 1.125rem; line-height: 1.6; }
+.prose-stage p + p { margin-top: 0.75rem; }
+.prose-stage strong { font-weight: 600; }
+.prose-stage ul { list-style: disc; padding-inline-start: 1.25rem; margin-top: 0.5rem; }
+.prose-chat { font-size: 1.0625rem; line-height: 1.6; }
+.prose-chat p + p { margin-top: 0.5rem; }
+.prose-chat ul, .prose-chat ol { padding-inline-start: 1.25rem; margin-top: 0.4rem; }
+.prose-chat ul { list-style: disc; } .prose-chat ol { list-style: decimal; }
+.prose-doc { font-size: 1rem; line-height: 1.55; }
+.prose-doc h1 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+.prose-doc h2 { font-size: 1.05rem; font-weight: 600; margin-top: 1rem; }
+.prose-doc h3 { font-size: 1rem; font-weight: 600; margin-top: 0.75rem; }
+.prose-doc p { margin-top: 0.35rem; }
+
+@keyframes verdict-enter { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
+.verdict-enter { animation: verdict-enter 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
