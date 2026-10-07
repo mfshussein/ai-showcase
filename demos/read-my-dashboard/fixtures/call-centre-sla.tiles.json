@@ -1,0 +1,62 @@
+{
+  "width": 1280,
+  "height": 800,
+  "tiles": [
+    {
+      "id": "sla",
+      "title": "Service level",
+      "x": 2,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "aht",
+      "title": "Average handle time",
+      "x": 26.3,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "abandon",
+      "title": "Abandon rate",
+      "x": 50.5,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "csat",
+      "title": "CSAT",
+      "x": 74.8,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "daily",
+      "title": "Daily service level",
+      "x": 2,
+      "y": 25.1,
+      "w": 55.3,
+      "h": 41.1
+    },
+    {
+      "id": "reasons",
+      "title": "Top contact reasons",
+      "x": 58.4,
+      "y": 25.1,
+      "w": 39.5,
+      "h": 41.1
+    },
+    {
+      "id": "queues",
+      "title": "Queues",
+      "x": 2,
+      "y": 68,
+      "w": 95.9,
+      "h": 20.6
+    }
+  ]
+}

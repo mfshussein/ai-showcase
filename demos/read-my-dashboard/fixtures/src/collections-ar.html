@@ -1,0 +1,21 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="size" content="1280x800">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dash.css"><script src="charts.js"></script>
+<style>body { font-family: "IBM Plex Sans Arabic", sans-serif; } .kpi { letter-spacing: 0; }</style></head><body>
+<header><h1>لوحة التحصيل والإشغال · سبتمبر 2026</h1><p>مجموعة سديم العقارية · لوسيل · بالريال القطري · بيانات تجريبية</p></header>
+<div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="tile" data-tile="occupancy" data-title="نسبة الإشغال"><h2>نسبة الإشغال</h2><div class="kpi">82%</div><div class="sub"><span class="down">▼ 9 نقاط</span> عن أغسطس</div><span class="pill">على المسار</span></div>
+  <div class="tile" data-tile="collected" data-title="التحصيل الشهري"><h2>التحصيل الشهري</h2><div class="kpi">11.4 مليون</div><div class="sub"><span class="down">▼ 12%</span> عن أغسطس</div></div>
+  <div class="tile" data-tile="arrears" data-title="المتأخرات"><h2>إجمالي المتأخرات</h2><div class="kpi">6.9 مليون</div><div class="sub"><span class="down">▲ 2.3 مليون</span> عن أغسطس</div></div>
+  <div class="tile" data-tile="leases" data-title="عقود جديدة"><h2>عقود إيجار جديدة</h2><div class="kpi">37</div><div class="sub"><span class="up">▲ 5</span> عن أغسطس</div></div>
+</div>
+<div class="grid" style="grid-template-columns: 1fr 1.3fr; margin-top: 14px;">
+  <div class="tile" data-tile="towers" data-title="نسبة التحصيل حسب البرج"><h2>نسبة التحصيل حسب البرج، %</h2><div id="b1"></div></div>
+  <div class="tile" data-tile="rentroll" data-title="الإيرادات الإيجارية الشهرية"><h2>الإيرادات الإيجارية الشهرية، مليون ريال</h2><div id="l1"></div></div>
+</div>
+<div class="tile" data-tile="aging" data-title="أعمار المتأخرات" style="margin-top: 14px;"><h2>أعمار المتأخرات</h2><table><tr><th>الفئة</th><th class="n">المبلغ</th><th class="n">عدد الوحدات</th></tr>
+<tr><td>أقل من 30 يوماً</td><td class="n">2.1 مليون</td><td class="n">64</td></tr><tr><td>30 إلى 90 يوماً</td><td class="n">3.2 مليون</td><td class="n">71</td></tr><tr><td>أكثر من 90 يوماً</td><td class="n">1.6 مليون</td><td class="n">22</td></tr></table></div>
+<script>
+bars("b1", ["برج أ", "برج ب", "برج ج", "برج د", "برج هـ"], [93, 91, 41, 89, 90], { h: 270, max: 100, labelValues: true, fmt: (v) => Math.round(v) + "%", colors: ["#3b6fe0","#3b6fe0","#3b6fe0","#3b6fe0","#3b6fe0"] });
+lines("l1", ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر"], [{ values: [12.6,12.8,12.9,13.1,13.0,13.2,13.1,13.0,11.4], color: "#3b6fe0", label: "الفعلي" }, { values: [12.5,12.7,12.9,13.0,13.1,13.2,13.3,13.4,13.5], color: "#98a2b3", dash: "5 4", label: "المستهدف" }], { h: 270, min: 10, max: 14.5, fmt: (v) => v.toFixed(1) });
+</script></body></html>

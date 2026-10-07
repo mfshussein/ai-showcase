@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "record": "node --env-file=.env.local --import tsx scripts/record.mts",
-    "shot": "node --import tsx scripts/shot.mts"
+    "shot": "node --import tsx scripts/shot.mts",
+    "images": "node --import tsx scripts/make-images.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",

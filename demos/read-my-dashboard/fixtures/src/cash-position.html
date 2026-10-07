@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="size" content="1280x800">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dash.css"><script src="charts.js"></script></head><body>
+<header><h1>Group cash position · week 40, 2026</h1><p>Dafna Holdings Q.P.S.C. · QAR · synthetic data</p></header>
+<div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="tile" data-tile="cash" data-title="Cash on hand"><h2>Cash on hand</h2><div class="kpi">QAR 212.4M</div><div class="sub"><span class="down">-8.7%</span> vs last week</div></div>
+  <div class="tile" data-tile="runway" data-title="Runway"><h2>Operating runway</h2><div class="kpi">7.4 months</div><div class="sub"><span class="down">-0.6</span> vs last week</div></div>
+  <div class="tile" data-tile="dso" data-title="DSO"><h2>Days sales outstanding</h2><div class="kpi">68 days</div><div class="sub"><span class="down">+9</span> vs Q2</div></div>
+  <div class="tile" data-tile="facility" data-title="Facility headroom"><h2>Revolver headroom</h2><div class="kpi">QAR 140M</div><div class="sub"><span class="flat">undrawn</span></div></div>
+</div>
+<div class="grid" style="grid-template-columns: 1.4fr 1fr; margin-top: 14px;">
+  <div class="tile" data-tile="forecast" data-title="13-week cash forecast"><h2>13-week cash forecast, QAR millions</h2><div id="l1"></div></div>
+  <div class="tile" data-tile="banks" data-title="Cash by bank"><h2>Cash by bank, QAR millions</h2><div id="b1"></div></div>
+</div>
+<div class="tile" data-tile="payables" data-title="Large payments due" style="margin-top: 14px;"><h2>Large payments due, next 14 days</h2><table><tr><th>Payee</th><th>Due</th><th class="n">Amount</th></tr>
+<tr><td>Sukuk coupon (semi-annual)</td><td>14 Oct</td><td class="n">QAR 38.0M</td></tr><tr><td>Gulf Steel Supplies</td><td>16 Oct</td><td class="n">QAR 21.5M</td></tr><tr><td>Payroll, October</td><td>19 Oct</td><td class="n">QAR 17.2M</td></tr></table></div>
+<script>
+lines("l1", ["W40","W41","W42","W43","W44","W45","W46","W47","W48","W49","W50","W51","W52"], [{ values: [212,196,154,149,158,162,141,138,146,150,131,127,133], color: "#3b6fe0", label: "Forecast" }, { values: Array(13).fill(120), color: "#b91c1c", dash: "5 4", label: "Minimum balance" }], { h: 270, min: 100, every: 2 });
+bars("b1", ["Bank A", "Bank B", "Bank C", "Bank D"], [88.1, 61.7, 40.2, 22.4], { h: 270, labelValues: true });
+</script></body></html>

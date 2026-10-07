@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="size" content="1280x800">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dash.css"><script src="charts.js"></script></head><body>
+<header><h1>Sales by region · Q3 2026</h1><p>Qamar Trading W.L.L. · all figures QAR · synthetic data</p></header>
+<div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="tile" data-tile="revenue" data-title="Revenue"><h2>Revenue Q3</h2><div class="kpi">QAR 48.2M</div><div class="sub"><span class="up">+6.1%</span> vs Q2</div></div>
+  <div class="tile" data-tile="margin" data-title="Gross margin"><h2>Gross margin</h2><div class="kpi">31.4%</div><div class="sub"><span class="down">-2.3 pts</span> vs Q2</div></div>
+  <div class="tile" data-tile="orders" data-title="Orders"><h2>Orders</h2><div class="kpi">12,904</div><div class="sub"><span class="up">+4.0%</span> vs Q2</div></div>
+  <div class="tile" data-tile="aov" data-title="Average order"><h2>Average order value</h2><div class="kpi">QAR 3,735</div><div class="sub"><span class="up">+2.0%</span> vs Q2</div></div>
+</div>
+<div class="grid" style="grid-template-columns: 1.3fr 1fr; margin-top: 14px;">
+  <div class="tile" data-tile="regions" data-title="Revenue by region"><h2>Revenue by region, QAR millions</h2><div id="b1"></div></div>
+  <div class="tile" data-tile="trend" data-title="Monthly revenue vs target"><h2>Monthly revenue vs target, QAR millions</h2><div id="l1"></div></div>
+</div>
+<div class="grid" style="grid-template-columns: 1fr 1fr; margin-top: 14px;">
+  <div class="tile" data-tile="top" data-title="Top customers"><h2>Top customers</h2><table><tr><th>Customer</th><th class="n">Revenue</th><th class="n">Share</th></tr>
+  <tr><td>Al Noor Hypermarkets</td><td class="n">7.9M</td><td class="n">16.4%</td></tr><tr><td>Bayt Contracting</td><td class="n">4.1M</td><td class="n">8.5%</td></tr><tr><td>Sidra Hospitality</td><td class="n">3.2M</td><td class="n">6.6%</td></tr><tr><td>Wakra Fresh</td><td class="n">2.6M</td><td class="n">5.4%</td></tr></table></div>
+  <div class="tile" data-tile="channel" data-title="Channel mix"><h2>Channel mix</h2><div id="b2"></div></div>
+</div>
+<script>
+bars("b1", ["Doha", "Lusail", "Al Rayyan", "Al Wakrah", "Al Khor", "Industrial Area"], [17.8, 9.6, 8.1, 5.2, 2.9, 4.6], { h: 250, labelValues: true });
+lines("l1", ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"], [{ values: [14.1,14.6,15.2,15.0,15.4,15.1,15.9,16.0,16.3], color: "#3b6fe0", label: "Actual" }, { values: [14,14.5,15,15.3,15.6,15.9,16.2,16.5,16.8], color: "#98a2b3", dash: "5 4", label: "Target" }], { h: 250, min: 12 });
+bars("b2", ["Wholesale", "Retail", "Online", "Projects"], [44, 27, 18, 11], { h: 130, labelValues: true, fmt: (v) => Math.round(v) + "%", color: "#6b8fe8" });
+</script></body></html>

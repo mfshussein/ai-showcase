@@ -1,0 +1,70 @@
+{
+  "width": 1280,
+  "height": 800,
+  "tiles": [
+    {
+      "id": "revenue",
+      "title": "Revenue",
+      "x": 2,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "margin",
+      "title": "Gross margin",
+      "x": 26.3,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "orders",
+      "title": "Orders",
+      "x": 50.5,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "aov",
+      "title": "Average order",
+      "x": 74.8,
+      "y": 8.4,
+      "w": 23.2,
+      "h": 15
+    },
+    {
+      "id": "regions",
+      "title": "Revenue by region",
+      "x": 2,
+      "y": 25.1,
+      "w": 53.6,
+      "h": 38.6
+    },
+    {
+      "id": "trend",
+      "title": "Monthly revenue vs target",
+      "x": 56.7,
+      "y": 25.1,
+      "w": 41.2,
+      "h": 38.6
+    },
+    {
+      "id": "top",
+      "title": "Top customers",
+      "x": 2,
+      "y": 65.5,
+      "w": 47.4,
+      "h": 24.1
+    },
+    {
+      "id": "channel",
+      "title": "Channel mix",
+      "x": 50.5,
+      "y": 65.5,
+      "w": 47.4,
+      "h": 24.1
+    }
+  ]
+}
