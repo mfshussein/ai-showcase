@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cypher-One AI Showcase
 
-## Getting Started
+Short, pre-loaded demonstrations that make the Cypher-One pitch tangible: watch an AI get it wrong, then watch a system control catch it. Built for a laptop in a meeting room and for a gated link sent afterwards.
 
-First, run the development server:
+Design spec: `docs/superpowers/specs/2026-10-07-ai-showcase-design.md`. Research: `docs/research/`.
+
+## Run it locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in the values
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env.local` needs:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Purpose |
+|---|---|
+| `ANTHROPIC_API_KEY` | Only for live runs and for recording. Replay works without it. |
+| `VIEWER_PASSWORD` | The code prospects use. Replay only. |
+| `PRESENTER_PASSWORD` | The code partners use. Adds "Run live" and the preflight page. |
+| `COOKIE_SECRET` | Any long random string. Signs the session cookie. |
+| `MODEL_MAIN`, `MODEL_FAST` | Default `claude-opus-5-5` and `claude-sonnet-5-5`. |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Presenting
 
-## Learn More
+- Open the gallery, press "Start the walkthrough", or open a single case.
+- Space, Enter or the right arrow advance. Left arrow goes back one screen. E opens the evidence drawer. Esc returns to the gallery.
+- Replay is the default and needs no network. Presenters can press L or "Run live" to run the real pipeline; if it fails, the stage continues from the recording and shows a "Cached" badge.
+- Before a meeting, open Preflight (presenter only) and probe the model.
 
-To learn more about Next.js, take a look at the following resources:
+## Adding a case
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create `demos/<slug>/` with `manifest.ts` (title, hook, lesson, tags, acts, takeaway), `run.ts` (an async generator that yields run events; see `lib/events.ts` for the contract and `components/panels/index.tsx` for panel props), and `fixtures/`.
+2. Register the manifest in `demos/registry.ts` and the runner in `demos/runners.ts`.
+3. Record it: `npm run record <slug>`. Read the printed transcript; re-record until the gasp and the verdict land.
+4. Add the golden to `demos/goldens.ts`, set the manifest `status` to `ready`, run `npm test` and `npm run test:e2e`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Fixtures are synthetic and fictional. Real incidents are cited only as public lessons, using the wording checked for the deck.
 
-## Deploy on Vercel
+## Checks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm test           # unit tests (harness logic, event schema, player, gate)
+npm run test:e2e   # Playwright: gate and a full replay of every recorded case
+npm run lint
+npx tsc --noEmit
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploying
+
+Vercel project with the environment variables above. Set a monthly spend limit on the Anthropic workspace. Live mode is presenter-only, so a shared viewer link cannot spend on the API. For a no-network meeting, `npm run build && npm start` on the laptop serves replay from the bundled recordings.
