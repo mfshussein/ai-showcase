@@ -90,6 +90,12 @@ describe("createOpenAiCompatibleLlm", () => {
     expect(srv.calls[0].body.reasoning).toBeUndefined();
     expect(srv.calls[0].body.max_tokens).toBe(300);
   });
+  it("vision() passes the requested reasoning effort to OpenRouter", async () => {
+    const or = { ...provider, baseURL: "https://openrouter.ai/api/v1" };
+    const srv = fakeServer(["ok"]);
+    await createOpenAiCompatibleLlm(or, srv.fetchImpl).vision({ image: { data: "AAAA", mediaType: "image/png" }, prompt: "p", effort: "low" });
+    expect(srv.calls[0].body.reasoning).toEqual({ effort: "low" });
+  });
   it("vision() sends an image_url data URL", async () => {
     const srv = fakeServer(["a chart"]);
     const llm = createOpenAiCompatibleLlm(provider, srv.fetchImpl);

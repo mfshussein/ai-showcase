@@ -36,7 +36,7 @@ export const run: DemoRunner = async function* (ctx) {
   yield { type: "panel", id: "dash", kind: "image", slot: "left", props: { title: picked.caption, src: src(PICK), alt: picked.caption, callouts: [] } };
   const t0 = Date.now();
   const reading = (await ctx.llm.vision({
-    model: "main",
+    model: "main", effort: "low",
     image: { data: image, mediaType: "image/png" },
     schema: Reading,
     system: "You are a senior finance analyst reading a management dashboard image for the CFO of a Qatari company. Write in plain English for an executive. Quote figures exactly as printed on the dashboard and say which tile they come from. No emoji. Be specific: name towers, months and amounts.",

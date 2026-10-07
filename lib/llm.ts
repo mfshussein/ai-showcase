@@ -94,7 +94,7 @@ export interface Llm {
   /** Yields text deltas. */
   stream(o: Common): AsyncGenerator<string>;
   parse<T>(o: Common & { schema: z.ZodType<T> }): Promise<T>;
-  vision<T>(o: { image: ImageInput; prompt: string; system?: string; schema?: z.ZodType<T>; model?: "main" | "fast" }): Promise<T | string>;
+  vision<T>(o: { image: ImageInput; prompt: string; system?: string; schema?: z.ZodType<T>; model?: "main" | "fast"; effort?: "low" | "medium" | "high" }): Promise<T | string>;
   /** Tool-calling loop: yields each call, its result, and the final reply. Stops after maxSteps (default 8) model turns. */
   tools(o: Common & { tools: ToolDef[]; maxSteps?: number }): AsyncGenerator<ToolStep>;
   usage(): { inputTokens: number; outputTokens: number; costUsd: number };
@@ -185,7 +185,7 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
       if (o.schema) {
         const res = await client.messages.parse({
           model, max_tokens: 4000, system: o.system,
-          output_config: { effort: "medium", format: zodOutputFormat(o.schema) },
+          output_config: { effort: o.effort ?? "medium", format: zodOutputFormat(o.schema) },
           messages: [{ role: "user", content }],
         });
         add(model, res.usage);
@@ -193,7 +193,7 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
         return res.parsed_output as z.infer<typeof o.schema>;
       }
       const res = await client.messages.create({
-        model, max_tokens: 4000, system: o.system, output_config: { effort: "medium" }, messages: [{ role: "user", content }],
+        model, max_tokens: 4000, system: o.system, output_config: { effort: o.effort ?? "medium" }, messages: [{ role: "user", content }],
       });
       add(model, res.usage);
       return textOf(res.content);
@@ -298,8 +298,8 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
         { type: "image_url", image_url: { url: `data:${o.image.mediaType};base64,${o.image.data}` } },
         { type: "text", text: o.prompt },
       ];
-      if (o.schema) return parseWith(model, msgs(withSchema(o.system, o.schema), content), o.schema, undefined, "medium");
-      return complete(model, msgs(o.system, content), undefined, false, "medium");
+      if (o.schema) return parseWith(model, msgs(withSchema(o.system, o.schema), content), o.schema, undefined, o.effort ?? "medium");
+      return complete(model, msgs(o.system, content), undefined, false, o.effort ?? "medium");
     },
     async *tools(o) {
       const model = MODEL[o.model ?? "main"];

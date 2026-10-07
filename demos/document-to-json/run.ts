@@ -38,7 +38,7 @@ export const run: DemoRunner = async function* (ctx) {
     let rec: Record<string, unknown>;
     try {
       rec = (await ctx.llm.vision({
-        model: "main", schema: doc.schema,
+        model: "main", effort: "low", schema: doc.schema,
         image: { data: (await ctx.fixtureBuffer(doc.file)).toString("base64"), mediaType: "image/png" },
         system: "You extract structured data from business documents for a back-office system in Qatar. Return only what is on the document. No emoji.",
         prompt: doc.prompt,
