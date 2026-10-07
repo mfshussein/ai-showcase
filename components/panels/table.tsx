@@ -21,7 +21,7 @@ export function TablePanel({ props }: { id: string; props: Record<string, unknow
               {columns.map((c) => {
                 const v = r[c.key];
                 return (
-                  <td key={c.key} className="py-2.5 pr-4">
+                  <td key={c.key} className="py-2.5 pr-4" dir="auto">
                     {v && typeof v === "object" ? <Chip text={v.text} tone={isTone(v.tone) ? v.tone : "info"} /> : typeof v === "number" ? <span className="font-mono">{v}</span> : v ?? ""}
                   </td>
                 );

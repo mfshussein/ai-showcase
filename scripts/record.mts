@@ -7,6 +7,7 @@ import type { DemoRunner } from "../demos/types";
 const runners: Record<string, () => Promise<{ run: DemoRunner }>> = {
   "conflicting-docs": () => import("../demos/conflicting-docs/run"),
   guardrails: () => import("../demos/guardrails/run"),
+  "glossary-translation": () => import("../demos/glossary-translation/run"),
   "document-to-json": () => import("../demos/document-to-json/run"),
   "read-my-dashboard": () => import("../demos/read-my-dashboard/run"),
 };
