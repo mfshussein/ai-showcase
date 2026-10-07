@@ -22,7 +22,7 @@ const events: RunEvent[] = [];
 const started = Date.now();
 for await (const ev of stamp(run({ mode: "record", llm, ...makeFixtureLoader(slug) }))) {
   events.push(ev);
-  const extra = "id" in ev ? ` ${ev.id}` : ev.type === "act.start" ? ` ${ev.act} ${ev.title}` : ev.type === "verdict" ? ` ${ev.status}` : "";
+  const extra = ev.type === "verdict" ? ` ${ev.id} ${ev.status}` : "id" in ev ? ` ${ev.id}` : ev.type === "act.start" ? ` ${ev.act} ${ev.title}` : "";
   process.stdout.write(`${String(ev.t).padStart(6)}ms ${ev.type}${extra}\n`);
   if (ev.type === "text.delta") process.stdout.write(`        ${JSON.stringify(ev.delta)}\n`);
 }
