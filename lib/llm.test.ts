@@ -8,6 +8,7 @@ describe("costUsd", () => {
   it("prices qwen3.8-max at $2/$6 and deepseek-v4-pro at $1.32/$3.96", () => {
     expect(costUsd("qwen3.8-max", 1_000_000, 1_000_000)).toBeCloseTo(8);
     expect(costUsd("deepseek-v4-pro", 1_000_000, 1_000_000)).toBeCloseTo(5.28);
+    expect(costUsd("qwen/qwen3.8-flash", 1_000_000, 1_000_000)).toBeCloseTo(0.62);
   });
   it("unknown model costs 0 unless an override is given", () => {
     expect(costUsd("x", 1, 1)).toBe(0);

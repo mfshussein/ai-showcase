@@ -27,6 +27,15 @@ const KNOWN_PRICES: Prices = {
   "glm-5.3": [1.4, 4.4],
   "glm-5.3-flash": [0.15, 0.5],
   "MiniMax-M3": [0.3, 1.2],
+  // OpenRouter ids (list price, October 2026)
+  "qwen/qwen3.8-max-0902": [2, 6],
+  "qwen/qwen3.8-flash": [0.15, 0.47],
+  "deepseek/deepseek-v4-pro-0813": [0.66, 1.98],
+  "deepseek/deepseek-v4.1-flash": [0.05, 1.2],
+  "moonshotai/kimi-k3": [3, 15],
+  "minimax/minimax-m3": [0.3, 1.2],
+  "z-ai/glm-5.3-flash": [0.15, 0.5],
+  "google/gemini-3.8-flash": [0.75, 3.75],
 };
 
 function parsePrice(s: string | undefined): [number, number] | undefined {
