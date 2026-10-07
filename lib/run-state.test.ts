@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { applyAll, initialRunState, reduceRun, segmentEvents, actsInRun, cursorForAct } from "./run-state";
-import type { RunEvent } from "./events";
+import { RunEvent, type RunEventInput } from "./events";
 
-const ev = (e: Omit<RunEvent, "t"> & { t?: number }): RunEvent => ({ t: 0, ...e } as RunEvent);
+const ev = (e: RunEventInput): RunEvent => RunEvent.parse({ t: 0, ...e });
 
 describe("reduceRun", () => {
   it("upserts panels and patches props", () => {
