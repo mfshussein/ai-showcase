@@ -24,6 +24,9 @@ npm run dev                  # http://localhost:3000
 | `PRESENTER_PASSWORD` | The code partners use. Adds "Run live" and the preflight page. |
 | `COOKIE_SECRET` | Any long random string. Signs the session cookie. |
 | `MODEL_MAIN`, `MODEL_FAST` | The capable model and the cheap classifier model. Defaults depend on the provider. |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | Night watchman alert email (port 465 uses implicit TLS). Without `SMTP_HOST` the email is still shown on stage and the evidence drawer says it was not sent. |
+| `ALERT_EMAIL_TO` | Who receives the night shift report. Put your own address here to have your phone buzz in the meeting. |
+| `SLACK_WEBHOOK_URL` | Optional. Also posts the report to a Slack or Microsoft Teams incoming webhook. |
 
 ## Presenting
 
@@ -32,14 +35,29 @@ npm run dev                  # http://localhost:3000
 - Replay is the default and needs no network. Presenters can press L or "Run live" to run the real pipeline; if it fails, the stage continues from the recording and shows a "Cached" badge.
 - Before a meeting, open Preflight (presenter only) and probe the model.
 
+## The cases
+
+| Order | Case | Pin drop |
+|---|---|---|
+| 10 | night-watchman | Statistics find five planted issues in a 500-row AP ledger; the bilingual report is emailed (live and record runs send a real email). |
+| 20 | conflicting-docs | The stale policy version is quarantined before indexing. |
+| 40 | guardrails | Four attempts, four gates. |
+| 50 | enquiry-to-crm | A tool-calling agent works an Arabic WhatsApp enquiry; the send step is held by the harness until a person approves. |
+| 60 | read-my-dashboard | One look at an Arabic dashboard: CFO lines, two circled anomalies, questions; every quoted figure traced back to the page. |
+| 70 | document-to-json | Invoice, SPECIMEN ID and handwritten note become records; code blocks the bad ones. |
+| 80 | glossary-translation | House terms honoured goes from a handful to 14/14. |
+
 ## Adding a case
 
 1. Create `demos/<slug>/` with `manifest.ts` (title, hook, lesson, tags, acts, takeaway), `run.ts` (an async generator that yields run events; see `lib/events.ts` for the contract and `components/panels/index.tsx` for panel props), and `fixtures/`.
 2. Register the manifest in `demos/registry.ts` and the runner in `demos/runners.ts`.
+   Images: write HTML under `demos/<slug>/fixtures/src/` and run `npm run images <slug>`. It renders PNGs into `fixtures/` and `public/fixtures/<slug>/`, and for elements marked `data-tile` writes `<name>.tiles.json` (tile boxes) and `<name>.text.txt` (the visible text).
 3. Add the runner to the static import map at the top of `scripts/record.mts`, then record it: `npm run record <slug>`. Read the printed transcript; re-record until the gasp and the verdict land.
 4. Add the golden to `demos/goldens.ts`, set the manifest `status` to `ready`, run `npm test` and `npm run test:e2e`.
 
-The two recorded cases were made with Qwen 3.8 Max and Qwen 3.8 Flash through OpenRouter. The Anthropic code path compiles and is unit-tested against the SDK types but has not been exercised against the live API yet; probe it from Preflight before relying on it.
+`Llm.tools()` (the tool-calling loop used by enquiry-to-crm) is implemented for OpenAI-compatible providers only. On the Anthropic provider it throws "not implemented"; record and run that case with `LLM_PROVIDER=openai`.
+
+The recorded cases were made with Qwen 3.8 Max and Qwen 3.8 Flash through OpenRouter. The Anthropic code path compiles and is unit-tested against the SDK types but has not been exercised against the live API yet; probe it from Preflight before relying on it.
 
 Fixtures are synthetic and fictional. Real incidents are cited only as public lessons, using the wording checked for the deck.
 
