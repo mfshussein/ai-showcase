@@ -42,7 +42,7 @@ export const run: DemoRunner = async function* (ctx) {
     system: "You are a senior finance analyst reading a management dashboard image for the CFO of a Qatari company. Write in plain English for an executive. Quote figures exactly as printed on the dashboard and say which tile they come from. No emoji. Be specific: name towers, months and amounts.",
     prompt: `Read this dashboard (${layout.width}x${layout.height} pixels). Return:
 - cfoLines: the three things the CFO would say about it in the board meeting, one sentence each.
-- anomalies: the two things that look wrong or contradictory. For each: a short label (max 5 words), why it matters (one sentence), and box: the bounding box of the tile or chart where it appears, as percentages of image width and height (0 to 100), with x,y the top-left corner.
+- anomalies: the two things that look wrong or contradictory. For each: a short label (max 5 words), why it matters (one sentence), and box: the bounding box of the tile or chart where it appears, as [x_min, y_min, x_max, y_max] on a 0 to 1000 scale, where 0,0 is the top-left of the image and 1000,1000 the bottom-right.
 - questions: three questions to ask the team before the meeting.`,
   })) as Reading;
   reading.cfoLines = reading.cfoLines.slice(0, 3);
@@ -51,7 +51,7 @@ export const run: DemoRunner = async function* (ctx) {
   const seconds = (Date.now() - t0) / 1000;
 
   const callouts = reading.anomalies.flatMap((a) => {
-    const box = toBox(a.box);
+    const box = toBox(a.box, layout);
     const tile = box ? snapToTile(box, layout.tiles, layout) : null;
     return tile ? [{ x: tile.x, y: tile.y, w: tile.w, h: tile.h, label: a.label }] : [];
   });
@@ -64,7 +64,7 @@ export const run: DemoRunner = async function* (ctx) {
     headline: `Board lines, ${["no anomaly could be", "one anomaly", "two anomalies"][callouts.length]} circled, questions to ask. From a screenshot in Arabic.`,
     reason: "One call to a vision model. The callouts are snapped to the dashboard tiles it pointed at, so a box is never drawn in the wrong place.",
     evidence: [
-      { label: "Model", value: ctx.llm.label },
+      { label: "Model", value: ctx.llm.visionModel ?? ctx.llm.label },
       { label: "Input", value: `${PICK}.png, ${layout.width}x${layout.height}` },
       { label: "Callouts", value: `${callouts.length} of ${reading.anomalies.length} matched to a tile` },
       { label: "Elapsed", value: `${seconds.toFixed(1)} s` },

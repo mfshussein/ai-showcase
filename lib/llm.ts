@@ -9,9 +9,11 @@ import { z } from "zod";
 
 export type Prices = Record<string, [number, number]>;
 
+/** `vision`, when set, is used for every image call (a fast multimodal model keeps "read in seconds" true). */
+type Models = { main: string; fast: string; vision?: string };
 export type Provider =
-  | { kind: "anthropic"; models: { main: string; fast: string }; label: string; prices?: Prices }
-  | { kind: "openai"; baseURL: string; apiKey: string; models: { main: string; fast: string }; label: string; prices?: Prices };
+  | { kind: "anthropic"; models: Models; label: string; prices?: Prices }
+  | { kind: "openai"; baseURL: string; apiKey: string; models: Models; label: string; prices?: Prices };
 
 /** USD per million tokens: [input, output]. Checked October 2026; override with LLM_PRICE_MAIN / LLM_PRICE_FAST ("in,out"). */
 const KNOWN_PRICES: Prices = {
@@ -51,7 +53,7 @@ export function resolveProvider(env: Record<string, string | undefined> = proces
     const baseURL = env.LLM_BASE_URL;
     const apiKey = env.LLM_API_KEY;
     if (!baseURL || !apiKey) throw new Error("LLM_PROVIDER=openai needs LLM_BASE_URL and LLM_API_KEY");
-    const models = { main: env.MODEL_MAIN ?? "qwen3.8-max", fast: env.MODEL_FAST ?? "qwen3.8-flash" };
+    const models: Models = { main: env.MODEL_MAIN ?? "qwen3.8-max", fast: env.MODEL_FAST ?? "qwen3.8-flash", ...(env.MODEL_VISION ? { vision: env.MODEL_VISION } : {}) };
     const pm = parsePrice(env.LLM_PRICE_MAIN);
     const pf = parsePrice(env.LLM_PRICE_FAST);
     if (pm) prices[models.main] = pm;
@@ -59,7 +61,7 @@ export function resolveProvider(env: Record<string, string | undefined> = proces
     const host = new URL(baseURL).hostname;
     return { kind: "openai", baseURL, apiKey, models, label: `${models.main} via ${host}`, ...(Object.keys(prices).length ? { prices } : {}) };
   }
-  const models = { main: env.MODEL_MAIN ?? "claude-opus-5-5", fast: env.MODEL_FAST ?? "claude-sonnet-5-5" };
+  const models: Models = { main: env.MODEL_MAIN ?? "claude-opus-5-5", fast: env.MODEL_FAST ?? "claude-sonnet-5-5", ...(env.MODEL_VISION ? { vision: env.MODEL_VISION } : {}) };
   return { kind: "anthropic", models, label: `${models.main} via Anthropic` };
 }
 
@@ -100,6 +102,8 @@ export interface Llm {
   usage(): { inputTokens: number; outputTokens: number; costUsd: number };
   /** Human-readable "model via host" for the evidence drawer. */
   label: string;
+  /** The model image calls use, when it differs from main. */
+  visionModel?: string;
 }
 
 function usageTracker(prices?: Prices) {
@@ -139,6 +143,7 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
 
   return {
     label: provider.label,
+    visionModel: MODEL.vision,
     async text(o) {
       const model = MODEL[o.model ?? "main"];
       const res = await client.beta.messages.create({
@@ -177,7 +182,7 @@ export function createAnthropicLlm(provider: Extract<Provider, { kind: "anthropi
       return res.parsed_output as z.infer<typeof o.schema>;
     },
     async vision(o) {
-      const model = MODEL[o.model ?? "main"];
+      const model = MODEL.vision ?? MODEL[o.model ?? "main"];
       const content: Anthropic.ContentBlockParam[] = [
         { type: "image", source: { type: "base64", media_type: o.image.mediaType, data: o.image.data } },
         { type: "text", text: o.prompt },
@@ -277,6 +282,7 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
 
   return {
     label: provider.label,
+    visionModel: MODEL.vision,
     async text(o) {
       return complete(MODEL[o.model ?? "main"], msgs(o.system, o.prompt), o.maxTokens, false, o.effort);
     },
@@ -293,7 +299,7 @@ export function createOpenAiCompatibleLlm(provider: Extract<Provider, { kind: "o
       return parseWith(MODEL[o.model ?? "main"], msgs(withSchema(o.system, o.schema), o.prompt), o.schema, o.maxTokens, o.effort);
     },
     async vision(o) {
-      const model = MODEL[o.model ?? "main"];
+      const model = MODEL.vision ?? MODEL[o.model ?? "main"];
       const content: OpenAI.ChatCompletionContentPart[] = [
         { type: "image_url", image_url: { url: `data:${o.image.mediaType};base64,${o.image.data}` } },
         { type: "text", text: o.prompt },

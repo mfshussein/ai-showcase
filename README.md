@@ -24,6 +24,7 @@ npm run dev                  # http://localhost:3000
 | `PRESENTER_PASSWORD` | The code partners use. Adds "Run live" and the preflight page. |
 | `COOKIE_SECRET` | Any long random string. Signs the session cookie. |
 | `MODEL_MAIN`, `MODEL_FAST` | The capable model and the cheap classifier model. Defaults depend on the provider. |
+| `MODEL_VISION` | Optional model for image calls. The recordings use `google/gemini-3.8-flash` (about 5 s per read; Qwen 3.8 Max takes 20 to 50 s because its reasoning cannot be turned off). |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | Night watchman alert email (port 465 uses implicit TLS). Without `SMTP_HOST` the email is still shown on stage and the evidence drawer says it was not sent. |
 | `ALERT_EMAIL_TO` | Who receives the night shift report. Put your own address here to have your phone buzz in the meeting. |
 | `PUBLIC_BASE_URL` | The deployed showcase URL, used for the evidence link in the alert email. Defaults to `http://localhost:3000`, which is a dead link on a phone. |

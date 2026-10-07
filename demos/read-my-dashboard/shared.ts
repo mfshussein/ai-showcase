@@ -17,9 +17,18 @@ export const Reading = z.object({
   questions: z.array(z.string()),
 });
 
-/** Accepts {x,y,w,h} or [x,y,w,h]; anything else is no box. */
-export function toBox(v: unknown): z.infer<typeof Box> | null {
-  if (Array.isArray(v) && v.length === 4 && v.every((n) => typeof n === "number")) return { x: v[0], y: v[1], w: v[2], h: v[3] };
+/** Accepts [x_min, y_min, x_max, y_max] on a 0-1000 scale (what we ask for), pixel corners (any value beyond 1000), or an {x,y,w,h} object. Returns percent for corners. */
+export function toBox(v: unknown, size: { width: number; height: number }): z.infer<typeof Box> | null {
+  if (Array.isArray(v)) {
+    if (v.length !== 4 || !v.every((n) => typeof n === "number" && Number.isFinite(n))) return null;
+    const [x1, y1, x2, y2] = v as number[];
+    if (x2 <= x1 || y2 <= y1) return null;
+    const pixels = v.some((n) => n > 1000);
+    const sx = pixels ? 100 / size.width : 0.1;
+    const sy = pixels ? 100 / size.height : 0.1;
+    const r = (n: number) => Math.round(n * 1e6) / 1e6;
+    return { x: r(x1 * sx), y: r(y1 * sy), w: r((x2 - x1) * sx), h: r((y2 - y1) * sy) };
+  }
   const r = Box.safeParse(v);
   return r.success ? r.data : null;
 }

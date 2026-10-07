@@ -1,0 +1,376 @@
+{
+  "demo": "read-my-dashboard",
+  "recordedAt": "2026-10-07T15:57:32.079Z",
+  "model": "qwen/qwen3.8-max-0902 via openrouter.ai",
+  "events": [
+    {
+      "type": "run.start",
+      "t": 0,
+      "demo": "read-my-dashboard",
+      "mode": "live",
+      "runId": "da639ce3-192a-4a86-bddd-5c97941781f9"
+    },
+    {
+      "type": "act.start",
+      "t": 1,
+      "act": 1,
+      "title": "The claim",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 2,
+      "id": "claim",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "size": "display",
+        "title": "It reads your artefacts, not just text.",
+        "text": "Every month someone screenshots dashboards into a board pack, and the number that matters is spotted after the meeting. Give it the picture. No data feed, no integration, no translation step."
+      }
+    },
+    {
+      "type": "pause",
+      "t": 3
+    },
+    {
+      "type": "act.start",
+      "t": 3,
+      "act": 2,
+      "title": "Four dashboards",
+      "subtitle": "Screenshots, exactly as they would land in a pack. One is entirely in Arabic.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "grid",
+      "kind": "image",
+      "slot": "main",
+      "props": {
+        "title": "This month's pack",
+        "images": [
+          {
+            "src": "/fixtures/read-my-dashboard/sales-by-region.png",
+            "alt": "Sales by region, Q3",
+            "caption": "Sales by region, Q3"
+          },
+          {
+            "src": "/fixtures/read-my-dashboard/cash-position.png",
+            "alt": "Group cash position, week 40",
+            "caption": "Group cash position, week 40"
+          },
+          {
+            "src": "/fixtures/read-my-dashboard/call-centre-sla.png",
+            "alt": "Contact centre service levels",
+            "caption": "Contact centre service levels"
+          },
+          {
+            "src": "/fixtures/read-my-dashboard/collections-ar.png",
+            "alt": "لوحة التحصيل والإشغال (Arabic)",
+            "caption": "لوحة التحصيل والإشغال (Arabic)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "pause",
+      "t": 3,
+      "label": "Read the Arabic one"
+    },
+    {
+      "type": "panel.patch",
+      "t": 3,
+      "id": "grid",
+      "patch": {
+        "images": [
+          {
+            "src": "/fixtures/read-my-dashboard/sales-by-region.png",
+            "alt": "Sales by region, Q3",
+            "caption": "Sales by region, Q3",
+            "selected": false
+          },
+          {
+            "src": "/fixtures/read-my-dashboard/cash-position.png",
+            "alt": "Group cash position, week 40",
+            "caption": "Group cash position, week 40",
+            "selected": false
+          },
+          {
+            "src": "/fixtures/read-my-dashboard/call-centre-sla.png",
+            "alt": "Contact centre service levels",
+            "caption": "Contact centre service levels",
+            "selected": false
+          },
+          {
+            "src": "/fixtures/read-my-dashboard/collections-ar.png",
+            "alt": "لوحة التحصيل والإشغال (Arabic)",
+            "caption": "لوحة التحصيل والإشغال (Arabic)",
+            "selected": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "act.start",
+      "t": 3,
+      "act": 4,
+      "title": "Read it",
+      "subtitle": "One look at the image. Answer in English, figures quoted as printed.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 3,
+      "id": "dash",
+      "kind": "image",
+      "slot": "left",
+      "props": {
+        "title": "لوحة التحصيل والإشغال (Arabic)",
+        "src": "/fixtures/read-my-dashboard/collections-ar.png",
+        "alt": "لوحة التحصيل والإشغال (Arabic)",
+        "callouts": []
+      }
+    },
+    {
+      "type": "panel.patch",
+      "t": 48779,
+      "id": "dash",
+      "patch": {
+        "callouts": []
+      }
+    },
+    {
+      "type": "panel",
+      "t": 48780,
+      "id": "cfo",
+      "kind": "markdown",
+      "slot": "right",
+      "props": {
+        "title": "What the CFO will say",
+        "text": "- Occupancy is at 82% with a 'on track' tag, yet monthly collection fell 12% versus August to 11.4 million QAR while total arrears rose by 2.3 million to 6.9 million, so cash collection is deteriorating even though the headline occupancy metric looks healthy.\n- Tower C is collecting only 41% of its billed rent versus 89-93% for Towers A, B, D and E, which is the single biggest drag on the 11.4 million monthly collection figure.\n- September actual rental revenue collapsed to roughly 11.1-11.5 million QAR, well below the ~13.4 million target line, breaking a year-long trend where actuals tracked or beat target."
+      }
+    },
+    {
+      "type": "panel",
+      "t": 48780,
+      "id": "anomalies",
+      "kind": "markdown",
+      "slot": "right",
+      "props": {
+        "tone": "block",
+        "title": "Two things look wrong",
+        "text": "- **Occupancy up but collections down.** The occupancy tile shows 82% tagged 'on track' while the monthly collection tile shows a 12% drop and arrears up 2.3 million, a contradiction that suggests new leases are not converting into cash or that arrears are concentrated in newly occupied units.\n- **Tower C collection collapse.** Tower C collects only 41% of billed rent versus 89-93% for every other tower, an outlier so severe it likely explains most of the 6.9 million arrears and the September revenue miss, and needs an immediate operational explanation."
+      }
+    },
+    {
+      "type": "panel",
+      "t": 48780,
+      "id": "questions",
+      "kind": "markdown",
+      "slot": "right",
+      "props": {
+        "title": "Ask before the meeting",
+        "text": "- What is driving Tower C's 41% collection rate - is it a single anchor tenant in dispute, a data-feed error, or a systemic billing problem?\n- Why did September actual rental revenue drop sharply below the target line after tracking it all year - is this a real vacancy event or a timing issue with invoicing?\n- Of the 6.9 million arrears, how much sits in the 'more than 90 days' bucket (1.6 million across 22 units) and what legal or escalation steps are underway on those accounts?"
+      }
+    },
+    {
+      "type": "verdict",
+      "t": 48780,
+      "id": "verdict",
+      "status": "READ IN 48.8 S",
+      "tone": "ok",
+      "headline": "Board lines, no anomaly could be circled, questions to ask. From a screenshot in Arabic.",
+      "reason": "One call to a vision model. The callouts are snapped to the dashboard tiles it pointed at, so a box is never drawn in the wrong place.",
+      "evidence": [
+        {
+          "label": "Model",
+          "value": "qwen/qwen3.8-max-0902 via openrouter.ai"
+        },
+        {
+          "label": "Input",
+          "value": "collections-ar.png, 1280x800"
+        },
+        {
+          "label": "Callouts",
+          "value": "0 of 2 matched to a tile"
+        },
+        {
+          "label": "Elapsed",
+          "value": "48.8 s"
+        }
+      ]
+    },
+    {
+      "type": "control.event",
+      "t": 48781,
+      "detector": "vision.read",
+      "policyId": "VIS-01",
+      "action": "allow",
+      "recordId": "CE-6001",
+      "detail": "0/2 callouts snapped to tiles"
+    },
+    {
+      "type": "pause",
+      "t": 48781
+    },
+    {
+      "type": "act.start",
+      "t": 48781,
+      "act": 5,
+      "title": "Proof",
+      "subtitle": "Vision is triage. Every figure it quoted is traced back to the page.",
+      "keep": []
+    },
+    {
+      "type": "panel",
+      "t": 48782,
+      "id": "trace",
+      "kind": "table",
+      "slot": "main",
+      "props": {
+        "title": "Figures quoted: 13 printed on the dashboard, 1 not printed",
+        "columns": [
+          {
+            "key": "figure",
+            "label": "Figure"
+          },
+          {
+            "key": "status",
+            "label": "On the dashboard?"
+          }
+        ],
+        "rows": [
+          {
+            "figure": "82",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "12",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "11.4",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "2.3",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "6.9",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "41",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "89",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "93",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "11.1",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "13.4",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "90",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "1.6",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "22",
+            "status": {
+              "text": "PRINTED",
+              "tone": "ok"
+            }
+          },
+          {
+            "figure": "11.5",
+            "status": {
+              "text": "DERIVED OR READ OFF A CHART, CHECK",
+              "tone": "warn"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "control.event",
+      "t": 48782,
+      "detector": "figures.trace",
+      "policyId": "VIS-02",
+      "action": "flag",
+      "recordId": "CE-6002",
+      "detail": "13 traced, 1 flagged"
+    },
+    {
+      "type": "panel",
+      "t": 48782,
+      "id": "takeaway",
+      "kind": "markdown",
+      "slot": "main",
+      "props": {
+        "tone": "ok",
+        "title": "It reads your artefacts, not just text.",
+        "text": "Screenshots, scans and slides, Arabic or English. The reading is fast; the control is that every number is traced to the source before it reaches a board pack."
+      }
+    },
+    {
+      "type": "run.end",
+      "t": 48782,
+      "usage": {
+        "inputTokens": 1364,
+        "outputTokens": 2323,
+        "costUsd": 0.016666
+      }
+    }
+  ]
+}

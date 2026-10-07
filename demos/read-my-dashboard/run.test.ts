@@ -68,7 +68,7 @@ describe("read-my-dashboard run", () => {
       cfoLines: ["a", "b", "c", "d"],
       anomalies: [
         { label: "No box", why: "w", box: null },
-        { label: "Array box", why: "w", box: [60, 33, 37, 38] },
+        { label: "Array box", why: "w", box: [600, 330, 970, 710] },
         { label: "Third", why: "w", box: { x: 60, y: 33, w: 37, h: 38 } },
       ],
       questions: ["q1", "q2", "q3", "q4"],
@@ -80,5 +80,20 @@ describe("read-my-dashboard run", () => {
     expect(v && v.type === "verdict" && v.headline).toMatch(/one anomaly circled/);
     const cfo = ev.find((e) => e.type === "panel" && e.id === "cfo");
     expect(cfo && cfo.type === "panel" && String(cfo.props.text).split("\n")).toHaveLength(3);
+  });
+});
+
+import { toBox } from "./shared";
+describe("toBox", () => {
+  it("reads [x_min, y_min, x_max, y_max] on a 0-1000 scale as percent", () => {
+    expect(toBox([566, 307, 978, 722], { width: 1280, height: 800 })).toEqual({ x: 56.6, y: 30.7, w: 41.2, h: 41.5 });
+  });
+  it("reads pixel corners when a value is beyond 1000", () => {
+    expect(toBox([486, 246, 1259, 579], { width: 1280, height: 800 })).toMatchObject({ x: 37.96875, y: 30.75 });
+  });
+  it("keeps {x,y,w,h} objects and rejects junk", () => {
+    expect(toBox({ x: 1, y: 2, w: 3, h: 4 }, { width: 10, height: 10 })).toEqual({ x: 1, y: 2, w: 3, h: 4 });
+    expect(toBox([1, 2, 3], { width: 10, height: 10 })).toBeNull();
+    expect(toBox([5, 5, 2, 2], { width: 10, height: 10 })).toBeNull();
   });
 });

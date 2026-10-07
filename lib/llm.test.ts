@@ -24,6 +24,10 @@ describe("resolveProvider", () => {
     const p = resolveProvider({ LLM_PROVIDER: "openai", LLM_BASE_URL: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1", LLM_API_KEY: "k", MODEL_MAIN: "qwen3.8-max", MODEL_FAST: "qwen3.8-flash" });
     expect(p).toEqual({ kind: "openai", baseURL: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1", apiKey: "k", models: { main: "qwen3.8-max", fast: "qwen3.8-flash" }, label: "qwen3.8-max via dashscope-intl.aliyuncs.com" });
   });
+  it("reads an optional vision model", () => {
+    const p = resolveProvider({ LLM_PROVIDER: "openai", LLM_BASE_URL: "https://x.example/v1", LLM_API_KEY: "k", MODEL_VISION: "google/gemini-3.8-flash" });
+    expect(p.models.vision).toBe("google/gemini-3.8-flash");
+  });
   it("reads a price override of the form in,out", () => {
     const p = resolveProvider({ LLM_PROVIDER: "openai", LLM_BASE_URL: "https://x.example/v1", LLM_API_KEY: "k", MODEL_MAIN: "m", MODEL_FAST: "f", LLM_PRICE_MAIN: "1.5,6", LLM_PRICE_FAST: "0.1,0.4" });
     expect(p.kind === "openai" && p.prices).toEqual({ m: [1.5, 6], f: [0.1, 0.4] });
@@ -95,6 +99,13 @@ describe("createOpenAiCompatibleLlm", () => {
     const srv = fakeServer(["ok"]);
     await createOpenAiCompatibleLlm(or, srv.fetchImpl).vision({ image: { data: "AAAA", mediaType: "image/png" }, prompt: "p", effort: "low" });
     expect(srv.calls[0].body.reasoning).toEqual({ effort: "low" });
+  });
+  it("vision() uses the vision model when one is configured, and says so", async () => {
+    const srv = fakeServer(["ok"]);
+    const llm = createOpenAiCompatibleLlm({ ...provider, models: { ...provider.models, vision: "v" } }, srv.fetchImpl);
+    await llm.vision({ image: { data: "AAAA", mediaType: "image/png" }, prompt: "p" });
+    expect(srv.calls[0].body.model).toBe("v");
+    expect(llm.visionModel).toBe("v");
   });
   it("vision() sends an image_url data URL", async () => {
     const srv = fakeServer(["a chart"]);
