@@ -3,7 +3,7 @@ import type { DemoManifest } from "../types";
 export const manifest: DemoManifest = {
   slug: "document-to-json",
   order: 70,
-  status: "soon",
+  status: "ready",
   title: "Paper in, record out",
   hook: "An invoice, an ID card and a handwritten delivery note become structured records, and code decides which ones are allowed downstream.",
   lesson: {
