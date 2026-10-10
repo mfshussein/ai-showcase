@@ -49,6 +49,10 @@ npm run dev                  # http://localhost:3000
 | 70 | document-to-json | Invoice, SPECIMEN ID and handwritten note become records; code blocks the bad ones. |
 | 80 | glossary-translation | House terms honoured goes from a handful to 14/14. |
 
+## Discovery Engine
+
+`/discovery` (the "Discovery Engine" button at the top of the gallery) is a guided discovery interview: a vague pain becomes a quantified pain point, a root cause at the buildable layer, tested hypotheses, a verdict on every pillar and a gated summary. It is scripted for now; there is no AI call yet. The flow is data (`discovery/flows/`), the rules are pure functions (`discovery/engine.ts`, unit-tested), and the screens render whatever a flow declares. Space or Next advances, 1 to 3 pick a branch, and every scripted answer, figure and verdict can be edited live.
+
 ## Adding a case
 
 1. Create `demos/<slug>/` with `manifest.ts` (title, hook, lesson, tags, acts, takeaway), `run.ts` (an async generator that yields run events; see `lib/events.ts` for the contract and `components/panels/index.tsx` for panel props), and `fixtures/`.

@@ -3,7 +3,7 @@ import path from "node:path";
 
 export default defineConfig({
   test: {
-    include: ["lib/**/*.test.ts", "demos/**/*.test.ts", "app/**/*.test.ts"],
+    include: ["lib/**/*.test.ts", "demos/**/*.test.ts", "app/**/*.test.ts", "discovery/**/*.test.ts"],
     environment: "node",
   },
   resolve: { alias: { "@": path.resolve(__dirname) } },

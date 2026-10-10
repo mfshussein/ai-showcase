@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { Compass } from "lucide-react";
 import type { DemoManifest } from "@/demos/types";
 import { Brand } from "@/components/brand";
 import { TagFilter } from "./tag-filter";
@@ -28,6 +29,9 @@ export function Gallery({ demos, presenter, walkthroughHref }: { demos: DemoMani
       <header className="flex items-center justify-between">
         <Brand />
         <div className="flex items-center gap-4 text-sm text-muted">
+          <Link href="/discovery" className="inline-flex items-center gap-2 rounded-md border border-accent/40 bg-accent/[0.06] px-3 py-1.5 font-semibold text-accent hover:border-accent hover:bg-accent/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40">
+            <Compass size={15} />Discovery Engine
+          </Link>
           {presenter && <Link href="/health" className="hover:text-fg">Preflight</Link>}
           <span>{presenter ? "Presenter" : "Viewer"}</span>
         </div>
@@ -40,11 +44,16 @@ export function Gallery({ demos, presenter, walkthroughHref }: { demos: DemoMani
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
           Each case below is a short, pre-loaded demonstration. Watch the AI get it wrong, then watch a control catch it. Every control is code, and every decision is logged.
         </p>
-        {walkthroughHref && (
-          <Link href={walkthroughHref} className="mt-8 inline-flex rounded-md bg-accent px-5 py-3 text-base font-semibold text-white hover:bg-[#1239b0] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40">
-            Start the walkthrough
+        <div className="mt-8 flex flex-wrap gap-3">
+          {walkthroughHref && (
+            <Link href={walkthroughHref} className="inline-flex rounded-md bg-accent px-5 py-3 text-base font-semibold text-white hover:bg-[#1239b0] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40">
+              Start the walkthrough
+            </Link>
+          )}
+          <Link href="/discovery" className="inline-flex rounded-md border border-line bg-card px-5 py-3 text-base font-semibold text-fg hover:border-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40">
+            See how we run discovery
           </Link>
-        )}
+        </div>
       </section>
 
       <section className="mt-16 space-y-3 border-t border-line pt-6">
